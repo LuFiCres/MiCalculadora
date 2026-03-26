@@ -421,7 +421,16 @@ export default function App() {
                 <div className="field" key={label}>
                   <label>{label}</label>
                   <div className="num-input-wrap">
-                    <input type="number" value={val} min={min} max={max} onChange={e => set(Number(e.target.value))} />
+                    <input
+                      type="number"
+                      value={val}
+                      min={min}
+                      max={max}
+                      onChange={e => {
+                        const v = parseFloat(e.target.value);
+                        if (!isNaN(v)) set(v);
+                      }}
+                    />
                     <span className="num-input-unit">{unit}</span>
                   </div>
                 </div>
@@ -430,7 +439,14 @@ export default function App() {
             <div className="field">
               <label>% Grasa corporal <span style={{color:"var(--text-dim)"}}>— opcional, mejora la precisión</span></label>
               <div className="num-input-wrap">
-                <input type="number" value={grasa} min={3} max={60} placeholder="Ej: 18" onChange={e => setGrasa(e.target.value)} />
+                <input
+                  type="number"
+                  value={grasa}
+                  min={3}
+                  max={60}
+                  placeholder="Ej: 18"
+                  onChange={e => setGrasa(e.target.value)}
+                />
                 <span className="num-input-unit">%</span>
               </div>
             </div>
