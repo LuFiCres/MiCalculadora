@@ -21,13 +21,21 @@ const styles = `
     --text: #1e1208;
     --text-muted: #8a6a50;
     --text-dim: #c4a882;
+    --success: #5a8a4a;
     --info: #3a6e9e;
+    --purple: #7a5a9e;
     --font-display: 'Playfair Display', serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
   }
 
-  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
 
   .page {
     min-height: 100vh;
@@ -50,33 +58,68 @@ const styles = `
     margin-bottom: 64px;
   }
 
-  .header-left h1 { font-family: var(--font-display); font-size: 3.4rem; line-height: 1; letter-spacing: -0.02em; }
+  .header-left h1 {
+    font-family: var(--font-display);
+    font-size: 3.4rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
   .header-left h1 em { font-style: italic; color: var(--accent); }
-  .header-left p { font-size: 0.82rem; color: var(--text-muted); margin-top: 12px; font-weight: 300; letter-spacing: 0.03em; }
+
+  .header-left p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+  }
+
   .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
   .header-badge {
-    font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);
-    border: 1px solid var(--border); padding: 6px 14px; border-radius: 100px;
-    letter-spacing: 0.1em; background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+    background: var(--surface);
   }
 
   .header-badge-accent {
-    font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent);
-    border: 1px solid var(--accent-dim); padding: 6px 14px; border-radius: 100px;
-    letter-spacing: 0.1em; background: var(--accent-dim);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    padding: 6px 14px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+    background: var(--accent-dim);
   }
 
   .left-col { grid-column: 1; grid-row: 2; padding-bottom: 60px; }
-  .right-col { grid-column: 2; grid-row: 2; padding-bottom: 60px; position: sticky; top: 40px; height: fit-content; }
+  .right-col {
+    grid-column: 2; grid-row: 2; padding-bottom: 60px;
+    position: sticky; top: 40px; height: fit-content;
+  }
 
   .section { margin-bottom: 52px; }
 
   .section-label {
-    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.18em;
-    color: var(--text-muted); text-transform: uppercase; margin-bottom: 22px;
-    display: flex; align-items: center; gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
+
   .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -84,123 +127,206 @@ const styles = `
   .input-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 
   .field { display: flex; flex-direction: column; gap: 8px; }
+
   .field label { font-size: 0.73rem; color: var(--text-muted); font-weight: 400; letter-spacing: 0.01em; }
 
   .num-input-wrap {
-    display: flex; align-items: center; background: var(--surface);
-    border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden;
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .num-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+
+  .num-input-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+
   .num-input-wrap input {
-    flex: 1; background: transparent; border: none; outline: none;
-    color: var(--text); font-family: var(--font-mono); font-size: 1rem;
-    padding: 12px 14px; width: 100%;
-  }
-  .num-input-unit { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); padding: 0 14px 0 0; white-space: nowrap; }
-
-  /* Slider */
-  .slider-field { display: flex; flex-direction: column; gap: 10px; }
-  .slider-top { display: flex; justify-content: space-between; align-items: center; }
-  .slider-top label { font-size: 0.73rem; color: var(--text-muted); }
-  .slider-value { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); font-weight: 500; }
-
-  .slider-wrap { position: relative; padding-bottom: 18px; }
-
-  input[type=range] {
-    -webkit-appearance: none; width: 100%; height: 4px;
-    border-radius: 2px; outline: none; border: none; cursor: pointer;
-  }
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
-    background: var(--accent); cursor: pointer;
-    box-shadow: 0 0 12px var(--accent-glow); transition: transform 0.15s;
-    border: 3px solid var(--surface);
-  }
-  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-
-  .slider-mark {
-    position: absolute;
-    bottom: 0;
-    transform: translateX(-50%);
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
     font-family: var(--font-mono);
-    font-size: 0.58rem;
-    color: var(--text-dim);
+    font-size: 1rem;
+    padding: 12px 14px;
+    width: 100%;
+  }
+
+  .num-input-unit {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    padding: 0 14px 0 0;
     white-space: nowrap;
   }
 
+  .slider-field { display: flex; flex-direction: column; gap: 10px; }
+
+  .slider-top { display: flex; justify-content: space-between; align-items: center; }
+  .slider-top label { font-size: 0.73rem; color: var(--text-muted); }
+
+  .slider-value { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); font-weight: 500; }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 2px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    outline: none;
+    border: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 12px var(--accent-glow);
+    transition: transform 0.15s;
+    border: 3px solid var(--surface);
+  }
+
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
   .slider-hint { font-size: 0.68rem; color: var(--text-dim); font-style: italic; }
 
-  .styled-select {
-    background: var(--surface); border: 1.5px solid var(--border); border-radius: 10px;
-    color: var(--text); font-family: var(--font-body); font-size: 0.83rem;
-    padding: 12px 36px 12px 14px; outline: none; width: 100%; cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s; appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6a50' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 14px center;
+  .slider-marks {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    padding: 0 2px;
   }
+
+  .styled-select {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.83rem;
+    padding: 12px 36px 12px 14px;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6a50' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+
   .styled-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
   .styled-select option { background: #faf7f2; color: #1e1208; }
 
   .sex-toggle {
-    display: grid; grid-template-columns: 1fr 1fr; background: var(--surface);
-    border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
   }
+
   .sex-btn {
-    padding: 12px; text-align: center; cursor: pointer; font-size: 0.8rem;
-    color: var(--text-muted); transition: all 0.2s; border: none;
-    background: transparent; font-family: var(--font-body);
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
   }
+
   .sex-btn.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
 
   .info-box {
-    background: var(--accent-dim); border: 1px solid rgba(217,79,43,0.2);
-    border-radius: 10px; padding: 12px 16px; font-size: 0.75rem;
-    color: var(--text-muted); line-height: 1.6; margin-top: 4px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(217,79,43,0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 4px;
   }
+
   .info-box strong { color: var(--accent); font-weight: 500; }
 
   .cta {
-    width: 100%; padding: 17px; background: var(--accent); color: #faf7f2;
-    border: none; border-radius: 12px; font-family: var(--font-body);
-    font-size: 0.9rem; font-weight: 500; cursor: pointer;
-    letter-spacing: 0.03em; transition: all 0.2s; margin-top: 8px;
+    width: 100%;
+    padding: 17px;
+    background: var(--accent);
+    color: #faf7f2;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all 0.2s;
+    margin-top: 8px;
   }
+
   .cta:hover { background: var(--accent-2); transform: translateY(-2px); box-shadow: 0 10px 32px var(--accent-glow); }
   .cta:active { transform: translateY(0); }
 
-  /* Results */
   .results-empty {
-    border: 1.5px dashed var(--border); border-radius: 16px; padding: 52px 32px;
-    text-align: center; color: var(--text-muted); background: var(--surface);
+    border: 1.5px dashed var(--border);
+    border-radius: 16px;
+    padding: 52px 32px;
+    text-align: center;
+    color: var(--text-muted);
+    background: var(--surface);
   }
+
   .results-empty .big-icon { font-size: 2.8rem; margin-bottom: 18px; opacity: 0.4; }
   .results-empty p { font-size: 0.83rem; line-height: 1.7; font-weight: 300; max-width: 260px; margin: 0 auto; }
 
   .results-panel {
-    border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden;
-    background: var(--surface); animation: fadeUp 0.4s ease;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface);
+    animation: fadeUp 0.4s ease;
     box-shadow: 0 4px 40px rgba(180,100,40,0.08);
   }
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   .results-header {
-    padding: 26px 28px 22px; border-bottom: 1px solid var(--border);
+    padding: 26px 28px 22px;
+    border-bottom: 1px solid var(--border);
     background: linear-gradient(135deg, #fdf8f2 0%, #f5ede0 100%);
   }
-  .results-header p { font-size: 0.67rem; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+
+  .results-header p {
+    font-size: 0.67rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
   .tdee-main { display: flex; align-items: baseline; gap: 8px; }
   .tdee-number { font-family: var(--font-display); font-size: 3.8rem; color: var(--accent); line-height: 1; }
   .tdee-unit { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
-
-  .imc-row {
-    display: flex; align-items: center; gap: 10px; margin-top: 12px;
-    padding-top: 12px; border-top: 1px solid var(--border);
-  }
-  .imc-label { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
-  .imc-val { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 500; }
-  .imc-cat { font-size: 0.68rem; padding: 2px 8px; border-radius: 100px; font-family: var(--font-mono); }
 
   .bar-wrap { padding: 16px 28px; border-bottom: 1px solid var(--border); }
   .bar-track { display: flex; gap: 3px; width: 100%; height: 8px; border-radius: 4px; overflow: hidden; }
@@ -213,11 +339,18 @@ const styles = `
   .breakdown-val { font-family: var(--font-mono); font-size: 0.83rem; font-weight: 500; }
 
   .targets { padding: 18px 28px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border); }
+
   .target-row {
-    background: var(--bg-warm); border-radius: 10px; padding: 12px 16px;
-    display: flex; justify-content: space-between; align-items: center;
-    border: 1px solid var(--border); transition: all 0.2s;
+    background: var(--bg-warm);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
   }
+
   .target-row.active { border-width: 1.5px; }
   .target-left p:first-child { font-size: 0.78rem; font-weight: 500; margin-bottom: 2px; }
   .target-left p:last-child { font-size: 0.67rem; color: var(--text-muted); }
@@ -226,23 +359,34 @@ const styles = `
   .macros { padding: 18px 28px; border-bottom: 1px solid var(--border); }
   .macros-title { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; }
   .macros-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  .macro-card { background: var(--bg-warm); border-radius: 10px; padding: 14px 10px; text-align: center; border: 1px solid var(--border); }
+
+  .macro-card {
+    background: var(--bg-warm);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
   .macro-val { font-family: var(--font-mono); font-size: 1.15rem; font-weight: 500; margin-bottom: 3px; }
   .macro-name { font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
   .macro-kcal { font-size: 0.6rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 3px; }
 
-  .extras { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-  .extra-row { display: flex; justify-content: space-between; align-items: center; }
-  .extra-label { font-size: 0.78rem; color: var(--text-muted); }
-  .extra-val { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 500; }
+  .agua { padding: 16px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .agua-label { font-size: 0.78rem; color: var(--text-muted); }
+  .agua-val { font-family: var(--font-mono); font-size: 1rem; color: var(--info); font-weight: 500; }
 
   .note { padding: 14px 28px 22px; font-size: 0.7rem; color: var(--text-dim); line-height: 1.7; font-style: italic; }
 
   .footer {
-    grid-column: 1 / -1; padding: 24px 0;
+    grid-column: 1 / -1;
+    padding: 24px 0;
     border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
+
   .footer p { font-size: 0.7rem; color: var(--text-dim); font-family: var(--font-mono); }
 
   @media (max-width: 920px) {
@@ -255,53 +399,6 @@ const styles = `
     .footer { grid-column: 1; flex-direction: column; gap: 8px; text-align: center; }
   }
 `;
-
-// Calculates left% position for a slider mark given its value and the slider min/max
-function markPos(val, min, max) {
-  const thumbHalf = 9; // half of 18px thumb
-  const pct = (val - min) / (max - min);
-  // CSS trick to account for thumb width at edges
-  return `calc(${pct * 100}% - ${thumbHalf * (pct * 2 - 1)}px)`;
-}
-
-function SliderWithMarks({ label, value, onChange, min, max, step = 1, unit = "", marks = [], hint }) {
-  const pct = (value - min) / (max - min);
-  const gradient = `linear-gradient(to right, var(--accent) ${pct * 100}%, var(--surface-2) ${pct * 100}%)`;
-
-  return (
-    <div className="slider-field">
-      <div className="slider-top">
-        <label>{label}</label>
-        <span className="slider-value">{typeof value === "number" && unit === "pasos" ? value.toLocaleString() : value}{unit !== "pasos" ? " " + unit : ""}</span>
-      </div>
-      <div className="slider-wrap">
-        <input
-          type="range"
-          min={min} max={max} step={step} value={value}
-          style={{ background: gradient }}
-          onChange={e => onChange(Number(e.target.value))}
-        />
-        {marks.map(m => (
-          <span
-            key={m.val}
-            className="slider-mark"
-            style={{ left: markPos(m.val, min, max) }}
-          >
-            {m.label}
-          </span>
-        ))}
-      </div>
-      {hint && <span className="slider-hint">{hint}</span>}
-    </div>
-  );
-}
-
-function imcInfo(imc) {
-  if (imc < 18.5) return { label: "Bajo peso", color: "#3a6e9e", bg: "rgba(58,110,158,0.1)" };
-  if (imc < 25)   return { label: "Normal", color: "#5a8a4a", bg: "rgba(90,138,74,0.1)" };
-  if (imc < 30)   return { label: "Sobrepeso", color: "#e8793a", bg: "rgba(232,121,58,0.1)" };
-  return           { label: "Obesidad", color: "#d94f2b", bg: "rgba(217,79,43,0.1)" };
-}
 
 export default function App() {
   const [sexo, setSexo] = useState("hombre");
@@ -342,26 +439,38 @@ export default function App() {
     const superavit = Math.round(tdee + 250);
     const superavit_agr = Math.round(tdee + 500);
 
-    let proteinG, kcalObj;
-    if (objetivo === "deficit")          { kcalObj = deficit_mod; proteinG = Math.round(peso * 2.2); }
-    else if (objetivo === "deficit_agresivo") { kcalObj = deficit_agr; proteinG = Math.round(peso * 2.4); }
-    else if (objetivo === "mantenimiento")    { kcalObj = mantenimiento; proteinG = Math.round(peso * 1.8); }
-    else if (objetivo === "superavit")        { kcalObj = superavit; proteinG = Math.round(peso * 2.0); }
-    else                                      { kcalObj = superavit_agr; proteinG = Math.round(peso * 2.0); }
+    let proteinG, fatG, carbG, kcalObj;
+    if (objetivo === "deficit") {
+      kcalObj = deficit_mod;
+      proteinG = Math.round(peso * 2.2);
+    } else if (objetivo === "deficit_agresivo") {
+      kcalObj = deficit_agr;
+      proteinG = Math.round(peso * 2.4);
+    } else if (objetivo === "mantenimiento") {
+      kcalObj = mantenimiento;
+      proteinG = Math.round(peso * 1.8);
+    } else if (objetivo === "superavit") {
+      kcalObj = superavit;
+      proteinG = Math.round(peso * 2.0);
+    } else {
+      kcalObj = superavit_agr;
+      proteinG = Math.round(peso * 2.0);
+    }
 
-    const fatG  = Math.round((kcalObj * 0.28) / 9);
-    const carbG = Math.round((kcalObj - proteinG * 4 - fatG * 9) / 4);
+    fatG = Math.round((kcalObj * 0.28) / 9);
+    carbG = Math.round((kcalObj - proteinG * 4 - fatG * 9) / 4);
 
     const horasEjDia = (duracion / 60 * diasFuerza) / 7;
     const agua = Math.round((peso * 35 + horasEjDia * 500) / 100) / 10;
-    const fibra = sexo === "hombre" ? 38 : 25; // g/día (Institute of Medicine)
-    const imc = +(peso / ((altura / 100) ** 2)).toFixed(1);
 
     setResultado({
-      bmr: Math.round(bmr), eat: Math.round(eatDia + cardioKcal),
-      neat: Math.round(neat), tef: Math.round(tef),
-      tdee: mantenimiento, deficit_mod, deficit_agr, superavit, superavit_agr,
-      kcalObj, proteinG, fatG, carbG, agua, fibra, imc,
+      bmr: Math.round(bmr),
+      eat: Math.round(eatDia + cardioKcal),
+      neat: Math.round(neat),
+      tef: Math.round(tef),
+      tdee: mantenimiento,
+      deficit_mod, deficit_agr, superavit, superavit_agr,
+      kcalObj, proteinG, fatG, carbG, agua,
       usandoKatch: grasa && Number(grasa) > 0,
     });
   };
@@ -369,38 +478,38 @@ export default function App() {
   const total = resultado ? resultado.bmr + resultado.eat + resultado.neat + resultado.tef : 1;
 
   const objetivoLabel = {
-    deficit: "déficit moderado", deficit_agresivo: "déficit agresivo",
-    mantenimiento: "mantenimiento", superavit: "superávit ligero",
+    deficit: "déficit moderado",
+    deficit_agresivo: "déficit agresivo",
+    mantenimiento: "mantenimiento",
+    superavit: "superávit ligero",
     superavit_agresivo: "superávit agresivo",
   }[objetivo];
 
   const targets = resultado ? [
-    { label: "Déficit agresivo",  desc: "−500 kcal/día",          val: resultado.deficit_agr,  color: "#d94f2b" },
-    { label: "Déficit moderado",  desc: "−300 kcal/día",          val: resultado.deficit_mod,  color: "#e8793a" },
-    { label: "Mantenimiento",     desc: "Sin cambios de peso",     val: resultado.tdee,         color: "#8a6a50" },
-    { label: "Superávit ligero",  desc: "+250 kcal/día",           val: resultado.superavit,    color: "#3a6e9e" },
-    { label: "Superávit agresivo",desc: "+500 kcal/día",           val: resultado.superavit_agr,color: "#5a8a4a" },
+    { label: "Déficit agresivo", desc: "−500 kcal/día", val: resultado.deficit_agr, color: "#d94f2b" },
+    { label: "Déficit moderado", desc: "−300 kcal/día", val: resultado.deficit_mod, color: "#e8793a" },
+    { label: "Mantenimiento", desc: "Sin cambios de peso", val: resultado.tdee, color: "#8a6a50" },
+    { label: "Superávit ligero", desc: "+250 kcal/día", val: resultado.superavit, color: "#3a6e9e" },
+    { label: "Superávit agresivo", desc: "+500 kcal/día", val: resultado.superavit_agr, color: "#5a8a4a" },
   ] : [];
 
   return (
     <>
       <style>{styles}</style>
       <div className="page">
-
         <header className="header">
           <div className="header-left">
             <h1>Gasto <em>calórico</em> total</h1>
             <p>Mifflin-St Jeor · Katch-McArdle · MET compendium · evidencia actualizada</p>
           </div>
           <div className="header-right">
-            <span className="header-badge">TDEE CALCULATOR v2.1</span>
+            <span className="header-badge">TDEE CALCULATOR v2.0</span>
             <span className="header-badge-accent">Basado en evidencia científica</span>
           </div>
         </header>
 
         <main className="left-col">
 
-          {/* 01 Biometría */}
           <div className="section">
             <div className="section-label">01 · Datos biométricos</div>
             <div className="input-grid cols-1" style={{marginBottom:16}}>
@@ -441,81 +550,86 @@ export default function App() {
             )}
           </div>
 
-          {/* 02 Fuerza */}
           <div className="section">
             <div className="section-label">02 · Entrenamiento de fuerza</div>
-            <div style={{display:"flex", flexDirection:"column", gap:28}}>
-              <SliderWithMarks
-                label="Días por semana" value={diasFuerza} onChange={setDiasFuerza}
-                min={1} max={7} unit="días"
-                marks={[1,2,3,4,5,6,7].map(d => ({ val: d, label: String(d) }))}
-              />
-              <SliderWithMarks
-                label="Duración por sesión" value={duracion} onChange={setDuracion}
-                min={20} max={180} step={5} unit="min"
-                marks={[20,45,60,90,120,150,180].map(d => ({ val: d, label: d + "'" }))}
-              />
+            <div style={{display:"flex", flexDirection:"column", gap:22}}>
+              <div className="slider-field">
+                <div className="slider-top">
+                  <label>Días por semana</label>
+                  <span className="slider-value">{diasFuerza} {diasFuerza === 1 ? "día" : "días"}</span>
+                </div>
+                <input type="range" min={1} max={7} value={diasFuerza} onChange={e => setDiasFuerza(Number(e.target.value))} />
+                <div className="slider-marks">{[1,2,3,4,5,6,7].map(d => <span key={d}>{d}</span>)}</div>
+              </div>
+              <div className="slider-field">
+                <div className="slider-top">
+                  <label>Duración por sesión</label>
+                  <span className="slider-value">{duracion} min</span>
+                </div>
+                <input type="range" min={20} max={180} step={5} value={duracion} onChange={e => setDuracion(Number(e.target.value))} />
+                <div className="slider-marks"><span>20 min</span><span>60 min</span><span>120 min</span><span>180 min</span></div>
+              </div>
               <div className="field">
                 <label>Intensidad percibida</label>
                 <select className="styled-select" value={intensidad} onChange={e => setIntensidad(e.target.value)}>
-                  <option value="ligera">Ligera — 3-4 series/ejercicio, RIR 4+, descansos 3 min</option>
-                  <option value="moderada">Moderada — 4-5 series, RIR 2-3, descansos 90-120 s</option>
-                  <option value="intensa">Intensa — 5+ series, RIR 0-1, descansos cortos, alto volumen</option>
-                  <option value="muy_intensa">Muy intensa — powerlifting / CrossFit / HIIT con pesas, esfuerzo máximo</option>
+                  <option value="ligera">Ligera — pocas series, descansos largos, sin mucho esfuerzo</option>
+                  <option value="moderada">Moderada — trabajo consistente, algo de fatiga al final</option>
+                  <option value="intensa">Intensa — mucho volumen, cerca del fallo frecuentemente</option>
+                  <option value="muy_intensa">Muy intensa — powerlifting / CrossFit, esfuerzo máximo</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* 03 Cardio */}
           <div className="section">
             <div className="section-label">03 · Cardio adicional</div>
             <div className="field">
               <label>¿Haces cardio además de la fuerza?</label>
               <select className="styled-select" value={cardio} onChange={e => setCardio(e.target.value)}>
-                <option value="ninguno">Ninguno — solo entreno de fuerza</option>
-                <option value="poco">Poco — 1-2 sesiones/semana de 20-30 min (paseo rápido, bici suave)</option>
-                <option value="moderado">Moderado — 3 sesiones/semana de 30-45 min (carrera, bici, elíptica)</option>
-                <option value="bastante">Bastante — 4 sesiones/semana de 45-60 min o sesiones largas</option>
-                <option value="mucho">Mucho — 5+ sesiones/semana o cardio de más de 60 min (running, ciclismo)</option>
+                <option value="ninguno">No, solo fuerza</option>
+                <option value="poco">Poco — 1-2 sesiones suaves por semana</option>
+                <option value="moderado">Moderado — 3 sesiones por semana</option>
+                <option value="bastante">Bastante — 4 sesiones o sesiones largas</option>
+                <option value="mucho">Mucho — 5+ sesiones, cardio de alto volumen</option>
               </select>
             </div>
           </div>
 
-          {/* 04 NEAT */}
           <div className="section">
             <div className="section-label">04 · Actividad diaria (NEAT)</div>
-            <div style={{display:"flex", flexDirection:"column", gap:28}}>
-              <SliderWithMarks
-                label="Pasos diarios promedio" value={pasos} onChange={setPasos}
-                min={1000} max={30000} step={500} unit="pasos"
-                marks={[1000,5000,10000,15000,20000,25000,30000].map(d => ({ val: d, label: d >= 1000 ? (d/1000)+"k" : d }))}
-                hint="Sin contar el entrenamiento — solo movimiento cotidiano"
-              />
+            <div style={{display:"flex", flexDirection:"column", gap:22}}>
+              <div className="slider-field">
+                <div className="slider-top">
+                  <label>Pasos diarios promedio</label>
+                  <span className="slider-value">{pasos.toLocaleString()}</span>
+                </div>
+                <input type="range" min={1000} max={30000} step={500} value={pasos} onChange={e => setPasos(Number(e.target.value))} />
+                <div className="slider-marks"><span>1k</span><span>5k</span><span>10k</span><span>20k</span><span>30k</span></div>
+                <span className="slider-hint">Sin contar el entrenamiento — solo movimiento cotidiano</span>
+              </div>
               <div className="field">
                 <label>Tipo de trabajo o actividad laboral</label>
                 <select className="styled-select" value={trabajo} onChange={e => setTrabajo(e.target.value)}>
-                  <option value="sedentario">Sedentario — oficina, estudio, sentado 6+ h al día</option>
-                  <option value="ligero">Ligero — sentado 4-6 h, de pie o caminando el resto (dependiente, recepcionista)</option>
-                  <option value="moderado">Moderado — de pie 6+ h, desplazamientos continuos (camarero, enfermero)</option>
-                  <option value="activo">Activo — trabajo físico intenso, cargas moderadas (almacén, fontanero)</option>
-                  <option value="muy_activo">Muy activo — esfuerzo físico muy exigente todo el día (construcción, mudanzas, agricultor)</option>
+                  <option value="sedentario">Sedentario — oficina, estudio, sentado casi todo el día</option>
+                  <option value="ligero">Ligero — de pie a ratos, algo de movimiento</option>
+                  <option value="moderado">Moderado — de pie varias horas, algo de carga física</option>
+                  <option value="activo">Activo — trabajo físico, mucho movimiento continuo</option>
+                  <option value="muy_activo">Muy activo — trabajo físico muy exigente (construcción, etc.)</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {/* 05 Objetivo */}
           <div className="section">
             <div className="section-label">05 · Objetivo</div>
             <div className="field">
               <label>¿Cuál es tu meta actual?</label>
               <select className="styled-select" value={objetivo} onChange={e => setObjetivo(e.target.value)}>
-                <option value="deficit_agresivo">Pérdida de grasa agresiva — déficit de 500 kcal (~0.5 kg/semana)</option>
+                <option value="deficit_agresivo">Pérdida de grasa agresiva — déficit de 500 kcal</option>
                 <option value="deficit">Pérdida de grasa moderada — déficit de 300 kcal ✓ recomendado</option>
                 <option value="mantenimiento">Mantenimiento — sin cambios de peso</option>
-                <option value="superavit">Volumen limpio — superávit de 250 kcal (mínima grasa)</option>
-                <option value="superavit_agresivo">Volumen agresivo — superávit de 500 kcal (~0.5 kg/semana)</option>
+                <option value="superavit">Volumen limpio — superávit de 250 kcal</option>
+                <option value="superavit_agresivo">Volumen agresivo — superávit de 500 kcal</option>
               </select>
             </div>
           </div>
@@ -537,13 +651,6 @@ export default function App() {
                   <span className="tdee-number">{resultado.tdee.toLocaleString()}</span>
                   <span className="tdee-unit">kcal/día</span>
                 </div>
-                <div className="imc-row">
-                  <span className="imc-label">IMC</span>
-                  <span className="imc-val" style={{color: imcInfo(resultado.imc).color}}>{resultado.imc}</span>
-                  <span className="imc-cat" style={{color: imcInfo(resultado.imc).color, background: imcInfo(resultado.imc).bg}}>
-                    {imcInfo(resultado.imc).label}
-                  </span>
-                </div>
               </div>
 
               <div className="bar-wrap">
@@ -562,8 +669,8 @@ export default function App() {
               <div className="breakdown">
                 {[
                   { label: "Metabolismo basal (BMR)", val: resultado.bmr, color: "#c4a882" },
-                  { label: "Gasto por entreno (EAT)",  val: resultado.eat, color: "#3a6e9e" },
-                  { label: "Actividad diaria (NEAT)",  val: resultado.neat, color: "#e8793a" },
+                  { label: "Gasto por entreno (EAT)", val: resultado.eat, color: "#3a6e9e" },
+                  { label: "Actividad diaria (NEAT)", val: resultado.neat, color: "#e8793a" },
                   { label: "Efecto térmico alimentos", val: resultado.tef, color: "#7a5a9e" },
                 ].map(row => (
                   <div className="breakdown-row" key={row.label}>
@@ -590,12 +697,12 @@ export default function App() {
               </div>
 
               <div className="macros">
-                <div className="macros-title">Macros recomendados · {objetivoLabel}</div>
+                <div className="macros-title">Macros recomendados para {objetivoLabel}</div>
                 <div className="macros-grid">
                   {[
-                    { name: "Proteína",     val: resultado.proteinG, color: "#d94f2b", kcal: resultado.proteinG * 4 },
-                    { name: "Grasa",        val: resultado.fatG,     color: "#e8793a", kcal: resultado.fatG * 9 },
-                    { name: "Carbohidrato", val: resultado.carbG,    color: "#3a6e9e", kcal: resultado.carbG * 4 },
+                    { name: "Proteína", val: resultado.proteinG, color: "#d94f2b", kcal: resultado.proteinG * 4 },
+                    { name: "Grasa", val: resultado.fatG, color: "#e8793a", kcal: resultado.fatG * 9 },
+                    { name: "Carbohidrato", val: resultado.carbG, color: "#3a6e9e", kcal: resultado.carbG * 4 },
                   ].map(m => (
                     <div className="macro-card" key={m.name}>
                       <div className="macro-val" style={{color: m.color}}>{m.val}g</div>
@@ -606,26 +713,20 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="extras">
-                <div className="extra-row">
-                  <span className="extra-label">💧 Agua recomendada al día</span>
-                  <span className="extra-val" style={{color:"#3a6e9e"}}>{resultado.agua} L</span>
-                </div>
-                <div className="extra-row">
-                  <span className="extra-label">🌾 Fibra dietética mínima</span>
-                  <span className="extra-val" style={{color:"#5a8a4a"}}>{resultado.fibra} g</span>
-                </div>
+              <div className="agua">
+                <span className="agua-label">💧 Agua recomendada al día</span>
+                <span className="agua-val">{resultado.agua} L</span>
               </div>
 
               <p className="note">
-                Estimación con margen ±10–15%. Pésate en las mismas condiciones y ajusta cada 2–3 semanas según evolución real del peso. El IMC es orientativo; no distingue masa muscular de grasa.
+                Estimación con margen ±10–15%. Pésate en las mismas condiciones y ajusta cada 2–3 semanas según evolución real del peso.
               </p>
             </div>
           )}
         </aside>
 
         <footer className="footer">
-          <p>Mifflin-St Jeor (1990) · Katch-McArdle · Ainsworth MET Compendium · IoM Dietary Reference Intakes</p>
+          <p>Mifflin-St Jeor (1990) · Katch-McArdle · Ainsworth MET Compendium</p>
           <p>No sustituye consulta con dietista-nutricionista colegiado</p>
         </footer>
       </div>
