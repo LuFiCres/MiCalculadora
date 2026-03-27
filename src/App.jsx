@@ -301,10 +301,10 @@ function markPos(val, min, max) {
 }
 
 function imcInfo(v) {
-  if (v < 18.5) return { label: "Bajo peso",  color: "#3a6e9e", bg: "rgba(58,110,158,.1)" };
-  if (v < 25)   return { label: "Normal",      color: "#5a8a4a", bg: "rgba(90,138,74,.1)"  };
-  if (v < 30)   return { label: "Sobrepeso",   color: "#c8860a", bg: "rgba(200,134,10,.1)" };
-  return               { label: "Obesidad",    color: "#d94f2b", bg: "rgba(217,79,43,.1)"  };
+  if (v < 18.5) return { label: "IMC bajo",         color: "#3a6e9e", bg: "rgba(58,110,158,.1)",  note: "Un IMC bajo puede indicar poca masa corporal total, pero el contexto individual siempre importa." };
+  if (v < 25)   return { label: "Rango habitual",   color: "#5a8a4a", bg: "rgba(90,138,74,.1)",   note: "IMC dentro del rango estadísticamente más común. Recuerda que es solo una referencia poblacional." };
+  if (v < 30)   return { label: "IMC elevado",      color: "#c8860a", bg: "rgba(200,134,10,.1)",  note: "Un IMC alto no significa necesariamente exceso de grasa. En personas con mucha masa muscular es completamente normal superar este umbral." };
+  return               { label: "IMC muy elevado",  color: "#d94f2b", bg: "rgba(217,79,43,.1)",   note: "El IMC es una métrica poblacional muy limitada. No distingue músculo de grasa ni tiene en cuenta la distribución corporal. Consulta a un profesional si tienes dudas." };
 }
 
 function getCategory(direction, delta) {
@@ -1094,12 +1094,12 @@ export default function App() {
                   </div>
                 )}
                 <div className="psec">
-                  <div className="psec-title">IMC detallado</div>
+                  <div className="psec-title">IMC — contexto e interpretación</div>
                   <div className="proy-card">
                     {[
-                      {l:"Valor IMC", v:resultado.imc, c:imcInfo(resultado.imc).color},
-                      {l:"Categoría", v:imcInfo(resultado.imc).label, c:"var(--text)"},
-                      {l:"Rango normal", v:"18.5 – 24.9", c:"var(--text-muted)"},
+                      {l:"Valor IMC",      v: resultado.imc,                    c: imcInfo(resultado.imc).color},
+                      {l:"Clasificación",  v: imcInfo(resultado.imc).label,     c: "var(--text)"},
+                      {l:"Rango habitual", v: "18.5 – 24.9",                   c: "var(--text-muted)"},
                     ].map(r => (
                       <div className="proy-row" key={r.l}>
                         <span className="proy-lbl">{r.l}</span>
@@ -1107,8 +1107,11 @@ export default function App() {
                       </div>
                     ))}
                   </div>
-                  <p style={{fontSize:".68rem", color:"var(--text-dim)", fontStyle:"italic", lineHeight:1.6, marginTop:8}}>
-                    El IMC no distingue músculo de grasa. Un atleta puede tener IMC de "sobrepeso" siendo completamente sano.
+                  <p style={{fontSize:".7rem", color:"var(--text-muted)", lineHeight:1.65, marginTop:10, background:"var(--bg-warm)", padding:"10px 14px", borderRadius:"var(--r)", border:"1px solid var(--border)"}}>
+                    💡 {imcInfo(resultado.imc).note}
+                  </p>
+                  <p style={{fontSize:".67rem", color:"var(--text-dim)", fontStyle:"italic", lineHeight:1.6, marginTop:8}}>
+                    El IMC no distingue músculo de grasa ni tiene en cuenta complexión, sexo, edad o distribución corporal. Dos personas con el mismo IMC pueden tener composiciones completamente distintas.
                   </p>
                 </div>
               </div>
@@ -1148,7 +1151,7 @@ export default function App() {
               </div>
 
               <p className="note">
-                Estimación con margen ±10–15%. Ajusta cada 2-3 semanas según evolución real del peso. No sustituye consulta con dietista-nutricionista colegiado.
+                Estimación con margen ±10–15%. Ajusta cada 2-3 semanas según evolución real del peso. El IMC es una referencia estadística poblacional — no define tu salud ni tu composición corporal. No sustituye consulta con dietista-nutricionista colegiado.
               </p>
             </div>
           )}
