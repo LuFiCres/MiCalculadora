@@ -337,17 +337,33 @@ function healthStatus(r) {
   return                               { label: "✓ Correcto", color: "#5a8a4a", bg: "rgba(90,138,74,.1)", msg: "Plan sostenible. Ajusta cada 2-3 semanas según evolución real del peso." };
 }
 
-function recompViability(bf, sexo, dias, intensidad) {
+function recompViability(bf, sexo, dias, met) {
   if (!bf || Number(bf) <= 0) return null;
   const bfN = Number(bf);
   const highBf = sexo === "hombre" ? bfN > 20 : bfN > 27;
-  const goodTraining = dias >= 3 && ["moderada","intensa","muy_intensa"].includes(intensidad);
-  if (highBf && goodTraining) return { viable: true, msg: "Con tu % de grasa y frecuencia de entreno, la recomposición corporal es viable. Mantén un déficit mínimo (~150-200 kcal) y proteína muy alta (2.2+ g/kg)." };
-  if (!goodTraining) return { viable: false, msg: "Para recomposición necesitas ≥3 días/semana de fuerza de calidad. Aumenta la frecuencia o la intensidad primero." };
+  const goodTraining = dias >= 3 && met >= 4.5;
+  if (highBf && goodTraining) return { viable: true, msg: "Con tu % de grasa y nivel de entreno, la recomposición corporal es viable. Mantén un déficit mínimo (~150-200 kcal) y proteína muy alta (2.2+ g/kg)." };
+  if (!goodTraining) return { viable: false, msg: "Para recomposición necesitas ≥3 días/semana con intensidad moderada-alta. Sube el volumen, el esfuerzo o la frecuencia." };
   return { viable: false, msg: "Con tu % de grasa actual, un déficit moderado + proteína alta dará resultados más rápidos que intentar recomp." };
 }
 
-function calcTDEE({ sexo, peso, altura, edad, grasa, diasFuerza, duracion, intensidad, cardio, pasos, trabajo }) {
+// Computes a MET value from three independent training dimensions
+function computeMET(rir, series, descanso) {
+  const rirScore     = { "0": 2.0, "1-2": 1.5, "3-4": 1.0, "5+": 0.5 }[rir]     ?? 1.5;
+  const seriesScore  = { "1-2": -0.5, "3": 0, "4-5": 0.4, "6+": 0.8 }[series]    ?? 0;
+  const descansoScore= { "menos60": 0.8, "60-90": 0.4, "90-120": 0, "2-3min": -0.2, "mas3min": -0.5 }[descanso] ?? 0;
+  const met = 2.0 + rirScore + seriesScore + descansoScore;
+  return Math.min(Math.max(met, 2.5), 9.0);
+}
+
+function metLabel(met) {
+  if (met < 3.5) return { label: "Ligero",      color: "#5a8a4a" };
+  if (met < 5.0) return { label: "Moderado",    color: "#c8860a" };
+  if (met < 6.5) return { label: "Intenso",     color: "#e8793a" };
+  return               { label: "Muy intenso",  color: "#d94f2b" };
+}
+
+function calcTDEE({ sexo, peso, altura, edad, grasa, diasFuerza, duracion, rir, series, descanso, cardio, pasos, trabajo }) {
   let bmr;
   if (grasa && Number(grasa) > 0) {
     const lean = peso * (1 - Number(grasa) / 100);
@@ -357,7 +373,7 @@ function calcTDEE({ sexo, peso, altura, edad, grasa, diasFuerza, duracion, inten
       ? 10 * peso + 6.25 * altura - 5 * edad + 5
       : 10 * peso + 6.25 * altura - 5 * edad - 161;
   }
-  const met = { ligera: 3.5, moderada: 5.0, intensa: 6.5, muy_intensa: 8.0 }[intensidad];
+  const met = computeMET(rir, series, descanso);
   const eat = ((met * peso * 3.5) / 200) * duracion * diasFuerza / 7
     + { ninguno: 0, poco: 300, moderado: 900, bastante: 2000, mucho: 3250 }[cardio] / 7;
   const neat = pasos * (peso * 0.00055) + { sedentario: 0, ligero: 200, moderado: 400, activo: 700, muy_activo: 1000 }[trabajo];
@@ -477,7 +493,9 @@ export default function App() {
   const [grasa,      setGrasa]      = useState("");
   const [diasF,      setDiasF]      = useState(5);
   const [duracion,   setDuracion]   = useState(60);
-  const [intensidad, setIntensidad] = useState("moderada");
+  const [rir,        setRir]        = useState("1-2");
+  const [series,     setSeries]     = useState("3");
+  const [descanso,   setDescanso]   = useState("90-120");
   const [cardio,     setCardio]     = useState("ninguno");
   const [pasos,      setPasos]      = useState(7000);
   const [trabajo,    setTrabajo]    = useState("sedentario");
@@ -505,7 +523,7 @@ export default function App() {
 
   // ── Calculate
   const calcular = () => {
-    const params = { sexo, peso, altura, edad, grasa, diasFuerza: diasF, duracion, intensidad, cardio, pasos, trabajo };
+    const params = { sexo, peso, altura, edad, grasa, diasFuerza: diasF, duracion, rir, series, descanso, cardio, pasos, trabajo };
     const base = calcTDEE(params);
 
     const mant    = base.tdee;
@@ -542,7 +560,7 @@ export default function App() {
 
   const calcB = () => {
     if (!resultado) return null;
-    return calcTDEE({ sexo, peso, altura, edad, grasa, diasFuerza: bDias, duracion: bDuracion, intensidad, cardio: bCardio, pasos: bPasos, trabajo });
+    return calcTDEE({ sexo, peso, altura, edad, grasa, diasFuerza: bDias, duracion: bDuracion, rir, series, descanso, cardio: bCardio, pasos: bPasos, trabajo });
   };
 
   const guardar = () => {
@@ -571,7 +589,6 @@ export default function App() {
   const total   = resultado ? resultado.bmr + resultado.eat + resultado.neat + resultado.tef : 1;
   const bResult = compareOn && resultado ? calcB() : null;
   const health  = resultado ? healthStatus(resultado) : null;
-  const recomp  = recompViability(grasa, sexo, diasF, intensidad);
 
   const getProyeccion = () => {
     if (!resultado) return null;
@@ -584,7 +601,9 @@ export default function App() {
   };
   const proy = getProyeccion();
 
-  const currentCat = getCategory(direction, customDelta);
+  const currentMET  = computeMET(rir, series, descanso);
+  const currentCat  = getCategory(direction, customDelta);
+  const recomp      = recompViability(grasa, sexo, diasF, currentMET);
 
   const targets = resultado ? [
     { label: "Déficit agresivo",   desc: "−500 kcal/día",  val: resultado.def_agr,      color: "#d94f2b" },
@@ -677,14 +696,56 @@ export default function App() {
                 marks={[1,2,3,4,5,6,7].map(d=>({val:d,label:String(d)}))} />
               <Slider label="Duración por sesión" value={duracion} onChange={setDuracion} min={20} max={180} step={5} unit="min"
                 marks={[20,45,60,90,120,150,180].map(d=>({val:d,label:d+"'"}))} />
-              <div className="field">
-                <label>Intensidad percibida <Tip text={TIPS.rir} /></label>
-                <select className="styled-select" value={intensidad} onChange={e=>setIntensidad(e.target.value)}>
-                  <option value="ligera">Ligera — 3-4 series/ejercicio, RIR 4+, descansos 3 min</option>
-                  <option value="moderada">Moderada — 4-5 series, RIR 2-3, descansos 90-120 s</option>
-                  <option value="intensa">Intensa — 5+ series, RIR 0-1, descansos cortos, alto volumen</option>
-                  <option value="muy_intensa">Muy intensa — powerlifting / CrossFit / HIIT con pesas</option>
-                </select>
+              <div style={{display:"flex", flexDirection:"column", gap:14}}>
+                {/* RIR */}
+                <div className="field">
+                  <label>Esfuerzo — proximidad al fallo <Tip text={TIPS.rir} /></label>
+                  <select className="styled-select" value={rir} onChange={e=>setRir(e.target.value)}>
+                    <option value="0">RIR 0 — Fallo muscular total, no puedes hacer una rep más</option>
+                    <option value="1-2">RIR 1-2 — Quedan 1-2 reps en el depósito, trabajo duro</option>
+                    <option value="3-4">RIR 3-4 — Trabajo moderado, margen amplio antes del fallo</option>
+                    <option value="5+">RIR 5+ — Esfuerzo ligero, lejos del fallo</option>
+                  </select>
+                </div>
+                {/* Series */}
+                <div className="field">
+                  <label>Volumen — series por ejercicio (media)</label>
+                  <select className="styled-select" value={series} onChange={e=>setSeries(e.target.value)}>
+                    <option value="1-2">1-2 series — Volumen muy bajo o trabajo de activación</option>
+                    <option value="3">3 series — Volumen estándar</option>
+                    <option value="4-5">4-5 series — Volumen alto</option>
+                    <option value="6+">6+ series — Volumen muy alto (especialización)</option>
+                  </select>
+                </div>
+                {/* Descanso */}
+                <div className="field">
+                  <label>Densidad — descanso entre series</label>
+                  <select className="styled-select" value={descanso} onChange={e=>setDescanso(e.target.value)}>
+                    <option value="menos60">&lt;60 s — Circuitos, HIIT con pesas, alta densidad</option>
+                    <option value="60-90">60-90 s — Hipertrofia clásica, descanso corto-moderado</option>
+                    <option value="90-120">90-120 s — Hipertrofia/fuerza, descanso moderado</option>
+                    <option value="2-3min">2-3 min — Fuerza, cargas altas, buena recuperación</option>
+                    <option value="mas3min">3+ min — Powerlifting, máximas, descanso largo</option>
+                  </select>
+                </div>
+                {/* MET indicator */}
+                <div style={{background:"var(--surface)", border:"1.5px solid var(--border)", borderRadius:"var(--r)", padding:"12px 14px", display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+                  <div>
+                    <p style={{fontSize:".68rem", color:"var(--text-muted)", marginBottom:3}}>Intensidad calculada de tu entreno:</p>
+                    <p style={{fontSize:".72rem", color:"var(--text-dim)", fontStyle:"italic"}}>
+                      MET estimado: <strong style={{color: metLabel(currentMET).color, fontStyle:"normal"}}>{currentMET.toFixed(1)}</strong>
+                    </p>
+                  </div>
+                  <span style={{
+                    fontFamily:"var(--font-mono)", fontSize:".75rem", fontWeight:500,
+                    padding:"5px 14px", borderRadius:100,
+                    color: metLabel(currentMET).color,
+                    background: metLabel(currentMET).color + "18",
+                    border: `1px solid ${metLabel(currentMET).color}44`,
+                  }}>
+                    {metLabel(currentMET).label}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
