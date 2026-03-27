@@ -307,6 +307,26 @@ function imcInfo(v) {
   return               { label: "Obesidad",    color: "#d94f2b", bg: "rgba(217,79,43,.1)"  };
 }
 
+function getCategory(direction, delta) {
+  if (direction === "mantenimiento") return { label: "Mantenimiento", color: "#8a6a50" };
+  if (direction === "deficit") {
+    if (delta <= 50)  return { label: "Mínimo",              color: "#5a8a4a", prot: 1.6 };
+    if (delta <= 150) return { label: "Ligero",              color: "#7a9a4a", prot: 1.8 };
+    if (delta <= 250) return { label: "Ligero / Moderado",   color: "#a08a30", prot: 2.0 };
+    if (delta <= 350) return { label: "Moderado",            color: "#c8860a", prot: 2.2 };
+    if (delta <= 450) return { label: "Moderado / Agresivo", color: "#d47020", prot: 2.3 };
+    if (delta <= 550) return { label: "Agresivo",            color: "#d94f2b", prot: 2.4 };
+    return                   { label: "Muy agresivo ⚠",     color: "#b03020", prot: 2.5 };
+  }
+  // superavit
+  if (delta <= 50)  return { label: "Mínimo",              color: "#5a8a4a", prot: 1.6 };
+  if (delta <= 150) return { label: "Ligero",              color: "#4a8a6a", prot: 1.8 };
+  if (delta <= 250) return { label: "Ligero / Moderado",   color: "#3a7a8a", prot: 1.9 };
+  if (delta <= 350) return { label: "Moderado",            color: "#3a6e9e", prot: 2.0 };
+  if (delta <= 450) return { label: "Moderado / Agresivo", color: "#5a5a9e", prot: 2.0 };
+  return                   { label: "Agresivo",            color: "#7a5a9e", prot: 2.0 };
+}
+
 function healthStatus(r) {
   const pPerKg = r.proteinG / r.peso;
   const deficit = r.mantenimiento - r.kcalObj;
@@ -461,7 +481,8 @@ export default function App() {
   const [cardio,     setCardio]     = useState("ninguno");
   const [pasos,      setPasos]      = useState(7000);
   const [trabajo,    setTrabajo]    = useState("sedentario");
-  const [objetivo,   setObjetivo]   = useState("deficit");
+  const [direction,    setDirection]    = useState("deficit");
+  const [customDelta,  setCustomDelta]  = useState(300);
   const [pesoObj,    setPesoObj]    = useState("");
 
   // ── Compare state (Scenario B)
@@ -493,12 +514,18 @@ export default function App() {
     const sup_lig = mant + 250;
     const sup_agr = mant + 500;
 
+    const cat = getCategory(direction, customDelta);
     let kcalObj, proteinG;
-    if      (objetivo === "deficit")          { kcalObj = def_mod; proteinG = Math.round(peso * 2.2); }
-    else if (objetivo === "deficit_agresivo") { kcalObj = def_agr; proteinG = Math.round(peso * 2.4); }
-    else if (objetivo === "mantenimiento")    { kcalObj = mant;    proteinG = Math.round(peso * 1.8); }
-    else if (objetivo === "superavit")        { kcalObj = sup_lig; proteinG = Math.round(peso * 2.0); }
-    else                                      { kcalObj = sup_agr; proteinG = Math.round(peso * 2.0); }
+    if (direction === "mantenimiento") {
+      kcalObj   = mant;
+      proteinG  = Math.round(peso * 1.8);
+    } else if (direction === "deficit") {
+      kcalObj   = mant - customDelta;
+      proteinG  = Math.round(peso * cat.prot);
+    } else {
+      kcalObj   = mant + customDelta;
+      proteinG  = Math.round(peso * cat.prot);
+    }
 
     const fatG  = Math.round((kcalObj * 0.28) / 9);
     const carbG = Math.round((kcalObj - proteinG * 4 - fatG * 9) / 4);
@@ -508,7 +535,7 @@ export default function App() {
     const fibra   = sexo === "hombre" ? 38 : 25;
     const imc     = +(peso / ((altura / 100) ** 2)).toFixed(1);
 
-    setResultado({ ...base, mantenimiento: mant, def_mod, def_agr, sup_lig, sup_agr, kcalObj, proteinG, fatG, carbG, agua, fibra, imc, peso, sexo, objetivo, usandoKatch: !!(grasa && Number(grasa) > 0) });
+    setResultado({ ...base, mantenimiento: mant, def_mod, def_agr, sup_lig, sup_agr, kcalObj, proteinG, fatG, carbG, agua, fibra, imc, peso, sexo, direction, customDelta, usandoKatch: !!(grasa && Number(grasa) > 0) });
     setSaved(false);
     setTab(0);
   };
@@ -526,7 +553,7 @@ export default function App() {
       kcalObj: resultado.kcalObj,
       peso: resultado.peso,
       imc: resultado.imc,
-      objetivo: resultado.objetivo,
+      objetivo: resultado.direction === "mantenimiento" ? "Mantenimiento" : `${resultado.direction === "deficit" ? "−" : "+"}${resultado.customDelta} kcal · ${getCategory(resultado.direction, resultado.customDelta).label}`,
     };
     const next = [entry, ...historial].slice(0, 12);
     setHistorial(next);
@@ -557,18 +584,27 @@ export default function App() {
   };
   const proy = getProyeccion();
 
+  const currentCat = getCategory(direction, customDelta);
+
   const targets = resultado ? [
-    { label: "Déficit agresivo",   desc: "−500 kcal/día",      val: resultado.def_agr,       color: "#d94f2b" },
-    { label: "Déficit moderado",   desc: "−300 kcal/día",      val: resultado.def_mod,       color: "#e8793a" },
-    { label: "Mantenimiento",      desc: "Sin cambios",        val: resultado.mantenimiento,  color: "#8a6a50" },
-    { label: "Superávit ligero",   desc: "+250 kcal/día",      val: resultado.sup_lig,       color: "#3a6e9e" },
-    { label: "Superávit agresivo", desc: "+500 kcal/día",      val: resultado.sup_agr,       color: "#5a8a4a" },
+    { label: "Déficit agresivo",   desc: "−500 kcal/día",  val: resultado.def_agr,      color: "#d94f2b" },
+    { label: "Déficit moderado",   desc: "−300 kcal/día",  val: resultado.def_mod,      color: "#e8793a" },
+    { label: "Mantenimiento",      desc: "Sin cambios",    val: resultado.mantenimiento, color: "#8a6a50" },
+    { label: "Superávit ligero",   desc: "+250 kcal/día",  val: resultado.sup_lig,      color: "#3a6e9e" },
+    { label: "Superávit agresivo", desc: "+500 kcal/día",  val: resultado.sup_agr,      color: "#5a8a4a" },
+    ...([resultado.def_agr, resultado.def_mod, resultado.mantenimiento, resultado.sup_lig, resultado.sup_agr].includes(resultado.kcalObj) ? [] : [{
+      label: `${resultado.direction === "deficit" ? "Déficit" : resultado.direction === "superavit" ? "Superávit" : ""} personalizado`,
+      desc:  `${resultado.direction === "deficit" ? "−" : "+"}${resultado.customDelta} kcal/día · ${getCategory(resultado.direction, resultado.customDelta).label}`,
+      val:   resultado.kcalObj,
+      color: getCategory(resultado.direction, resultado.customDelta).color,
+    }]),
   ] : [];
 
-  const objLabel = {
-    deficit: "déficit moderado", deficit_agresivo: "déficit agresivo",
-    mantenimiento: "mantenimiento", superavit: "superávit ligero", superavit_agresivo: "superávit agresivo",
-  }[objetivo];
+  const objLabel = resultado
+    ? resultado.direction === "mantenimiento"
+      ? "Mantenimiento"
+      : `${resultado.direction === "deficit" ? "Déficit" : "Superávit"} ${resultado.customDelta} kcal · ${getCategory(resultado.direction, resultado.customDelta).label}`
+    : "";
 
   const numField = (label, val, set, min, max, unit) => (
     <div className="field" key={label}>
@@ -691,19 +727,88 @@ export default function App() {
 
           {/* 05 */}
           <div className="section">
-            <div className="section-label">05 · Objetivo</div>
-            <div style={{display:"flex",flexDirection:"column",gap:16}}>
+            <div className="section-label">05 · Objetivo calórico</div>
+            <div style={{display:"flex",flexDirection:"column",gap:20}}>
+
+              {/* Direction selector */}
               <div className="field">
-                <label>¿Cuál es tu meta actual?</label>
-                <select className="styled-select" value={objetivo} onChange={e=>setObjetivo(e.target.value)}>
-                  <option value="deficit_agresivo">Pérdida de grasa agresiva — déficit 500 kcal (~0.5 kg/sem)</option>
-                  <option value="deficit">Pérdida de grasa moderada — déficit 300 kcal ✓ recomendado</option>
-                  <option value="mantenimiento">Mantenimiento — sin cambios de peso</option>
-                  <option value="superavit">Volumen limpio — superávit 250 kcal (mínima grasa)</option>
-                  <option value="superavit_agresivo">Volumen agresivo — superávit 500 kcal (~0.5 kg/sem)</option>
-                </select>
+                <label>Dirección del objetivo</label>
+                <div style={{display:"grid", gridTemplateColumns:"1fr 1fr 1fr", background:"var(--surface)", border:"1.5px solid var(--border)", borderRadius:"var(--r)", overflow:"hidden"}}>
+                  {[
+                    {val:"deficit",       label:"Pérdida de grasa"},
+                    {val:"mantenimiento", label:"Mantenimiento"},
+                    {val:"superavit",     label:"Ganancia muscular"},
+                  ].map(opt => (
+                    <button key={opt.val}
+                      className={`sex-btn ${direction===opt.val?"active":""}`}
+                      style={{fontSize:".72rem", padding:"13px 6px", lineHeight:1.3}}
+                      onClick={() => { setDirection(opt.val); if(opt.val==="mantenimiento") setCustomDelta(0); else if(customDelta===0) setCustomDelta(300); }}>
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-              {(objetivo === "deficit" || objetivo === "deficit_agresivo") && (
+
+              {/* Delta slider — only when not maintenance */}
+              {direction !== "mantenimiento" && (
+                <div style={{background:"var(--surface)", border:"1.5px solid var(--border)", borderRadius:"var(--r)", padding:"16px"}}>
+
+                  {/* Quick presets */}
+                  <div style={{display:"flex", gap:6, marginBottom:14, flexWrap:"wrap"}}>
+                    <span style={{fontSize:".68rem", color:"var(--text-muted)", alignSelf:"center", marginRight:2}}>Presets:</span>
+                    {(direction === "deficit"
+                      ? [{v:100,l:"Mínimo"},{v:200,l:"Ligero"},{v:300,l:"Moderado"},{v:400,l:"Mod/Agresivo"},{v:500,l:"Agresivo"},{v:600,l:"Muy agresivo"}]
+                      : [{v:100,l:"Mínimo"},{v:150,l:"Ligero"},{v:250,l:"Moderado"},{v:350,l:"Mod/Agresivo"},{v:500,l:"Agresivo"}]
+                    ).map(p => (
+                      <button key={p.v}
+                        onClick={() => setCustomDelta(p.v)}
+                        style={{
+                          padding:"3px 10px", borderRadius:6, fontSize:".66rem",
+                          fontFamily:"var(--font-mono)", cursor:"pointer", border:"1px solid",
+                          background: customDelta===p.v ? "var(--accent-dim)" : "transparent",
+                          color:       customDelta===p.v ? "var(--accent)" : "var(--text-muted)",
+                          borderColor: customDelta===p.v ? "var(--accent-dim)" : "var(--border)",
+                          transition:"all .15s",
+                        }}>
+                        {p.l}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Slider */}
+                  <Slider
+                    label={direction === "deficit" ? "Déficit calórico" : "Superávit calórico"}
+                    value={customDelta} onChange={setCustomDelta}
+                    min={50} max={700} step={25} unit="kcal"
+                    marks={direction === "deficit"
+                      ? [{val:50,label:"50"},{val:200,label:"200"},{val:300,label:"300"},{val:500,label:"500"},{val:700,label:"700"}]
+                      : [{val:50,label:"50"},{val:150,label:"150"},{val:300,label:"300"},{val:500,label:"500"},{val:700,label:"700"}]
+                    }
+                  />
+
+                  {/* Category badge */}
+                  <div style={{display:"flex", alignItems:"center", gap:10, marginTop:14, paddingTop:12, borderTop:"1px solid var(--border)"}}>
+                    <span style={{fontSize:".72rem", color:"var(--text-muted)"}}>Categoría automática:</span>
+                    <span style={{
+                      fontFamily:"var(--font-mono)", fontSize:".72rem", fontWeight:500,
+                      padding:"3px 12px", borderRadius:100,
+                      color: currentCat.color,
+                      background: currentCat.color + "18",
+                      border: `1px solid ${currentCat.color}44`,
+                    }}>
+                      {currentCat.label}
+                    </span>
+                  </div>
+
+                  {/* Protein note */}
+                  <p style={{fontSize:".68rem", color:"var(--text-dim)", fontStyle:"italic", marginTop:8, lineHeight:1.55}}>
+                    Proteína recomendada para este nivel: <strong style={{color:"var(--accent)", fontStyle:"normal"}}>{currentCat.prot} g/kg</strong>
+                  </p>
+                </div>
+              )}
+
+              {/* Peso objetivo */}
+              {direction === "deficit" && (
                 <div className="field">
                   <label>Peso objetivo <span style={{color:"var(--text-dim)"}}>— para calcular tiempo estimado</span></label>
                   <div className="num-input-wrap">
