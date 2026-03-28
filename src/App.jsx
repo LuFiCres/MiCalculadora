@@ -315,18 +315,10 @@ const styles = `
   /* ── Responsive ── */
   @media (max-width: 960px) {
     .page { grid-template-columns: 1fr; padding: 0 20px; gap: 0; width: 100%; }
-    .header {
-      grid-column: 1; flex-direction: row; align-items: flex-start;
-      justify-content: space-between; padding: 24px 0 22px; margin-bottom: 32px;
-    }
-    .header-left { flex: 1; padding-right: 12px; }
-    .header-left h1 { font-size: 2rem; }
-    .header-left p { font-size: .75rem; margin-top: 6px; }
-    .header-right { flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
-    .header-badges { display: none; }
-    .autosave-badge { font-size: .52rem; padding: 2px 7px; }
+    .header { grid-column: 1; flex-direction: column; align-items: flex-start; gap: 16px; padding: 32px 0 28px; margin-bottom: 40px; }
     .left-col, .right-col, .historial, .footer { grid-column: 1; grid-row: auto; }
     .right-col { position: static; max-height: none; overflow-y: visible; margin-top: 32px; }
+    .header-left h1 { font-size: 2.2rem; }
     .input-grid.cols-3 { grid-template-columns: 1fr 1fr; }
     .footer { flex-direction: column; gap: 8px; text-align: center; }
     .compare-cards { grid-template-columns: 1fr; }
@@ -335,147 +327,12 @@ const styles = `
 
   @media (max-width: 480px) {
     .page { padding: 0 16px; }
-    .header-left h1 { font-size: 1.65rem; }
     .input-grid.cols-3 { grid-template-columns: 1fr; }
     .macros-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .header-left h1 { font-size: 1.9rem; }
     .tabs { overflow-x: auto; }
     .tab-btn { font-size: .58rem; padding: 10px 2px; }
-    .dark-toggle { padding: 6px 10px; font-size: .6rem; gap: 5px; }
   }
-  /* ── App navigation ── */
-  .app-nav { grid-column: 1/-1; display: flex; align-items: center; gap: 4px; margin-bottom: 40px; border-bottom: 1.5px solid var(--border); padding-bottom: 0; }
-  .app-nav-tab {
-    padding: 10px 22px; font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em;
-    color: var(--text-muted); border: none; background: transparent; cursor: pointer;
-    border-bottom: 2.5px solid transparent; margin-bottom: -1.5px;
-    transition: var(--transition-btn); text-transform: uppercase;
-  }
-  .app-nav-tab:hover { color: var(--accent); }
-  .app-nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
-  .app-nav-tab:active { transform: scale(0.97); }
-  .nav-beta { font-family: var(--font-mono); font-size: .55rem; padding: 2px 7px; border-radius: 100px; background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-dim); margin-left: 6px; letter-spacing: .06em; vertical-align: middle; }
-
-  /* ── Progress page ── */
-  .progress-page { grid-column: 1/-1; grid-row: 2; padding-bottom: 80px; }
-
-  /* Level card */
-  .level-card {
-    background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--r-lg); padding: 28px 32px; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 28px;
-    box-shadow: 0 4px 32px var(--accent-glow);
-    position: relative; overflow: hidden;
-  }
-  .level-card::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .level-icon { font-size: 3rem; flex-shrink: 0; line-height: 1; }
-  .level-info { flex: 1; min-width: 0; }
-  .level-num { font-family: var(--font-mono); font-size: .65rem; color: var(--accent); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 4px; }
-  .level-name { font-family: var(--font-display); font-size: 2rem; color: var(--text); line-height: 1.1; margin-bottom: 12px; }
-  .level-name em { font-style: italic; color: var(--accent); }
-  .xp-bar-wrap { position: relative; }
-  .xp-bar-track { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
-  .xp-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .8s cubic-bezier(.34,1.2,.64,1); }
-  .xp-labels { display: flex; justify-content: space-between; margin-top: 6px; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); }
-  .level-xp-total { text-align: right; flex-shrink: 0; }
-  .xp-big { font-family: var(--font-display); font-size: 2.8rem; color: var(--accent); line-height: 1; }
-  .xp-lbl { font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .1em; }
-
-  /* Stats row */
-  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 28px; }
-  .stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 16px 18px; text-align: center; }
-  .stat-val { font-family: var(--font-display); font-size: 2rem; line-height: 1; margin-bottom: 3px; }
-  .stat-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; line-height: 1.4; }
-
-  /* Calendar */
-  .cal-wrap { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 24px; }
-  .cal-header { padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
-  .cal-month { font-family: var(--font-display); font-size: 1.3rem; }
-  .cal-month em { font-style: italic; color: var(--accent); }
-  .cal-nav-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: var(--transition-btn); box-shadow: 0 2px 0 var(--border); }
-  .cal-nav-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-  .cal-nav-btn:active { transform: translateY(2px); box-shadow: none; }
-  .cal-weekdays { display: grid; grid-template-columns: repeat(7,1fr); padding: 10px 16px 4px; }
-  .cal-wd { text-align: center; font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; }
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; padding: 8px 16px 16px; }
-  .cal-day {
-    aspect-ratio: 1; border-radius: 10px; border: 1.5px solid transparent;
-    cursor: pointer; display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 3px; transition: var(--transition-btn);
-    position: relative; background: var(--bg-warm); min-height: 52px;
-  }
-  .cal-day:hover { border-color: var(--accent); transform: scale(1.04); }
-  .cal-day:active { transform: scale(0.97); }
-  .cal-day.empty { background: transparent; cursor: default; border-color: transparent; }
-  .cal-day.empty:hover { transform: none; }
-  .cal-day.today { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim); }
-  .cal-day.future { opacity: .4; cursor: not-allowed; }
-  .cal-day.future:hover { transform: none; border-color: transparent; }
-  .cal-day.tracked-full { background: rgba(90,138,74,.15); border-color: rgba(90,138,74,.3); }
-  .cal-day.tracked-partial { background: rgba(200,134,10,.1); border-color: rgba(200,134,10,.25); }
-  .cal-day.tracked-none { background: rgba(217,79,43,.06); border-color: rgba(217,79,43,.15); }
-  .cal-day-num { font-family: var(--font-mono); font-size: .72rem; color: var(--text-muted); font-weight: 500; line-height: 1; }
-  .cal-day.today .cal-day-num { color: var(--accent); font-weight: 700; }
-  .cal-dots { display: flex; gap: 2px; }
-  .cal-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-  /* Day modal */
-  .day-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); animation: fadeIn .15s ease; }
-  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-  .day-modal { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 28px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: slideUp .2s ease; }
-  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  .modal-title { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 6px; }
-  .modal-title em { font-style: italic; color: var(--accent); }
-  .modal-sub { font-size: .75rem; color: var(--text-muted); margin-bottom: 22px; font-family: var(--font-mono); }
-  .cat-btn {
-    width: 100%; display: flex; align-items: center; gap: 14px; padding: 14px 16px;
-    border-radius: var(--r); border: 1.5px solid var(--border); background: var(--bg-warm);
-    cursor: pointer; margin-bottom: 10px; transition: var(--transition-btn);
-    box-shadow: 0 2px 0 var(--border); text-align: left; font-family: var(--font-body);
-  }
-  .cat-btn:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 0 rgba(217,79,43,.15); }
-  .cat-btn:active { transform: translateY(2px); box-shadow: none; }
-  .cat-btn.done { border-color: transparent; box-shadow: 0 2px 0 rgba(0,0,0,.08); }
-  .cat-icon { font-size: 1.4rem; flex-shrink: 0; }
-  .cat-text { flex: 1; }
-  .cat-name { font-size: .85rem; font-weight: 500; margin-bottom: 1px; }
-  .cat-desc { font-size: .7rem; color: var(--text-muted); }
-  .cat-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: .75rem; flex-shrink: 0; transition: var(--transition-btn); }
-  .cat-btn.done .cat-check { border-color: transparent; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-  .modal-save { flex: 1; padding: 13px; background: var(--accent); color: #faf7f2; border: none; border-radius: var(--r); font-family: var(--font-body); font-size: .85rem; font-weight: 500; cursor: pointer; transition: var(--transition-btn); box-shadow: 0 4px 0 rgba(0,0,0,.15); }
-  .modal-save:hover { background: var(--accent-2); transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,.12); }
-  .modal-save:active { transform: translateY(2px); box-shadow: none; }
-  .modal-cancel { padding: 13px 18px; background: var(--surface); color: var(--text-muted); border: 1.5px solid var(--border); border-radius: var(--r); font-family: var(--font-body); font-size: .85rem; cursor: pointer; transition: var(--transition-btn); box-shadow: 0 2px 0 var(--border); }
-  .modal-cancel:hover { border-color: var(--accent); color: var(--accent); }
-  .modal-cancel:active { transform: translateY(2px); box-shadow: none; }
-
-  /* Calendar legend */
-  .cal-legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 0 0 4px; }
-  .leg-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); }
-  .leg-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-
-  /* Streak fire animation */
-  @keyframes fireFlicker { 0%,100%{transform:scale(1) rotate(-2deg)} 50%{transform:scale(1.08) rotate(2deg)} }
-  .fire-icon { display: inline-block; animation: fireFlicker 1.4s ease-in-out infinite; }
-
-  @media (max-width: 960px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .level-card { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .level-xp-total { align-self: flex-start; }
-    .cal-day { min-height: 44px; }
-  }
-  @media (max-width: 480px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .level-card { padding: 20px; }
-    .cal-day { min-height: 38px; border-radius: 8px; }
-    .cal-dot { width: 5px; height: 5px; }
-    .day-modal { padding: 20px; }
-  }
-
 `;
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
@@ -603,112 +460,6 @@ function loadForm() {
   catch { return DEFAULT_FORM; }
 }
 
-
-// ─── PROGRESS CONSTANTS & HELPERS ───────────────────────────────────────────
-const PROG_KEY = "tdee_progress_v1";
-
-const LEVELS = [
-  { n:1, name:"Novato",       icon:"🌱", xpMin:0,    xpMax:29   },
-  { n:2, name:"Constante",    icon:"⚡", xpMin:30,   xpMax:89   },
-  { n:3, name:"Disciplinado", icon:"🔥", xpMin:90,   xpMax:209  },
-  { n:4, name:"Dedicado",     icon:"💪", xpMin:210,  xpMax:419  },
-  { n:5, name:"Atleta",       icon:"🏆", xpMin:420,  xpMax:839  },
-  { n:6, name:"Élite",        icon:"⭐", xpMin:840,  xpMax:1679 },
-  { n:7, name:"Leyenda",      icon:"👑", xpMin:1680, xpMax:Infinity },
-];
-
-const CATS = [
-  { key:"training", icon:"💪", name:"Entrenamiento", desc:"¿Has entrenado hoy?",   color:"#d94f2b", bg:"rgba(217,79,43,.12)"  },
-  { key:"diet",     icon:"🥗", name:"Dieta",         desc:"¿Has cumplido tu plan alimentario?", color:"#5a8a4a", bg:"rgba(90,138,74,.12)"   },
-  { key:"sleep",    icon:"😴", name:"Sueño",         desc:"¿Has dormido 7-9 horas?", color:"#3a6e9e", bg:"rgba(58,110,158,.12)"  },
-];
-
-function loadProgress() {
-  try { return JSON.parse(localStorage.getItem(PROG_KEY) || "{}"); }
-  catch { return {}; }
-}
-
-function saveProgress(data) {
-  try { localStorage.setItem(PROG_KEY, JSON.stringify(data)); } catch {}
-}
-
-function dayKey(date) {
-  return date.toISOString().slice(0,10);
-}
-
-function today() { return dayKey(new Date()); }
-
-function dayXP(entry) {
-  if (!entry) return 0;
-  const done = CATS.filter(c => entry[c.key]).length;
-  if (done === 3) return 7;
-  if (done === 2) return 3;
-  if (done === 1) return 1;
-  return 0;
-}
-
-function calcStats(progress) {
-  const keys = Object.keys(progress).sort();
-  let totalXP = 0, currentStreak = 0, bestStreak = 0, streak = 0, totalDays = 0, perfectDays = 0;
-  const todayStr = today();
-
-  keys.forEach(k => {
-    const xp = dayXP(progress[k]);
-    totalXP += xp;
-    if (xp > 0) totalDays++;
-    if (dayXP(progress[k]) === 7) perfectDays++;
-  });
-
-  // Calculate current streak (consecutive days going backwards from today)
-  const cur = new Date();
-  let checking = new Date(cur);
-  currentStreak = 0;
-  while (true) {
-    const k = dayKey(checking);
-    const entry = progress[k];
-    if (entry && dayXP(entry) > 0) {
-      currentStreak++;
-      checking.setDate(checking.getDate() - 1);
-    } else { break; }
-    if (currentStreak > 500) break;
-  }
-
-  // Calculate best streak
-  let runStreak = 0;
-  keys.forEach((k, i) => {
-    if (dayXP(progress[k]) > 0) {
-      if (i === 0) { runStreak = 1; }
-      else {
-        const prev = new Date(keys[i-1]);
-        const cur2 = new Date(k);
-        const diff = (cur2 - prev) / 86400000;
-        runStreak = diff === 1 ? runStreak + 1 : 1;
-      }
-      bestStreak = Math.max(bestStreak, runStreak);
-    } else { runStreak = 0; }
-  });
-
-  const level = LEVELS.find(l => totalXP >= l.xpMin && totalXP <= l.xpMax) || LEVELS[LEVELS.length-1];
-  const nextLevel = LEVELS.find(l => l.n === level.n + 1);
-  const xpInLevel = totalXP - level.xpMin;
-  const xpNeeded = nextLevel ? nextLevel.xpMin - level.xpMin : 1;
-  const pct = nextLevel ? Math.min(100, Math.round((xpInLevel / xpNeeded) * 100)) : 100;
-
-  return { totalXP, currentStreak, bestStreak, totalDays, perfectDays, level, nextLevel, xpInLevel, xpNeeded, pct };
-}
-
-function getDaysInMonth(year, month) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-function getFirstDayOfMonth(year, month) {
-  let d = new Date(year, month, 1).getDay();
-  return d === 0 ? 6 : d - 1; // Monday = 0
-}
-
-const MONTH_NAMES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-const WEEKDAYS = ["L","M","X","J","V","S","D"];
-
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 function Tip({ text }) {
   return (
@@ -787,245 +538,6 @@ function MealPlan({ kcal, proteinG, fatG, carbG }) {
   );
 }
 
-
-// ─── PROGRESS PAGE ───────────────────────────────────────────────────────────
-function ProgressPage({ darkMode, setDarkMode }) {
-  const [progress, setProgress] = useState(loadProgress);
-  const [viewYear, setViewYear] = useState(() => new Date().getFullYear());
-  const [viewMonth, setViewMonth] = useState(() => new Date().getMonth());
-  const [selectedDay, setSelectedDay] = useState(null); // "YYYY-MM-DD"
-  const [modalDraft, setModalDraft] = useState({});
-
-  const stats = calcStats(progress);
-  const todayStr = today();
-
-  const daysInMonth = getDaysInMonth(viewYear, viewMonth);
-  const firstDay = getFirstDayOfMonth(viewYear, viewMonth);
-
-  const prevMonth = () => {
-    if (viewMonth === 0) { setViewYear(y=>y-1); setViewMonth(11); }
-    else setViewMonth(m=>m-1);
-  };
-  const nextMonth = () => {
-    const now = new Date();
-    if (viewYear > now.getFullYear() || (viewYear === now.getFullYear() && viewMonth >= now.getMonth())) return;
-    if (viewMonth === 11) { setViewYear(y=>y+1); setViewMonth(0); }
-    else setViewMonth(m=>m+1);
-  };
-
-  const openDay = (dayNum) => {
-    const k = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
-    const now = new Date(); now.setHours(23,59,59,999);
-    const dayDate = new Date(viewYear, viewMonth, dayNum);
-    if (dayDate > now) return;
-    setSelectedDay(k);
-    setModalDraft(progress[k] ? { ...progress[k] } : { training:false, diet:false, sleep:false });
-  };
-
-  const saveDay = () => {
-    const updated = { ...progress, [selectedDay]: modalDraft };
-    setProgress(updated);
-    saveProgress(updated);
-    setSelectedDay(null);
-  };
-
-  const toggleCat = (key) => setModalDraft(d => ({ ...d, [key]: !d[key] }));
-
-  const getDayClass = (dayNum) => {
-    const k = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
-    const now = new Date(); now.setHours(23,59,59,999);
-    const dayDate = new Date(viewYear, viewMonth, dayNum);
-    let cls = "cal-day";
-    if (k === todayStr) cls += " today";
-    if (dayDate > now) cls += " future";
-    else if (progress[k]) {
-      const done = CATS.filter(c => progress[k][c.key]).length;
-      if (done === 3) cls += " tracked-full";
-      else if (done > 0) cls += " tracked-partial";
-      else cls += " tracked-none";
-    }
-    return cls;
-  };
-
-  const getDayDots = (dayNum) => {
-    const k = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
-    const entry = progress[k];
-    if (!entry) return null;
-    return CATS.map(c => (
-      <div key={c.key} className="cal-dot" style={{ background: entry[c.key] ? c.color : "var(--border)" }}/>
-    ));
-  };
-
-  // Format selected day for modal title
-  const formatSelectedDay = () => {
-    if (!selectedDay) return "";
-    const d = new Date(selectedDay + "T12:00:00");
-    return d.toLocaleDateString("es-ES", { weekday:"long", day:"numeric", month:"long" });
-  };
-
-  return (
-    <div className="progress-page">
-
-      {/* Level card */}
-      <div className="level-card">
-        <div className="level-icon">{stats.level.icon}</div>
-        <div className="level-info">
-          <div className="level-num">Nivel {stats.level.n} · {stats.totalXP} XP totales</div>
-          <div className="level-name"><em>{stats.level.name}</em></div>
-          <div className="xp-bar-wrap">
-            <div className="xp-bar-track">
-              <div className="xp-bar-fill" style={{ width: `${stats.pct}%` }}/>
-            </div>
-            <div className="xp-labels">
-              <span>{stats.nextLevel ? `${stats.xpInLevel} / ${stats.xpNeeded} XP para nivel ${stats.level.n+1}` : "¡Nivel máximo alcanzado!"}</span>
-              <span>{stats.pct}%</span>
-            </div>
-          </div>
-        </div>
-        <div className="level-xp-total">
-          <div className="xp-big">{stats.totalXP}</div>
-          <div className="xp-lbl">XP totales</div>
-        </div>
-      </div>
-
-      {/* Stats row */}
-      <div className="stats-row">
-        {[
-          { val: <><span className="fire-icon">🔥</span> {stats.currentStreak}</>, lbl: "Racha
-actual", color: "#d94f2b" },
-          { val: `⭐ ${stats.bestStreak}`,   lbl: "Mejor
-racha",   color: "#c8860a" },
-          { val: `💪 ${stats.totalDays}`,    lbl: "Días
-cumplidos", color: "#5a8a4a" },
-          { val: `✨ ${stats.perfectDays}`,  lbl: "Días
-perfectos", color: "#7a5a9e" },
-        ].map((s,i) => (
-          <div key={i} className="stat-card">
-            <div className="stat-val" style={{color:s.color}}>{s.val}</div>
-            <div className="stat-lbl" style={{whiteSpace:"pre-line"}}>{s.lbl}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* XP info */}
-      <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"12px 18px",marginBottom:24,display:"flex",gap:20,flexWrap:"wrap",alignItems:"center"}}>
-        <span style={{fontFamily:"var(--font-mono)",fontSize:".65rem",color:"var(--text-muted)",letterSpacing:".08em",textTransform:"uppercase"}}>Sistema de XP:</span>
-        {[{t:"1 hábito",v:"1 XP"},{t:"2 hábitos",v:"3 XP"},{t:"3 hábitos ✨",v:"7 XP"}].map(item=>(
-          <div key={item.t} style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--text-muted)"}}>{item.t}</span>
-            <span style={{fontFamily:"var(--font-mono)",fontSize:".72rem",fontWeight:500,color:"var(--accent)",background:"var(--accent-dim)",padding:"2px 8px",borderRadius:100}}>{item.v}</span>
-          </div>
-        ))}
-      </div>
-
-      {/* Calendar */}
-      <div className="cal-wrap">
-        <div className="cal-header">
-          <button className="cal-nav-btn" onClick={prevMonth}>‹</button>
-          <div className="cal-month">
-            <em>{MONTH_NAMES[viewMonth]}</em> {viewYear}
-          </div>
-          <button className="cal-nav-btn" onClick={nextMonth}
-            style={{opacity: (viewYear === new Date().getFullYear() && viewMonth >= new Date().getMonth()) ? .3 : 1}}>›</button>
-        </div>
-        <div className="cal-weekdays">
-          {WEEKDAYS.map(d => <div key={d} className="cal-wd">{d}</div>)}
-        </div>
-        <div className="cal-grid">
-          {Array(firstDay).fill(null).map((_,i) => <div key={`e${i}`} className="cal-day empty"/>)}
-          {Array(daysInMonth).fill(null).map((_,i) => (
-            <div key={i+1} className={getDayClass(i+1)} onClick={()=>openDay(i+1)}>
-              <span className="cal-day-num">{i+1}</span>
-              <div className="cal-dots">{getDayDots(i+1)}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{padding:"12px 20px 16px",borderTop:"1px solid var(--border)"}}>
-          <div className="cal-legend">
-            {[
-              {color:"rgba(90,138,74,.5)",    label:"Todo cumplido"},
-              {color:"rgba(200,134,10,.4)",   label:"Parcial"},
-              {color:"rgba(217,79,43,.2)",    label:"Sin cumplir"},
-              {color:"var(--accent)",         label:"Hoy"},
-            ].map(l=>(
-              <div key={l.label} className="leg-item">
-                <div className="leg-dot" style={{background:l.color}}/>
-                {l.label}
-              </div>
-            ))}
-            <div className="leg-item">
-              {CATS.map(c=><div key={c.key} className="leg-dot" style={{background:c.color}}/>)}
-              💪 🥗 😴
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Levels guide */}
-      <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",overflow:"hidden"}}>
-        <div style={{padding:"14px 20px",borderBottom:"1px solid var(--border)",fontFamily:"var(--font-mono)",fontSize:".62rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase"}}>
-          Tabla de niveles
-        </div>
-        <div style={{padding:"12px 8px"}}>
-          {LEVELS.map((l,i) => {
-            const isCurrentLevel = stats.level.n === l.n;
-            const isPast = stats.level.n > l.n;
-            return (
-              <div key={l.n} style={{display:"flex",alignItems:"center",gap:12,padding:"8px 12px",borderRadius:"var(--r)",marginBottom:4,background:isCurrentLevel?"var(--accent-dim)":"transparent",border:`1px solid ${isCurrentLevel?"var(--accent-dim)":"transparent"}`}}>
-                <span style={{fontSize:"1.3rem",width:28,textAlign:"center"}}>{l.icon}</span>
-                <div style={{flex:1}}>
-                  <span style={{fontFamily:"var(--font-display)",fontSize:".95rem",color:isCurrentLevel?"var(--accent)":isPast?"var(--text-muted)":"var(--text)"}}>{l.name}</span>
-                  {isCurrentLevel && <span style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--accent)",marginLeft:8,background:"var(--accent-dim)",padding:"1px 7px",borderRadius:100}}>← tú</span>}
-                </div>
-                <div style={{fontFamily:"var(--font-mono)",fontSize:".65rem",color:"var(--text-dim)",textAlign:"right"}}>
-                  {l.n < 7 ? `${l.xpMin}–${l.xpMax} XP` : `${l.xpMin}+ XP`}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Day modal */}
-      {selectedDay && (
-        <div className="day-modal-overlay" onClick={e=>{ if(e.target===e.currentTarget)setSelectedDay(null); }}>
-          <div className="day-modal">
-            <div className="modal-title">¿Cómo fue el <em>día</em>?</div>
-            <div className="modal-sub">{formatSelectedDay()}</div>
-            {CATS.map(cat => (
-              <button
-                key={cat.key}
-                className={`cat-btn ${modalDraft[cat.key]?"done":""}`}
-                style={modalDraft[cat.key]?{background:cat.bg,borderColor:cat.color}:{}}
-                onClick={()=>toggleCat(cat.key)}
-              >
-                <span className="cat-icon">{cat.icon}</span>
-                <div className="cat-text">
-                  <div className="cat-name" style={{color:modalDraft[cat.key]?cat.color:"var(--text)"}}>{cat.name}</div>
-                  <div className="cat-desc">{cat.desc}</div>
-                </div>
-                <div className="cat-check" style={modalDraft[cat.key]?{background:cat.color}:{}}>
-                  {modalDraft[cat.key] && <span style={{color:"#fff",fontSize:".9rem"}}>✓</span>}
-                </div>
-              </button>
-            ))}
-            <div style={{marginTop:12,padding:"10px 14px",background:"var(--bg-warm)",borderRadius:"var(--r)",border:"1px solid var(--border)"}}>
-              <div style={{fontFamily:"var(--font-mono)",fontSize:".65rem",color:"var(--text-muted)",marginBottom:4}}>XP que ganarás este día:</div>
-              <div style={{fontFamily:"var(--font-display)",fontSize:"1.6rem",color:"var(--accent)"}}>
-                {dayXP(modalDraft)} <span style={{fontFamily:"var(--font-mono)",fontSize:".75rem",color:"var(--text-muted)"}}>XP</span>
-              </div>
-            </div>
-            <div className="modal-actions">
-              <button className="modal-cancel" onClick={()=>setSelectedDay(null)}>Cancelar</button>
-              <button className="modal-save" onClick={saveDay}>Guardar día</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const saved0 = loadForm();
@@ -1047,9 +559,6 @@ export default function App() {
   const [direction,  setDirection]  = useState(saved0.direction);
   const [customDelta,setCustomDelta]= useState(saved0.customDelta);
   const [pesoObj,    setPesoObj]    = useState(saved0.pesoObj);
-
-  // ── App routing
-  const [appPage, setAppPage] = useState('calculator'); // 'calculator' | 'progress'
 
   // ── Compare
   const [compareOn,  setCompareOn]  = useState(false);
@@ -1176,33 +685,15 @@ export default function App() {
           <div className="header-right">
             <button className="dark-toggle" onClick={()=>setDarkMode(d=>!d)}>
               <span>{darkMode?"☀":"🌙"}</span>
-              <span>{darkMode?"Modo claro":"Modo oscuro"}</span>
+              {darkMode?"Modo claro":"Modo oscuro"}
             </button>
-            <div className="header-badges">
-              <span className="badge badge-neutral">TDEE CALCULATOR v3.1</span>
-              <span className="badge badge-accent">Basado en evidencia científica</span>
-            </div>
-            {autoSaveTs && <span className="autosave-badge">✓ Guardado {autoSaveTs}</span>}
+            <span className="badge badge-neutral">TDEE CALCULATOR v3.1</span>
+            <span className="badge badge-accent">Basado en evidencia científica</span>
+            {autoSaveTs && <span className="autosave-badge">✓ Guardado automático {autoSaveTs}</span>}
           </div>
         </header>
 
-        {/* ── NAV TABS ── */}
-        <nav className="app-nav" style={{gridColumn:"1/-1"}}>
-          {[
-            {id:"calculator", label:"Calculadora"},
-            {id:"progress",   label:<>Mi Progreso <span className="nav-beta">BETA</span></>},
-          ].map(tab=>(
-            <button key={tab.id} className={`app-nav-tab ${appPage===tab.id?"active":""}`} onClick={()=>setAppPage(tab.id)}>
-              {tab.label}
-            </button>
-          ))}
-        </nav>
-
-        {/* ── PROGRESS PAGE ── */}
-        {appPage === "progress" && <ProgressPage darkMode={darkMode} setDarkMode={setDarkMode}/>}
-
         {/* ── LEFT COL ── */}
-        {appPage === "calculator" && <>
         <main className="left-col">
 
           {/* 01 */}
@@ -1633,8 +1124,6 @@ export default function App() {
             </div>
           )}
         </aside>
-
-        </> /* end calculator pages */}
 
         {/* ── HISTORIAL ── */}
         <div className="historial">
