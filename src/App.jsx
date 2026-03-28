@@ -190,8 +190,26 @@ const styles = `
   .field > label { font-size: .73rem; color: var(--text-muted); font-weight: 400; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .num-input-wrap { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); overflow: hidden; transition: border-color .2s, box-shadow .2s; }
   .num-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-  .num-input-wrap input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 1rem; padding: 11px 13px; width: 100%; }
-  .num-input-unit { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); padding: 0 13px 0 0; white-space: nowrap; }
+  .num-input-wrap input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 1rem; padding: 11px 13px; width: 100%; min-width: 0; text-align: center; }
+  .num-input-unit { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); padding: 0 10px 0 0; white-space: nowrap; }
+
+  /* ocultar spinners nativos */
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  /* botones +/- personalizados */
+  .spin-btn {
+    width: 34px; height: 100%; flex-shrink: 0;
+    background: transparent; border: none; outline: none;
+    color: var(--text-muted); font-size: 1.15rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--tr); font-family: var(--font-mono); line-height: 1;
+    padding: 0; user-select: none;
+  }
+  .spin-btn:hover { color: var(--accent); background: var(--accent-dim); }
+  .spin-btn:active { transform: scale(0.85); color: var(--accent-2); }
+
   .styled-select {
     background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r);
     color: var(--text); font-family: var(--font-body); font-size: .83rem;
@@ -796,7 +814,6 @@ function CalendarPage() {
         <p>Registra tus hábitos diarios — entrenamiento, dieta y sueño — y sigue tu racha</p>
       </div>
 
-      {/* Year summary stats */}
       <div className="cal-summary">
         {[
           {val:`🔥 ${stats.streak}`,  lbl:"Racha actual",    color:"#d94f2b"},
@@ -811,7 +828,6 @@ function CalendarPage() {
         ))}
       </div>
 
-      {/* Legend */}
       <div className="cal-legend-bar">
         {[
           {color:"rgba(90,138,74,.4)",   label:"Día perfecto (3/3)"},
@@ -825,14 +841,12 @@ function CalendarPage() {
         </div>
       </div>
 
-      {/* Year nav */}
       <div className="year-nav">
         <button className="year-btn" onClick={()=>setViewYear(y=>y-1)}>‹</button>
         <div className="year-label"><em>{viewYear}</em></div>
         <button className="year-btn" onClick={()=>setViewYear(y=>Math.min(y+1, now.getFullYear()))} style={{opacity:viewYear>=now.getFullYear()?.4:1}}>›</button>
       </div>
 
-      {/* 12 months grid */}
       <div className="months-grid">
         {Array(12).fill(null).map((_,m)=>(
           <MiniMonth key={m} year={viewYear} month={m} calendar={calendar} onDayClick={setSelectedDay}/>
@@ -947,12 +961,31 @@ function CalculatorPage() {
 
   const objLabel=resultado?resultado.direction==="mantenimiento"?"Mantenimiento":`${resultado.direction==="deficit"?"Déficit":"Superávit"} ${resultado.customDelta} kcal · ${getCategory(resultado.direction,resultado.customDelta).label}`:"";
 
-  const numField=(label,val,set,min,max,unit)=>(
+  // ── numField con botones +/- personalizados ──────────────────────────────
+  const numField = (label, val, set, min, max, unit) => (
     <div className="field" key={label}>
       <label>{label}</label>
       <div className="num-input-wrap">
-        <input type="number" value={val} min={min} max={max} onChange={e=>{const v=parseFloat(e.target.value);if(!isNaN(v))set(v);}}/>
+        <button
+          className="spin-btn"
+          type="button"
+          tabIndex={-1}
+          onClick={() => set(v => Math.max(min, Number(v) - 1))}
+        >−</button>
+        <input
+          type="number"
+          value={val}
+          min={min}
+          max={max}
+          onChange={e => { const v = parseFloat(e.target.value); if (!isNaN(v)) set(v); }}
+        />
         <span className="num-input-unit">{unit}</span>
+        <button
+          className="spin-btn"
+          type="button"
+          tabIndex={-1}
+          onClick={() => set(v => Math.min(max, Number(v) + 1))}
+        >+</button>
       </div>
     </div>
   );
@@ -1400,7 +1433,6 @@ export default function App() {
     try{localStorage.setItem("tdee_dark", darkMode?"1":"0");}catch{}
   }, [darkMode]);
 
-  // Ping autosave indicator every 30s
   useEffect(()=>{
     const interval = setInterval(()=>{
       setAutoSaveTs(new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}));
@@ -1434,15 +1466,12 @@ export default function App() {
       <style>{styles}</style>
       <div className="app-shell">
 
-        {/* Mobile burger */}
         <button className="burger" onClick={()=>setSidebarOpen(v=>!v)}>
           <span/><span/><span/>
         </button>
 
-        {/* Sidebar overlay */}
         <div className={`sidebar-overlay ${sidebarOpen?"open":""}`} onClick={()=>setSidebarOpen(false)}/>
 
-        {/* Sidebar */}
         <nav className={`sidebar ${sidebarOpen?"open":""}`}>
           <div className="sidebar-logo">
             <h2>Gasto <em>calórico</em></h2>
@@ -1476,7 +1505,6 @@ export default function App() {
           </div>
         </nav>
 
-        {/* Main content */}
         <div className="main-content">
           {page==="calculator" && <CalculatorPage/>}
           {page==="calendar"   && <CalendarPage/>}
