@@ -79,6 +79,7 @@ const styles = `
     min-height: 100vh; -webkit-font-smoothing: antialiased;
     overflow-x: hidden; transition: background .3s, color .3s;
   }
+  body.sidebar-open { overflow: hidden; }
 
   /* ── APP SHELL ── */
   .app-shell { display: flex; min-height: 100vh; }
@@ -102,7 +103,7 @@ const styles = `
   .sidebar-logo h2 em { font-style: italic; color: var(--accent); }
   .sidebar-logo p { font-size: .62rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px; letter-spacing: .06em; }
 
-  .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+  .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 
   .nav-section-label {
     font-family: var(--font-mono); font-size: .55rem; letter-spacing: .18em;
@@ -592,28 +593,28 @@ const styles = `
     background: var(--surface); border: 1.5px solid var(--border);
     border-radius: var(--r-lg); overflow: hidden;
   }
-  .nutr-summary-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); }
-  .nutr-summary-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-  .nutr-date-badge { font-family: var(--font-display); font-size: 1.1rem; }
+  .nutr-summary-header { padding: 12px 16px 10px; border-bottom: 1px solid var(--border); }
+  .nutr-summary-title { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
+  .nutr-date-badge { font-family: var(--font-display); font-size: .95rem; }
   .nutr-date-badge em { font-style: italic; color: var(--accent); }
 
-  .nutr-donut-wrap { padding: 24px 22px 16px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .nutr-donut-svg { width: 180px; height: 180px; flex-shrink: 0; }
+  .nutr-donut-wrap { padding: 14px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .nutr-donut-svg { width: 140px; height: 140px; flex-shrink: 0; }
   .nutr-ring { transition: stroke-dasharray 0.6s cubic-bezier(.34,1.2,.64,1), stroke-dashoffset 0.6s cubic-bezier(.34,1.2,.64,1); }
 
-  .nutr-macro-bars { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-  .nutr-bar-row { display: flex; flex-direction: column; gap: 4px; }
+  .nutr-macro-bars { width: 100%; display: flex; flex-direction: column; gap: 7px; }
+  .nutr-bar-row { display: flex; flex-direction: column; gap: 3px; }
   .nutr-bar-top { display: flex; justify-content: space-between; align-items: center; }
-  .nutr-bar-lbl { font-size: .7rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
-  .nutr-bar-lbl-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
-  .nutr-bar-vals { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); }
+  .nutr-bar-lbl { font-size: .65rem; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+  .nutr-bar-lbl-dot { width: 7px; height: 7px; border-radius: 2px; flex-shrink: 0; }
+  .nutr-bar-vals { font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); }
   .nutr-bar-vals strong { color: var(--text); }
-  .nutr-bar-track { height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .nutr-bar-track { height: 4px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
   .nutr-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s cubic-bezier(.34,1.2,.64,1); }
 
-  .nutr-kcal-total { text-align: center; padding: 14px 22px 20px; border-top: 1px solid var(--border); }
-  .nutr-kcal-num { font-family: var(--font-display); font-size: 2.4rem; color: var(--accent); line-height: 1; }
-  .nutr-kcal-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+  .nutr-kcal-total { text-align: center; padding: 10px 16px 12px; border-top: 1px solid var(--border); }
+  .nutr-kcal-num { font-family: var(--font-display); font-size: 1.9rem; color: var(--accent); line-height: 1; }
+  .nutr-kcal-lbl { font-family: var(--font-mono); font-size: .55rem; color: var(--text-muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 2px; }
 
   /* Meals column */
   .nutr-meals { display: flex; flex-direction: column; gap: 20px; }
@@ -676,15 +677,26 @@ const styles = `
   /* Responsive nutrition */
   @media (max-width: 900px) {
     .nutr-layout { grid-template-columns: 1fr; }
-    .nutr-summary-card { position: static; }
-    .nutr-donut-wrap { flex-direction: row; align-items: flex-start; }
-    .nutr-donut-svg { width: 140px; height: 140px; }
+    .nutr-summary-card { position: static; order: -1; }
+    /* En móvil: donut + barras en fila horizontal compacta */
+    .nutr-donut-wrap { flex-direction: row; align-items: center; gap: 16px; padding: 12px 16px 10px; }
+    .nutr-donut-svg { width: 110px; height: 110px; flex-shrink: 0; }
+    .nutr-macro-bars { flex: 1; }
+    .nutr-kcal-total { padding: 8px 16px 10px; }
+    .nutr-kcal-num { font-size: 1.5rem; }
+  }
+  @media (max-width: 700px) {
+    .nutr-layout { gap: 16px; }
+    .nutr-donut-svg { width: 100px; height: 100px; }
+    .nutr-add-form { flex-wrap: wrap; }
+    .nutr-add-input.narrow { width: 54px; }
   }
   @media (max-width: 480px) {
     .nutr-add-form { flex-direction: column; align-items: stretch; }
     .nutr-add-input.wide, .nutr-add-input.narrow { width: 100%; }
     .nutr-food-macros { display: none; }
-    .nutr-donut-wrap { flex-direction: column; align-items: center; }
+    .nutr-donut-svg { width: 90px; height: 90px; }
+    .nutr-kcal-num { font-size: 1.3rem; }
   }
 
 `;
@@ -1660,7 +1672,7 @@ function saveNutrition(data) {
 
 // SVG donut ring component
 function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
-  const cx = 90, cy = 90, r = 72, sw = 16;
+  const cx = 90, cy = 90, r = 72, sw = 13;
   const circ = 2 * Math.PI * r;
   const total = kcal || 0;
   const pKcal = protG * 4, fKcal = fatG * 9, cKcal = carbG * 4;
@@ -1982,6 +1994,11 @@ export default function App() {
     document.body.classList.toggle("dark", darkMode);
     try{localStorage.setItem("tdee_dark", darkMode?"1":"0");}catch{}
   }, [darkMode]);
+
+  useEffect(()=>{
+    document.body.classList.toggle("sidebar-open", sidebarOpen);
+    return () => document.body.classList.remove("sidebar-open");
+  }, [sidebarOpen]);
 
   useEffect(()=>{
     const interval = setInterval(()=>{
