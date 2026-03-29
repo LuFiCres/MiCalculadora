@@ -470,32 +470,116 @@ const styles = `
   .burger span { display: block; width: 18px; height: 2px; background: var(--text-muted); border-radius: 2px; transition: .2s; }
   .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 1100px) {
+  /* ─── RESPONSIVE — 6 breakpoints ────────────────────────
+     > 1280   sidebar visible, layout completo
+     1100-1280 sidebar estrecha (200px)
+     < 1100   sidebar se convierte en drawer (burger)
+     < 900    layout 1 columna
+     < 700    móvil amplio
+     < 480    móvil estrecho
+     < 360    ventana muy pequeña
+  ─────────────────────────────────────────────────────── */
+
+  /* 1100-1280: sidebar más estrecha, padding reducido */
+  @media (max-width: 1280px) {
+    :root { --sidebar-w: 200px; }
+    .main-content { padding: 0 32px; }
+    .calc-layout { gap: 40px; grid-template-columns: 1fr 380px; }
+    .page-header h1 { font-size: 2.2rem; }
     .months-grid { grid-template-columns: repeat(3,1fr); }
   }
-  @media (max-width: 900px) {
-    .calc-layout { grid-template-columns: 1fr; }
-    .right-col { position: static; max-height: none; overflow-y: visible; }
-    .months-grid { grid-template-columns: repeat(2,1fr); }
-    .cal-summary { grid-template-columns: repeat(2,1fr); }
-  }
-  @media (max-width: 768px) {
-    .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
-    .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,.2); }
+
+  /* < 1100: sidebar pasa a drawer, burger aparece */
+  @media (max-width: 1100px) {
+    :root { --sidebar-w: 240px; }
+    .sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); box-shadow: none; }
+    .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,.22); }
     .sidebar-overlay.open { display: block; }
     .burger { display: flex; }
-    .main-content { margin-left: 0; padding: 0 20px; padding-top: 60px; }
-    .months-grid { grid-template-columns: repeat(2,1fr); }
-    .compare-cards { grid-template-columns: 1fr; }
-    .input-grid.cols-3 { grid-template-columns: 1fr 1fr; }
-    .page-footer { flex-direction: column; gap: 8px; text-align: center; }
+    .main-content { margin-left: 0; padding: 0 32px; padding-top: 64px; max-width: 100%; }
+    .calc-layout { grid-template-columns: 1fr 360px; gap: 32px; }
+    .page-header { padding: 32px 0 28px; margin-bottom: 36px; }
+    .page-header h1 { font-size: 2rem; }
+    .months-grid { grid-template-columns: repeat(3,1fr); }
+    .cal-summary { grid-template-columns: repeat(4,1fr); }
+    .input-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
   }
+
+  /* < 900: layout 1 columna, resultados debajo del form */
+  @media (max-width: 900px) {
+    .main-content { padding: 0 24px; padding-top: 64px; }
+    .calc-layout { grid-template-columns: 1fr; gap: 28px; }
+    .right-col { position: static; max-height: none; overflow-y: visible; }
+    .page-header h1 { font-size: 1.9rem; }
+    .months-grid { grid-template-columns: repeat(2,1fr); }
+    .cal-summary { grid-template-columns: repeat(2,1fr); }
+    .compare-cards { grid-template-columns: 1fr 1fr; }
+    .input-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .tdee-number { font-size: 2.8rem; }
+    .historial-section { padding-top: 36px; }
+    .hist-grid { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); }
+  }
+
+  /* < 700: móvil amplio */
+  @media (max-width: 700px) {
+    .main-content { padding: 0 16px; padding-top: 60px; }
+    .page-header { padding: 24px 0 20px; margin-bottom: 28px; }
+    .page-header h1 { font-size: 1.65rem; }
+    .page-header p { font-size: .76rem; }
+    .section { margin-bottom: 36px; }
+    .input-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+    .input-grid { grid-template-columns: 1fr 1fr; }
+    .months-grid { grid-template-columns: repeat(2,1fr); }
+    .cal-summary { grid-template-columns: repeat(2,1fr); }
+    .compare-cards { grid-template-columns: 1fr; }
+    .obj-dir-grid { grid-template-columns: 1fr; }
+    .macros-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .page-footer { flex-direction: column; gap: 8px; text-align: center; }
+    .tdee-number { font-size: 2.4rem; }
+    .results-header { padding: 16px 18px 14px; }
+    .breakdown { padding: 12px 18px; }
+    .targets { padding: 12px 18px; }
+    .psec { padding: 12px 18px; }
+    .bar-wrap { padding: 10px 18px; }
+    .hist-grid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); }
+  }
+
+  /* < 480: móvil estrecho */
   @media (max-width: 480px) {
-    .main-content { padding: 0 14px; padding-top: 60px; }
+    .main-content { padding: 0 12px; padding-top: 58px; }
+    .page-header h1 { font-size: 1.4rem; }
+    .input-grid.cols-3 { grid-template-columns: 1fr; }
+    .input-grid { grid-template-columns: 1fr; }
     .months-grid { grid-template-columns: 1fr 1fr; }
     .cal-summary { grid-template-columns: 1fr 1fr; }
-    .input-grid.cols-3 { grid-template-columns: 1fr; }
+    .macros-grid { grid-template-columns: 1fr 1fr; }
+    .obj-dir-grid { grid-template-columns: 1fr; }
+    .tabs { flex-wrap: wrap; }
+    .tab-btn { font-size: .55rem; padding: 8px 2px; }
+    .tdee-number { font-size: 2rem; }
+    .hist-grid { grid-template-columns: 1fr 1fr; }
+    .compare-cards { grid-template-columns: 1fr; }
+    .meal-sel { flex-wrap: wrap; }
+    .results-header { padding: 14px 14px 12px; }
+    .breakdown { padding: 10px 14px; }
+    .targets { padding: 10px 14px; }
+    .psec { padding: 10px 14px; }
+    .bar-wrap { padding: 8px 14px; }
+    .brow-lbl { font-size: .7rem; }
+    .section-label { font-size: .56rem; }
+  }
+
+  /* < 360: ventana muy pequeña */
+  @media (max-width: 360px) {
+    .main-content { padding: 0 8px; padding-top: 54px; }
+    .page-header h1 { font-size: 1.2rem; }
+    .months-grid { grid-template-columns: 1fr; }
+    .cal-summary { grid-template-columns: 1fr 1fr; }
+    .macros-grid { grid-template-columns: 1fr; }
+    .hist-grid { grid-template-columns: 1fr; }
+    .tab-btn { font-size: .5rem; letter-spacing: 0; }
+    .tdee-number { font-size: 1.7rem; }
+    .num-input-wrap input { font-size: .85rem; }
   }
 `;
 
