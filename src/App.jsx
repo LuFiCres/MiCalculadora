@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');`;
 
@@ -23,6 +23,7 @@ const FORM_KEY  = "tdee_form_v1";
 const HIST_KEY  = "tdee_hist";
 const PLAN_KEY  = "tdee_macro_plan_v1";
 const CAL_KEY   = "tdee_calendar_v1";
+const PESO_KEY  = "tdee_peso_v1";
 
 const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const WEEKDAYS  = ["L","M","X","J","V","S","D"];
@@ -828,6 +829,97 @@ const styles = `
     .food-lib-input.num-input { width: 100%; }
   }
 
+  /* ── STREAK TOAST ── */
+  .streak-toast {
+    position: fixed; bottom: 32px; right: 32px; z-index: 500;
+    background: var(--surface); border: 1.5px solid var(--accent);
+    border-radius: var(--r-lg); padding: 18px 22px;
+    box-shadow: 0 8px 40px var(--accent-glow), 0 2px 12px rgba(0,0,0,.15);
+    display: flex; align-items: center; gap: 14px; max-width: 320px;
+    animation: toastIn .35s cubic-bezier(.34,1.4,.64,1);
+  }
+  @keyframes toastIn { from{opacity:0;transform:translateY(20px) scale(.92)} to{opacity:1;transform:translateY(0) scale(1)} }
+  .toast-out { animation: toastOut .25s ease forwards; }
+  @keyframes toastOut { to{opacity:0;transform:translateY(12px) scale(.95)} }
+  .toast-icon { font-size: 2rem; flex-shrink: 0; }
+  .toast-body strong { display: block; font-size: .88rem; color: var(--accent); margin-bottom: 2px; }
+  .toast-body p { font-size: .75rem; color: var(--text-muted); line-height: 1.45; }
+  .toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; padding: 2px 4px; border-radius: 4px; transition: var(--tr); flex-shrink: 0; align-self: flex-start; }
+  .toast-close:hover { color: var(--accent); background: var(--accent-dim); }
+
+  /* ── TODAY BANNER ── */
+  .today-banner {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); padding: 14px 20px;
+    margin-bottom: 32px; display: flex; align-items: center;
+    gap: 18px; flex-wrap: wrap;
+  }
+  .today-banner-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 200px; }
+  .today-banner-streak { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; color: #d94f2b; flex-shrink: 0; }
+  .today-banner-info strong { display: block; font-size: .82rem; color: var(--text); margin-bottom: 1px; }
+  .today-banner-info span { font-size: .72rem; color: var(--text-muted); font-family: var(--font-mono); }
+  .today-banner-cats { display: flex; gap: 7px; flex-wrap: wrap; }
+  .today-cat-pill {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 100px; font-size: .68rem;
+    font-family: var(--font-mono); border: 1.5px solid; transition: var(--tr);
+    cursor: pointer;
+  }
+  .today-banner-cta { font-family: var(--font-mono); font-size: .65rem; color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 5px 12px; cursor: pointer; white-space: nowrap; transition: var(--tr); }
+  .today-banner-cta:hover { background: var(--accent); color: #faf7f2; }
+
+  /* ── MI PESO PAGE ── */
+  .peso-page { padding-bottom: 80px; }
+  .peso-layout { display: grid; grid-template-columns: 1fr 300px; gap: 36px; align-items: start; }
+  .peso-form { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 22px; margin-bottom: 24px; }
+  .peso-form-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+  .peso-form-row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .peso-form-field { display: flex; flex-direction: column; gap: 5px; }
+  .peso-form-field label { font-size: .68rem; color: var(--text-muted); font-family: var(--font-mono); }
+  .peso-form-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font-mono); font-size: .9rem; padding: 8px 12px; outline: none; transition: border-color .2s, box-shadow .2s; }
+  .peso-form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .peso-form-input.wide { width: 180px; }
+  .peso-form-input.narrow { width: 88px; }
+  .peso-add-btn { padding: 8px 16px; background: var(--accent); color: #faf7f2; border: none; border-radius: var(--r); font-family: var(--font-body); font-size: .8rem; font-weight: 500; cursor: pointer; transition: var(--tr); box-shadow: 0 2px 0 rgba(0,0,0,.12); white-space: nowrap; }
+  .peso-add-btn:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .peso-add-btn:active { transform: translateY(1px); box-shadow: none; }
+  .peso-log { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .peso-log-header { padding: 12px 18px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .58rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+  .peso-log-clear { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); background: none; border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; cursor: pointer; transition: var(--tr); }
+  .peso-log-clear:hover { color: var(--accent); border-color: var(--accent-dim); }
+  .peso-entry { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--border); transition: background .15s; }
+  .peso-entry:last-child { border-bottom: none; }
+  .peso-entry:hover { background: var(--bg-warm); }
+  .peso-entry-date { font-family: var(--font-mono); font-size: .65rem; color: var(--text-muted); min-width: 86px; }
+  .peso-entry-val { font-family: var(--font-display); font-size: 1.15rem; color: var(--accent); line-height: 1; min-width: 60px; }
+  .peso-entry-delta { font-family: var(--font-mono); font-size: .65rem; min-width: 44px; }
+  .peso-entry-note { font-size: .72rem; color: var(--text-muted); flex: 1; font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .peso-entry-del { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: .85rem; padding: 2px 5px; border-radius: 4px; transition: var(--tr); flex-shrink: 0; }
+  .peso-entry-del:hover { color: var(--accent); background: var(--accent-dim); }
+  .peso-empty { padding: 28px 18px; text-align: center; font-size: .8rem; color: var(--text-dim); font-style: italic; }
+  .peso-stats { display: flex; flex-direction: column; gap: 12px; }
+  .peso-stat-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+  .peso-stat-lbl { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .12em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+  .peso-stat-val { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; }
+  .peso-stat-sub { font-size: .68rem; color: var(--text-muted); margin-top: 3px; font-family: var(--font-mono); }
+  .peso-chart-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px 20px; }
+  .peso-chart-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; }
+  .modal-notes { width: 100%; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font-body); font-size: .8rem; padding: 9px 12px; outline: none; resize: none; transition: border-color .2s; margin-top: 10px; }
+  .modal-notes:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .modal-notes::placeholder { color: var(--text-dim); }
+
+  @media (max-width: 900px) {
+    .peso-layout { grid-template-columns: 1fr; }
+    .peso-stats { flex-direction: row; flex-wrap: wrap; }
+    .peso-stat-card { flex: 1; min-width: 140px; }
+  }
+  @media (max-width: 480px) {
+    .today-banner { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .streak-toast { left: 16px; right: 16px; bottom: 16px; }
+    .peso-form-row { flex-direction: column; }
+    .peso-form-input.wide, .peso-form-input.narrow { width: 100%; }
+  }
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -930,6 +1022,21 @@ function loadPlan() {
 
 function savePlan(plan) {
   try { localStorage.setItem(PLAN_KEY, JSON.stringify(plan)); } catch {}
+}
+
+
+function loadPeso() {
+  try { return JSON.parse(localStorage.getItem(PESO_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function savePeso(data) {
+  try { localStorage.setItem(PESO_KEY, JSON.stringify(data)); } catch {}
+}
+
+function formatDateShort(isoStr) {
+  const d = new Date(isoStr + "T12:00:00");
+  return d.toLocaleDateString("es-ES", { day:"2-digit", month:"short" });
 }
 
 function loadCalendar() {
@@ -1162,10 +1269,263 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
   );
 }
 
+
+// ─── STREAK TOAST ────────────────────────────────────────────────────────────
+function StreakToast({ streak, onClose }) {
+  const milestones = {
+    3:  { icon:"🌱", title:"¡3 días seguidos!", msg:"El hábito empieza a formarse. ¡Sigue así!" },
+    7:  { icon:"🔥", title:"¡1 semana de racha!", msg:"Una semana completa. Esto ya es un hábito real." },
+    14: { icon:"⚡", title:"¡2 semanas sin fallar!", msg:"Dos semanas de constancia. La disciplina es tuya." },
+    21: { icon:"💪", title:"¡21 días!", msg:"Dicen que tarda 21 días. Ya lo tienes." },
+    30: { icon:"🏆", title:"¡1 mes de racha!", msg:"Un mes entero. Nivel otro." },
+    60: { icon:"⭐", title:"¡60 días seguidos!", msg:"Dos meses. Estás en modo élite." },
+    100:{ icon:"👑", title:"¡100 días!", msg:"Triple dígito. Leyenda." },
+  };
+  const m = milestones[streak];
+  if (!m) return null;
+  const [exiting, setExiting] = useState(false);
+  const close = () => { setExiting(true); setTimeout(onClose, 260); };
+  useEffect(() => {
+    const t = setTimeout(close, 5000);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <div className={`streak-toast ${exiting ? "toast-out" : ""}`}>
+      <div className="toast-icon">{m.icon}</div>
+      <div className="toast-body">
+        <strong>{m.title}</strong>
+        <p>{m.msg}</p>
+      </div>
+      <button className="toast-close" onClick={close}>×</button>
+    </div>
+  );
+}
+
+// ─── WEIGHT SPARKLINE ────────────────────────────────────────────────────────
+function WeightSparkline({ entries }) {
+  if (entries.length < 2) {
+    return (
+      <div style={{height:100,display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <p style={{fontSize:".75rem",color:"var(--text-dim)",fontStyle:"italic",textAlign:"center"}}>
+          Añade al menos 2 registros para ver la gráfica
+        </p>
+      </div>
+    );
+  }
+  const W = 260, H = 100, PAD = 12;
+  const vals = entries.map(e => e.weight);
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
+  const range = maxV - minV || 1;
+  const pts = entries.map((e, i) => {
+    const x = PAD + (i / (entries.length - 1)) * (W - PAD * 2);
+    const y = PAD + ((maxV - e.weight) / range) * (H - PAD * 2);
+    return { x, y, ...e };
+  });
+  const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const areaD = pathD + ` L${pts[pts.length-1].x.toFixed(1)},${H} L${PAD},${H} Z`;
+  const trend = vals[vals.length - 1] - vals[0];
+  const trendColor = trend < 0 ? "#5a8a4a" : trend > 0 ? "#d94f2b" : "#8a6a50";
+  return (
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{overflow:"visible"}}>
+      <path d={areaD} fill="var(--accent)" opacity=".07"/>
+      <path d={pathD} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      {pts.map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r="3" fill="var(--accent)" stroke="var(--surface)" strokeWidth="1.5"/>
+      ))}
+      <text x={pts[0].x} y={pts[0].y - 7} textAnchor="middle"
+        style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:"var(--text-muted)"}}>
+        {vals[0].toFixed(1)}
+      </text>
+      <text x={pts[pts.length-1].x} y={pts[pts.length-1].y - 7} textAnchor="middle"
+        style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:trendColor,fontWeight:600}}>
+        {vals[vals.length-1].toFixed(1)}
+      </text>
+    </svg>
+  );
+}
+
+// ─── TODAY BANNER ─────────────────────────────────────────────────────────────
+function TodayBanner({ onNavigate }) {
+  const calendar = useMemo(() => loadCalendar(), []);
+  const today    = todayKey();
+  const entry    = calendar[today] || null;
+  const stats    = useMemo(() => getCalStats(calendar), [calendar]);
+  const doneCats = entry ? CATS.filter(c => entry[c.key]) : [];
+  return (
+    <div className="today-banner">
+      <div className="today-banner-left">
+        <div className="today-banner-streak">🔥 {stats.streak}</div>
+        <div className="today-banner-info">
+          <strong>Racha actual</strong>
+          <span>{stats.streak === 0 ? "Empieza hoy tu racha" : `${stats.streak} día${stats.streak!==1?"s":""} seguido${stats.streak!==1?"s":""}`}</span>
+        </div>
+      </div>
+      <div className="today-banner-cats">
+        {CATS.map(cat => {
+          const done = entry && entry[cat.key];
+          return (
+            <div key={cat.key} className="today-cat-pill" onClick={()=>onNavigate("calendar")}
+              style={{
+                color: done ? cat.color : "var(--text-dim)",
+                background: done ? cat.bg : "transparent",
+                borderColor: done ? cat.color : "var(--border)",
+              }}>
+              <span style={{fontSize:".9rem"}}>{cat.icon}</span>
+              {cat.name}
+              {done && <span style={{fontSize:".7rem"}}>✓</span>}
+            </div>
+          );
+        })}
+      </div>
+      <button className="today-banner-cta" onClick={()=>onNavigate("calendar")}>
+        {!entry ? "Registrar hoy →" : doneCats.length < 3 ? "Completar día →" : "Ver calendario →"}
+      </button>
+    </div>
+  );
+}
+
+// ─── MI PESO PAGE ─────────────────────────────────────────────────────────────
+function PesoPage() {
+  const [entries, setEntries] = useState(loadPeso);
+  const [draftWeight, setDraftWeight] = useState("");
+  const [draftDate,   setDraftDate]   = useState(() => new Date().toISOString().slice(0,10));
+  const [draftNote,   setDraftNote]   = useState("");
+
+  const addEntry = () => {
+    const w = parseFloat(draftWeight);
+    if (isNaN(w) || w < 20 || w > 300) return;
+    const entry = { id: Date.now(), date: draftDate, weight: w, note: draftNote.trim() };
+    const updated = [...entries, entry].sort((a, b) => a.date.localeCompare(b.date));
+    setEntries(updated);
+    savePeso(updated);
+    setDraftWeight(""); setDraftNote("");
+  };
+
+  const removeEntry = (id) => {
+    const updated = entries.filter(e => e.id !== id);
+    setEntries(updated);
+    savePeso(updated);
+  };
+
+  const clearAll = () => {
+    if (entries.length === 0) return;
+    setEntries([]); savePeso([]);
+  };
+
+  const firstEntry = entries[0];
+  const lastEntry  = entries[entries.length - 1];
+  const totalChange = entries.length >= 2 ? lastEntry.weight - firstEntry.weight : null;
+  const avgPerWeek  = entries.length >= 2 ? (() => {
+    const days = (new Date(lastEntry.date) - new Date(firstEntry.date)) / 86400000;
+    const weeks = days / 7 || 1;
+    return (totalChange / weeks).toFixed(2);
+  })() : null;
+  const chartEntries = entries.slice(-12);
+
+  return (
+    <div className="peso-page">
+      <div className="page-header">
+        <h1>Mi <em>Peso</em></h1>
+        <p>Registra tu peso periódicamente y visualiza tu progreso real a lo largo del tiempo</p>
+      </div>
+      <div className="peso-layout">
+        <div>
+          <div className="peso-form">
+            <div className="peso-form-title">Nuevo registro</div>
+            <div className="peso-form-row">
+              <div className="peso-form-field">
+                <label>Fecha</label>
+                <input type="date" className="peso-form-input narrow" style={{width:140}} value={draftDate}
+                  onChange={e=>setDraftDate(e.target.value)}/>
+              </div>
+              <div className="peso-form-field">
+                <label>Peso (kg)</label>
+                <input className="peso-form-input narrow" type="number" min={20} max={300} step={0.1}
+                  placeholder="75.4" value={draftWeight}
+                  onChange={e=>setDraftWeight(e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&addEntry()}/>
+              </div>
+              <div className="peso-form-field" style={{flex:1,minWidth:120}}>
+                <label>Nota (opcional)</label>
+                <input className="peso-form-input wide" placeholder="Ej: En ayunas, después de entreno..."
+                  value={draftNote} onChange={e=>setDraftNote(e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&addEntry()}/>
+              </div>
+              <button className="peso-add-btn" onClick={addEntry}>+ Añadir</button>
+            </div>
+          </div>
+          <div className="peso-log">
+            <div className="peso-log-header">
+              <span>Historial de peso</span>
+              {entries.length > 0 && <button className="peso-log-clear" onClick={clearAll}>Limpiar todo</button>}
+            </div>
+            {entries.length === 0 ? (
+              <div className="peso-empty">Sin registros aún. Añade tu primer pesaje arriba.</div>
+            ) : (
+              [...entries].reverse().map((e, i, arr) => {
+                const prev = arr[i + 1];
+                const delta = prev ? e.weight - prev.weight : null;
+                const deltaColor = delta === null ? "var(--text-dim)" : delta < 0 ? "#5a8a4a" : delta > 0 ? "#d94f2b" : "#8a6a50";
+                const deltaStr   = delta === null ? "—" : `${delta > 0 ? "+" : ""}${delta.toFixed(1)}`;
+                return (
+                  <div key={e.id} className="peso-entry">
+                    <span className="peso-entry-date">{formatDateShort(e.date)}</span>
+                    <span className="peso-entry-val">{e.weight.toFixed(1)}<span style={{fontSize:".62rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)",marginLeft:2}}>kg</span></span>
+                    <span className="peso-entry-delta" style={{color:deltaColor,fontFamily:"var(--font-mono)",fontSize:".65rem"}}>{deltaStr}</span>
+                    <span className="peso-entry-note">{e.note || ""}</span>
+                    <button className="peso-entry-del" onClick={()=>removeEntry(e.id)}>×</button>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+        <div className="peso-stats">
+          <div className="peso-chart-card">
+            <div className="peso-chart-title">Evolución {entries.length > 0 ? `· ${entries.length} registros` : ""}</div>
+            <WeightSparkline entries={chartEntries}/>
+          </div>
+          {lastEntry && (
+            <div className="peso-stat-card">
+              <div className="peso-stat-lbl">Peso actual</div>
+              <div className="peso-stat-val" style={{color:"var(--accent)"}}>{lastEntry.weight.toFixed(1)} <span style={{fontSize:".9rem",fontFamily:"var(--font-mono)",color:"var(--text-muted)"}}>kg</span></div>
+              <div className="peso-stat-sub">{formatDateShort(lastEntry.date)}</div>
+            </div>
+          )}
+          {totalChange !== null && (
+            <div className="peso-stat-card">
+              <div className="peso-stat-lbl">Cambio total</div>
+              <div className="peso-stat-val" style={{color:totalChange<0?"#5a8a4a":totalChange>0?"#d94f2b":"#8a6a50"}}>
+                {totalChange > 0 ? "+" : ""}{totalChange.toFixed(1)} <span style={{fontSize:".9rem",fontFamily:"var(--font-mono)",color:"var(--text-muted)"}}>kg</span>
+              </div>
+              <div className="peso-stat-sub">desde {formatDateShort(firstEntry.date)}</div>
+            </div>
+          )}
+          {avgPerWeek !== null && (
+            <div className="peso-stat-card">
+              <div className="peso-stat-lbl">Media semanal</div>
+              <div className="peso-stat-val" style={{color:parseFloat(avgPerWeek)<0?"#5a8a4a":parseFloat(avgPerWeek)>0?"#d94f2b":"#8a6a50"}}>
+                {parseFloat(avgPerWeek) > 0 ? "+" : ""}{avgPerWeek} <span style={{fontSize:".9rem",fontFamily:"var(--font-mono)",color:"var(--text-muted)"}}>kg/sem</span>
+              </div>
+              <div className="peso-stat-sub">{entries.length} registros en total</div>
+            </div>
+          )}
+          {entries.length === 0 && (
+            <div className="peso-stat-card" style={{textAlign:"center",padding:"24px 16px"}}>
+              <div style={{fontSize:"2rem",marginBottom:8,opacity:.3}}>⚖️</div>
+              <p style={{fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.6}}>Cuando tengas registros verás aquí tu progreso y tendencia semanal.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── DAY MODAL ───────────────────────────────────────────────────────────────
 function DayModal({ dateKey, calendar, onSave, onClose }) {
   const existing = calendar[dateKey] || {};
-  const [draft, setDraft] = useState({training:false,diet:false,sleep:false,...existing});
+  const [draft, setDraft] = useState({training:false,diet:false,sleep:false,note:"",...existing});
   const toggle = key => setDraft(d=>({...d,[key]:!d[key]}));
   const done = CATS.filter(c=>draft[c.key]).length;
   const d = new Date(dateKey+"T12:00:00");
@@ -1193,6 +1553,8 @@ function DayModal({ dateKey, calendar, onSave, onClose }) {
           <span style={{fontSize:".72rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Hábitos cumplidos:</span>
           <span style={{fontFamily:"var(--font-display)",fontSize:"1.4rem",color:done===3?"#5a8a4a":done>0?"#c8860a":"var(--text-muted)"}}>{done}/3</span>
         </div>
+        <textarea className="modal-notes" rows={2} placeholder="Nota del día (opcional)..."
+          value={draft.note||""} onChange={e=>setDraft(d=>({...d,note:e.target.value}))}/>
         <div className="modal-actions">
           <button className="modal-cancel" onClick={onClose}>Cancelar</button>
           <button className="modal-save" onClick={()=>onSave(dateKey,draft)}>Guardar día</button>
@@ -1253,8 +1615,17 @@ function CalendarPage() {
   const [calendar, setCalendar] = useState(loadCalendar);
   const [viewYear, setViewYear] = useState(()=>new Date().getFullYear());
   const [selectedDay, setSelectedDay] = useState(null);
+  const [toast, setToast] = useState(null);
   const now = new Date();
   const stats = getCalStats(calendar, viewYear);
+  const prevStreak = useRef(stats.streak);
+  useEffect(() => {
+    const milestones = [3,7,14,21,30,60,100];
+    if (stats.streak > prevStreak.current && milestones.includes(stats.streak)) {
+      setToast(stats.streak);
+    }
+    prevStreak.current = stats.streak;
+  }, [stats.streak]);
 
   const handleSave = (k, draft) => {
     const updated = {...calendar,[k]:draft};
@@ -1312,12 +1683,13 @@ function CalendarPage() {
       {selectedDay && (
         <DayModal dateKey={selectedDay} calendar={calendar} onSave={handleSave} onClose={()=>setSelectedDay(null)}/>
       )}
+      {toast && <StreakToast streak={toast} onClose={()=>setToast(null)}/>}
     </div>
   );
 }
 
 // ─── CALCULATOR PAGE ─────────────────────────────────────────────────────────
-function CalculatorPage() {
+function CalculatorPage({ onNavigate }) {
   const saved0 = loadForm();
   const [sexo,setSexo]=useState(saved0.sexo);
   const [peso,setPeso]=useState(saved0.peso);
@@ -1454,6 +1826,7 @@ function CalculatorPage() {
         <p>Mifflin-St Jeor · Katch-McArdle · MET compendium · evidencia actualizada</p>
       </div>
 
+      <TodayBanner onNavigate={onNavigate}/>
       <div className="calc-layout">
         {/* LEFT */}
         <div>
@@ -2432,6 +2805,7 @@ export default function App() {
         {id:"calculator", icon:"🧮", label:"Mi Calculadora"},
         {id:"calendar",   icon:"📅", label:"Mi Calendario"},
         {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
+        {id:"peso",       icon:"⚖️", label:"Mi Peso"},
       ]
     },
     {
@@ -2488,9 +2862,10 @@ export default function App() {
         </nav>
 
         <div className="main-content">
-          {page==="calculator" && <CalculatorPage/>}
+          {page==="calculator" && <CalculatorPage onNavigate={navigate}/>}
           {page==="calendar"   && <CalendarPage/>}
           {page==="nutrition"  && <NutritionPage/>}
+          {page==="peso"        && <PesoPage/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
