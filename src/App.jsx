@@ -581,6 +581,112 @@ const styles = `
     .tdee-number { font-size: 1.7rem; }
     .num-input-wrap input { font-size: .85rem; }
   }
+  /* ── NUTRITION PAGE ── */
+  .nutrition-page { padding-bottom: 80px; }
+
+  .nutr-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
+
+  /* Donut summary card */
+  .nutr-summary-card {
+    position: sticky; top: 32px;
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); overflow: hidden;
+  }
+  .nutr-summary-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); }
+  .nutr-summary-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+  .nutr-date-badge { font-family: var(--font-display); font-size: 1.1rem; }
+  .nutr-date-badge em { font-style: italic; color: var(--accent); }
+
+  .nutr-donut-wrap { padding: 24px 22px 16px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .nutr-donut-svg { width: 180px; height: 180px; flex-shrink: 0; }
+  .nutr-ring { transition: stroke-dasharray 0.6s cubic-bezier(.34,1.2,.64,1), stroke-dashoffset 0.6s cubic-bezier(.34,1.2,.64,1); }
+
+  .nutr-macro-bars { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .nutr-bar-row { display: flex; flex-direction: column; gap: 4px; }
+  .nutr-bar-top { display: flex; justify-content: space-between; align-items: center; }
+  .nutr-bar-lbl { font-size: .7rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .nutr-bar-lbl-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .nutr-bar-vals { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); }
+  .nutr-bar-vals strong { color: var(--text); }
+  .nutr-bar-track { height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .nutr-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s cubic-bezier(.34,1.2,.64,1); }
+
+  .nutr-kcal-total { text-align: center; padding: 14px 22px 20px; border-top: 1px solid var(--border); }
+  .nutr-kcal-num { font-family: var(--font-display); font-size: 2.4rem; color: var(--accent); line-height: 1; }
+  .nutr-kcal-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+
+  /* Meals column */
+  .nutr-meals { display: flex; flex-direction: column; gap: 20px; }
+
+  .nutr-meal-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; transition: var(--tr); }
+  .nutr-meal-header { padding: 13px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; background: var(--bg-warm); }
+  .nutr-meal-header:hover { background: var(--surface-2); }
+  .nutr-meal-title { display: flex; align-items: center; gap: 10px; }
+  .nutr-meal-emoji { font-size: 1.1rem; }
+  .nutr-meal-name { font-family: var(--font-display); font-size: .95rem; }
+  .nutr-meal-name em { font-style: italic; color: var(--accent); }
+  .nutr-meal-kcal { font-family: var(--font-mono); font-size: .75rem; color: var(--accent); }
+
+  .nutr-food-list { padding: 8px 0; }
+  .nutr-food-item { display: flex; align-items: center; gap: 10px; padding: 8px 18px; border-bottom: 1px solid var(--border); transition: background .15s; }
+  .nutr-food-item:last-child { border-bottom: none; }
+  .nutr-food-item:hover { background: var(--bg-warm); }
+  .nutr-food-name { flex: 1; font-size: .8rem; }
+  .nutr-food-grams { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); }
+  .nutr-food-kcal { font-family: var(--font-mono); font-size: .75rem; color: var(--accent); min-width: 52px; text-align: right; }
+  .nutr-food-macros { font-size: .62rem; color: var(--text-dim); font-family: var(--font-mono); min-width: 120px; text-align: right; }
+  .nutr-food-del { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: .9rem; padding: 2px 4px; border-radius: 4px; transition: var(--tr); flex-shrink: 0; }
+  .nutr-food-del:hover { color: var(--accent); background: var(--accent-dim); }
+
+  .nutr-add-row { padding: 10px 18px; }
+  .nutr-add-form { display: flex; gap: 7px; flex-wrap: wrap; align-items: flex-end; }
+  .nutr-add-field { display: flex; flex-direction: column; gap: 4px; }
+  .nutr-add-field label { font-size: .62rem; color: var(--text-muted); font-family: var(--font-mono); }
+  .nutr-add-input {
+    background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r);
+    color: var(--text); font-family: var(--font-mono); font-size: .8rem;
+    padding: 7px 10px; outline: none; transition: border-color .2s, box-shadow .2s;
+  }
+  .nutr-add-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .nutr-add-input.wide { width: 140px; }
+  .nutr-add-input.narrow { width: 60px; }
+  .nutr-add-btn {
+    padding: 7px 14px; background: var(--accent); color: #faf7f2;
+    border: none; border-radius: var(--r); font-family: var(--font-body);
+    font-size: .78rem; font-weight: 500; cursor: pointer; transition: var(--tr);
+    box-shadow: 0 2px 0 rgba(0,0,0,.15); white-space: nowrap;
+  }
+  .nutr-add-btn:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .nutr-add-btn:active { transform: translateY(1px); box-shadow: none; }
+
+  .nutr-meal-empty { padding: 14px 18px; font-size: .75rem; color: var(--text-dim); font-style: italic; }
+
+  /* Quick foods panel */
+  .nutr-quick { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px; margin-bottom: 20px; }
+  .nutr-quick-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+  .nutr-quick-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .nutr-quick-btn {
+    padding: 4px 10px; border-radius: 6px; font-size: .68rem; font-family: var(--font-mono);
+    cursor: pointer; border: 1.5px solid var(--border); background: var(--bg-warm);
+    color: var(--text-muted); transition: var(--tr); box-shadow: 0 2px 0 var(--border);
+  }
+  .nutr-quick-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .nutr-quick-btn:active { transform: translateY(1px); box-shadow: none; }
+
+  /* Responsive nutrition */
+  @media (max-width: 900px) {
+    .nutr-layout { grid-template-columns: 1fr; }
+    .nutr-summary-card { position: static; }
+    .nutr-donut-wrap { flex-direction: row; align-items: flex-start; }
+    .nutr-donut-svg { width: 140px; height: 140px; }
+  }
+  @media (max-width: 480px) {
+    .nutr-add-form { flex-direction: column; align-items: stretch; }
+    .nutr-add-input.wide, .nutr-add-input.narrow { width: 100%; }
+    .nutr-food-macros { display: none; }
+    .nutr-donut-wrap { flex-direction: column; align-items: center; }
+  }
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1505,6 +1611,366 @@ function CalculatorPage() {
   );
 }
 
+
+// ─── NUTRITION PAGE ──────────────────────────────────────────────────────────
+const NUTR_KEY = "tdee_nutrition_v1";
+
+const MEAL_DEFS = [
+  { id:"breakfast", name:"Desayuno",    emoji:"☕" },
+  { id:"midmorning",name:"Media mañana",emoji:"🍎" },
+  { id:"lunch",     name:"Almuerzo",    emoji:"🍽️" },
+  { id:"snack",     name:"Merienda",    emoji:"🫐" },
+  { id:"dinner",    name:"Cena",        emoji:"🌙" },
+];
+
+const QUICK_FOODS = [
+  { name:"Pechuga pollo 100g", kcal:165, p:31,  f:3.6, c:0   },
+  { name:"Arroz cocido 150g",  kcal:195, p:3.6, f:0.3, c:43  },
+  { name:"Huevo L",            kcal:78,  p:6.3, f:5.3, c:0.6 },
+  { name:"Avena 50g",          kcal:188, p:6.5, f:3.5, c:32  },
+  { name:"Plátano",            kcal:89,  p:1.1, f:0.3, c:23  },
+  { name:"Aguacate ½",         kcal:120, p:1.5, f:11,  c:6.5 },
+  { name:"Atún lata 80g",      kcal:96,  p:21,  f:1,   c:0   },
+  { name:"Almendras 30g",      kcal:174, p:6,   f:15,  c:6   },
+  { name:"Leche 200ml",        kcal:98,  p:6.6, f:5,   c:9.4 },
+  { name:"Pan integral 40g",   kcal:100, p:4,   f:1.2, c:19  },
+  { name:"Salmon 120g",        kcal:250, p:25,  f:16,  c:0   },
+  { name:"Pasta cocida 180g",  kcal:264, p:9,   f:1.3, c:54  },
+];
+
+const MACRO_COLORS = {
+  p: "#d94f2b",
+  f: "#e8793a",
+  c: "#3a6e9e",
+  rest: "var(--surface-2)",
+};
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function loadNutrition() {
+  try { return JSON.parse(localStorage.getItem(NUTR_KEY) || "{}"); } catch { return {}; }
+}
+
+function saveNutrition(data) {
+  try { localStorage.setItem(NUTR_KEY, JSON.stringify(data)); } catch {}
+}
+
+// SVG donut ring component
+function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
+  const cx = 90, cy = 90, r = 72, sw = 16;
+  const circ = 2 * Math.PI * r;
+  const total = kcal || 0;
+  const pKcal = protG * 4, fKcal = fatG * 9, cKcal = carbG * 4;
+  const pct = (v) => total > 0 ? v / total : 0;
+
+  // Build arc segments: protein, fat, carbs, rest
+  const segs = [
+    { val: pKcal, color: MACRO_COLORS.p  },
+    { val: fKcal, color: MACRO_COLORS.f  },
+    { val: cKcal, color: MACRO_COLORS.c  },
+  ];
+  const usedFrac = total > 0 ? Math.min(total / Math.max(goalKcal, 1), 1) : 0;
+
+  let offset = 0;
+  const arcs = segs.map(seg => {
+    const frac = pct(seg.val) * usedFrac;
+    const dash = frac * circ;
+    const arc = { ...seg, dash, offset: offset * circ };
+    offset += frac;
+    return arc;
+  });
+
+  const pctLabel = Math.round(usedFrac * 100);
+
+  return (
+    <svg className="nutr-donut-svg" viewBox="0 0 180 180">
+      {/* Track */}
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={sw}/>
+      {/* Segments */}
+      {arcs.map((arc, i) => (
+        <circle key={i} className="nutr-ring"
+          cx={cx} cy={cy} r={r} fill="none"
+          stroke={arc.color} strokeWidth={sw}
+          strokeDasharray={`${arc.dash} ${circ}`}
+          strokeDashoffset={-arc.offset}
+          transform={`rotate(-90 ${cx} ${cy})`}
+        />
+      ))}
+      {/* Center text */}
+      <text x={cx} y={cy-14} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10" fill="var(--text-muted)">CONSUMIDO</text>
+      <text x={cx} y={cy+8} textAnchor="middle" fontFamily="var(--font-display)" fontSize="26" fill="var(--accent)">{total > 0 ? total.toLocaleString() : "0"}</text>
+      <text x={cx} y={cy+24} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9" fill="var(--text-muted)">kcal</text>
+      <text x={cx} y={cy+42} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fill={pctLabel >= 100 ? "#d94f2b" : "#5a8a4a"} fontWeight="500">{pctLabel}% del objetivo</text>
+    </svg>
+  );
+}
+
+function NutritionPage() {
+  const today = todayStr();
+  const [allData, setAllData] = useState(loadNutrition);
+  const [openMeal, setOpenMeal] = useState("lunch");
+  const [drafts, setDrafts] = useState({});  // {mealId: {name, grams, kcal, p, f, c}}
+
+  // Goal (pulled from calculator history if available)
+  const [goalKcal] = useState(() => {
+    try {
+      const hist = JSON.parse(localStorage.getItem("tdee_hist") || "[]");
+      return hist[0]?.kcalObj || 2000;
+    } catch { return 2000; }
+  });
+  const [goalP] = useState(() => {
+    try {
+      const hist = JSON.parse(localStorage.getItem("tdee_hist") || "[]");
+      if (!hist[0]) return 150;
+      return Math.round(hist[0].peso * 2) || 150;
+    } catch { return 150; }
+  });
+
+  const todayData = allData[today] || {};
+  // todayData[mealId] = [{name, kcal, p, f, c, grams?}]
+
+  const getMealFoods = (mealId) => todayData[mealId] || [];
+
+  const totals = MEAL_DEFS.reduce((acc, m) => {
+    getMealFoods(m.id).forEach(food => {
+      acc.kcal += food.kcal || 0;
+      acc.p    += food.p    || 0;
+      acc.f    += food.f    || 0;
+      acc.c    += food.c    || 0;
+    });
+    return acc;
+  }, { kcal:0, p:0, f:0, c:0 });
+
+  const updateDraft = (mealId, field, value) => {
+    setDrafts(d => ({ ...d, [mealId]: { ...(d[mealId]||{}), [field]: value } }));
+  };
+
+  const addFood = (mealId, food) => {
+    const updated = {
+      ...allData,
+      [today]: {
+        ...todayData,
+        [mealId]: [...getMealFoods(mealId), { ...food, id: Date.now() }],
+      }
+    };
+    setAllData(updated);
+    saveNutrition(updated);
+    setDrafts(d => ({ ...d, [mealId]: {} }));
+  };
+
+  const addCustomFood = (mealId) => {
+    const d = drafts[mealId] || {};
+    const name = (d.name || "").trim();
+    if (!name) return;
+    const kcal = parseFloat(d.kcal) || 0;
+    const p    = parseFloat(d.p)    || 0;
+    const f    = parseFloat(d.f)    || 0;
+    const c    = parseFloat(d.c)    || 0;
+    const grams = d.grams ? parseFloat(d.grams) : undefined;
+    addFood(mealId, { name: grams ? `${name} ${grams}g` : name, kcal, p, f, c });
+  };
+
+  const removeFood = (mealId, foodId) => {
+    const updated = {
+      ...allData,
+      [today]: {
+        ...todayData,
+        [mealId]: getMealFoods(mealId).filter(f => f.id !== foodId),
+      }
+    };
+    setAllData(updated);
+    saveNutrition(updated);
+  };
+
+  const goalF = Math.round(goalKcal * 0.28 / 9);
+  const goalC = Math.round((goalKcal - goalP*4 - goalF*9) / 4);
+
+  const todayFormatted = new Date().toLocaleDateString("es-ES", { weekday:"long", day:"numeric", month:"long" });
+
+  return (
+    <div className="nutrition-page">
+      <div className="page-header">
+        <h1>Mi <em>Nutrición</em></h1>
+        <p>Diario de comidas · registro diario de calorías y macronutrientes</p>
+      </div>
+
+      <div className="nutr-layout">
+
+        {/* ── LEFT: meals ── */}
+        <div>
+          {/* Quick add */}
+          <div className="nutr-quick">
+            <div className="nutr-quick-title">Alimentos frecuentes — pulsa para añadir a la comida abierta</div>
+            <div className="nutr-quick-grid">
+              {QUICK_FOODS.map(qf => (
+                <button key={qf.name} className="nutr-quick-btn"
+                  onClick={() => addFood(openMeal, { ...qf, id: undefined })}>
+                  {qf.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Meals */}
+          <div className="nutr-meals">
+            {MEAL_DEFS.map(meal => {
+              const foods = getMealFoods(meal.id);
+              const mKcal = foods.reduce((s,f) => s + (f.kcal||0), 0);
+              const isOpen = openMeal === meal.id;
+              const draft  = drafts[meal.id] || {};
+
+              return (
+                <div key={meal.id} className="nutr-meal-card">
+                  <div className="nutr-meal-header" onClick={() => setOpenMeal(isOpen ? null : meal.id)}>
+                    <div className="nutr-meal-title">
+                      <span className="nutr-meal-emoji">{meal.emoji}</span>
+                      <span className="nutr-meal-name"><em>{meal.name}</em></span>
+                      {foods.length > 0 && <span style={{fontFamily:"var(--font-mono)",fontSize:".62rem",color:"var(--text-dim)"}}>· {foods.length} alimento{foods.length>1?"s":""}</span>}
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <span className="nutr-meal-kcal">{mKcal > 0 ? `${Math.round(mKcal)} kcal` : ""}</span>
+                      <span style={{fontFamily:"var(--font-mono)",fontSize:".8rem",color:"var(--text-dim)",transition:"transform .2s",display:"inline-block",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}>▾</span>
+                    </div>
+                  </div>
+
+                  {isOpen && (
+                    <>
+                      {foods.length === 0 ? (
+                        <div className="nutr-meal-empty">Sin alimentos registrados aún.</div>
+                      ) : (
+                        <div className="nutr-food-list">
+                          {foods.map(food => (
+                            <div key={food.id} className="nutr-food-item">
+                              <span className="nutr-food-name">{food.name}</span>
+                              <span className="nutr-food-macros">P{Math.round(food.p)}·G{Math.round(food.f)}·C{Math.round(food.c)}</span>
+                              <span className="nutr-food-kcal">{Math.round(food.kcal)} kcal</span>
+                              <button className="nutr-food-del" onClick={() => removeFood(meal.id, food.id)} title="Eliminar">×</button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Add food form */}
+                      <div className="nutr-add-row">
+                        <div className="nutr-add-form">
+                          <div className="nutr-add-field" style={{flex:1,minWidth:120}}>
+                            <label>Alimento</label>
+                            <input className="nutr-add-input wide" placeholder="Ej: Yogur griego" value={draft.name||""} onChange={e => updateDraft(meal.id,"name",e.target.value)}
+                              onKeyDown={e => e.key==="Enter" && addCustomFood(meal.id)}/>
+                          </div>
+                          <div className="nutr-add-field">
+                            <label>kcal</label>
+                            <input className="nutr-add-input narrow" type="number" min="0" placeholder="150" value={draft.kcal||""} onChange={e => updateDraft(meal.id,"kcal",e.target.value)}/>
+                          </div>
+                          <div className="nutr-add-field">
+                            <label>P(g)</label>
+                            <input className="nutr-add-input narrow" type="number" min="0" placeholder="12" value={draft.p||""} onChange={e => updateDraft(meal.id,"p",e.target.value)}/>
+                          </div>
+                          <div className="nutr-add-field">
+                            <label>G(g)</label>
+                            <input className="nutr-add-input narrow" type="number" min="0" placeholder="5" value={draft.f||""} onChange={e => updateDraft(meal.id,"f",e.target.value)}/>
+                          </div>
+                          <div className="nutr-add-field">
+                            <label>C(g)</label>
+                            <input className="nutr-add-input narrow" type="number" min="0" placeholder="8" value={draft.c||""} onChange={e => updateDraft(meal.id,"c",e.target.value)}/>
+                          </div>
+                          <div className="nutr-add-field">
+                            <label>&nbsp;</label>
+                            <button className="nutr-add-btn" onClick={() => addCustomFood(meal.id)}>+ Añadir</button>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── RIGHT: summary donut ── */}
+        <div className="nutr-summary-card">
+          <div className="nutr-summary-header">
+            <div className="nutr-summary-title">Resumen del día</div>
+            <div className="nutr-date-badge"><em>{todayFormatted.charAt(0).toUpperCase()+todayFormatted.slice(1)}</em></div>
+          </div>
+
+          <div className="nutr-donut-wrap">
+            <NutrDonut kcal={Math.round(totals.kcal)} protG={totals.p} fatG={totals.f} carbG={totals.c} goalKcal={goalKcal}/>
+
+            <div className="nutr-macro-bars">
+              {[
+                { label:"Proteína",   key:"p", val:totals.p, goal:goalP,  color:MACRO_COLORS.p, unit:"g" },
+                { label:"Grasa",      key:"f", val:totals.f, goal:goalF,  color:MACRO_COLORS.f, unit:"g" },
+                { label:"Carbohidrato",key:"c",val:totals.c, goal:goalC,  color:MACRO_COLORS.c, unit:"g" },
+              ].map(m => {
+                const pct = Math.min((m.val / Math.max(m.goal,1)) * 100, 100);
+                return (
+                  <div key={m.key} className="nutr-bar-row">
+                    <div className="nutr-bar-top">
+                      <div className="nutr-bar-lbl">
+                        <div className="nutr-bar-lbl-dot" style={{background:m.color}}/>
+                        {m.label}
+                      </div>
+                      <div className="nutr-bar-vals">
+                        <strong>{Math.round(m.val)}</strong> / {m.goal}{m.unit}
+                      </div>
+                    </div>
+                    <div className="nutr-bar-track">
+                      <div className="nutr-bar-fill" style={{width:`${pct}%`,background:m.color}}/>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="nutr-kcal-total">
+            <div className="nutr-kcal-num">{Math.round(totals.kcal).toLocaleString()}</div>
+            <div className="nutr-kcal-lbl">de {goalKcal.toLocaleString()} kcal objetivo</div>
+            <div style={{marginTop:10,display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
+              {Math.round(goalKcal - totals.kcal) > 0
+                ? <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--green)",background:"var(--green-dim)",padding:"3px 10px",borderRadius:100}}>
+                    Restan {Math.round(goalKcal - totals.kcal)} kcal
+                  </span>
+                : <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--accent)",background:"var(--accent-dim)",padding:"3px 10px",borderRadius:100}}>
+                    Objetivo alcanzado ✓
+                  </span>
+              }
+            </div>
+          </div>
+
+          {/* Per-meal breakdown */}
+          <div style={{borderTop:"1px solid var(--border)",padding:"14px 22px 18px"}}>
+            <div style={{fontFamily:"var(--font-mono)",fontSize:".55rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:10}}>Por comida</div>
+            {MEAL_DEFS.map(meal => {
+              const foods = getMealFoods(meal.id);
+              const mKcal = Math.round(foods.reduce((s,f)=>s+(f.kcal||0),0));
+              if (mKcal === 0 && foods.length === 0) return null;
+              const pct = Math.round((mKcal / Math.max(totals.kcal,1))*100);
+              return (
+                <div key={meal.id} style={{display:"flex",alignItems:"center",gap:8,marginBottom:7}}>
+                  <span style={{fontSize:".85rem",width:20,textAlign:"center",flexShrink:0}}>{meal.emoji}</span>
+                  <div style={{flex:1}}>
+                    <div style={{height:4,background:"var(--surface-2)",borderRadius:2,overflow:"hidden"}}>
+                      <div style={{height:"100%",width:`${pct}%`,background:"var(--accent)",borderRadius:2,transition:"width .5s"}}/>
+                    </div>
+                  </div>
+                  <span style={{fontFamily:"var(--font-mono)",fontSize:".65rem",color:"var(--accent)",minWidth:52,textAlign:"right"}}>{mKcal > 0 ? `${mKcal} kcal` : "—"}</span>
+                </div>
+              );
+            }).filter(Boolean)}
+            {totals.kcal === 0 && <p style={{fontSize:".72rem",color:"var(--text-dim)",fontStyle:"italic"}}>Empieza añadiendo alimentos a cualquier comida.</p>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("calculator");
@@ -1533,13 +1999,13 @@ export default function App() {
       items: [
         {id:"calculator", icon:"🧮", label:"Mi Calculadora"},
         {id:"calendar",   icon:"📅", label:"Mi Calendario"},
+        {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
       ]
     },
     {
       section: "Próximamente",
       items: [
         {id:"progress",  icon:"🏆", label:"Mi Progreso",    badge:"Soon"},
-        {id:"nutrition", icon:"🥗", label:"Mi Nutrición",   badge:"Soon"},
         {id:"profile",   icon:"👤", label:"Mi Perfil",      badge:"Soon"},
       ]
     },
@@ -1592,6 +2058,7 @@ export default function App() {
         <div className="main-content">
           {page==="calculator" && <CalculatorPage/>}
           {page==="calendar"   && <CalendarPage/>}
+          {page==="nutrition"  && <NutritionPage/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
