@@ -21,6 +21,7 @@ const MEAL_PLANS = {
 
 const FORM_KEY  = "tdee_form_v1";
 const HIST_KEY  = "tdee_hist";
+const PLAN_KEY  = "tdee_macro_plan_v1";
 const CAL_KEY   = "tdee_calendar_v1";
 
 const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
@@ -699,6 +700,46 @@ const styles = `
     .nutr-kcal-num { font-size: 1.3rem; }
   }
 
+  /* ── MACRO PLAN CUSTOMIZER ── */
+  .plan-strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .plan-strategy-btn {
+    padding: 10px 8px; border-radius: var(--r); border: 1.5px solid var(--border);
+    background: var(--bg-warm); cursor: pointer; text-align: left;
+    font-family: var(--font-body); transition: var(--tr);
+    box-shadow: 0 2px 0 var(--border);
+  }
+  .plan-strategy-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .plan-strategy-btn:active { transform: translateY(1px); box-shadow: none; }
+  .plan-strategy-btn.active { background: var(--accent-dim); border-color: var(--accent); box-shadow: none; }
+  .plan-strategy-icon { font-size: 1.1rem; margin-bottom: 4px; }
+  .plan-strategy-name { font-size: .76rem; font-weight: 500; color: var(--text); margin-bottom: 1px; }
+  .plan-strategy-btn.active .plan-strategy-name { color: var(--accent); }
+  .plan-strategy-desc { font-size: .62rem; color: var(--text-muted); line-height: 1.4; }
+
+  .plan-macro-slider { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .plan-macro-top { display: flex; justify-content: space-between; align-items: center; }
+  .plan-macro-lbl { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: var(--text-muted); }
+  .plan-macro-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .plan-macro-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; }
+  .plan-macro-grams { font-family: var(--font-mono); font-size: .65rem; color: var(--text-dim); }
+
+  .plan-total-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 12px 0 6px; gap: 2px; }
+  .plan-total-seg { border-radius: 2px; transition: flex .4s cubic-bezier(.34,1.2,.64,1); }
+  .plan-total-warn { font-family: var(--font-mono); font-size: .62rem; color: var(--accent); text-align: center; }
+  .plan-total-ok { font-family: var(--font-mono); font-size: .62rem; color: var(--green); text-align: center; }
+
+  .plan-save-btn {
+    width: 100%; padding: 10px; background: var(--accent); color: #faf7f2;
+    border: none; border-radius: var(--r); font-family: var(--font-body);
+    font-size: .82rem; font-weight: 500; cursor: pointer; transition: var(--tr);
+    box-shadow: 0 3px 0 rgba(0,0,0,.15); margin-top: 4px;
+  }
+  .plan-save-btn:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .plan-save-btn:active { transform: translateY(2px); box-shadow: none; }
+  .plan-save-btn.saved { background: var(--green); }
+
+  .plan-info-pill { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: .6rem; padding: 3px 9px; border-radius: 100px; border: 1px solid; }
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -793,6 +834,14 @@ function validateCalc(base, kcalObj, proteinG, fatG, carbG, peso) {
 function loadForm() {
   try { const s = localStorage.getItem(FORM_KEY); return s ? {...DEFAULT_FORM,...JSON.parse(s)} : DEFAULT_FORM; }
   catch { return DEFAULT_FORM; }
+}
+
+function loadPlan() {
+  try { return JSON.parse(localStorage.getItem(PLAN_KEY) || "null"); } catch { return null; }
+}
+
+function savePlan(plan) {
+  try { localStorage.setItem(PLAN_KEY, JSON.stringify(plan)); } catch {}
 }
 
 function loadCalendar() {
@@ -904,6 +953,123 @@ function MealPlan({ kcal, proteinG, fatG, carbG }) {
           );
         })}
       </div>
+    </div>
+  );
+}
+
+
+// ─── MACRO PLAN CUSTOMIZER ───────────────────────────────────────────────────
+const STRATEGIES = [
+  { id:"deficit",    icon:"🔥", name:"Déficit",       desc:"Pérdida de grasa con masa preservada",  pPct:35, fPct:25, cPct:40 },
+  { id:"recomp",     icon:"⚖️", name:"Recomposición", desc:"Perder grasa y ganar músculo a la vez", pPct:40, fPct:25, cPct:35 },
+  { id:"superavit",  icon:"💪", name:"Superávit",     desc:"Ganancia muscular con algo de grasa",   pPct:30, fPct:25, cPct:45 },
+  { id:"lean_bulk",  icon:"🎯", name:"Lean Bulk",     desc:"Superávit mínimo, máximo músculo limpio",pPct:35, fPct:25, cPct:40 },
+];
+
+function MacroPlanCustomizer({ kcalObj, onSave }) {
+  const existing = loadPlan();
+  const [strategy, setStrategy] = useState(existing?.strategy || "deficit");
+  const [pPct, setPPct] = useState(existing?.pPct ?? 35);
+  const [fPct, setFPct] = useState(existing?.fPct ?? 25);
+  const [planSaved, setPlanSaved] = useState(false);
+
+  const cPct = Math.max(0, 100 - pPct - fPct);
+  const total = pPct + fPct + cPct;
+  const ok = total === 100;
+
+  const protG = Math.round((kcalObj * pPct / 100) / 4);
+  const fatG  = Math.round((kcalObj * fPct / 100) / 9);
+  const carbG = Math.round((kcalObj * cPct / 100) / 4);
+
+  const applyStrategy = (s) => {
+    const st = STRATEGIES.find(x => x.id === s);
+    setStrategy(s);
+    setPPct(st.pPct);
+    setFPct(st.fPct);
+  };
+
+  const handleSave = () => {
+    const plan = { strategy, pPct, fPct, cPct, protG, fatG, carbG, kcalObj, updatedAt: Date.now() };
+    savePlan(plan);
+    onSave(plan);
+    setPlanSaved(true);
+    setTimeout(() => setPlanSaved(false), 2000);
+  };
+
+  return (
+    <div>
+      {/* Strategy selector */}
+      <div style={{fontFamily:"var(--font-mono)",fontSize:".56rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:10}}>Estrategia</div>
+      <div className="plan-strategy-grid">
+        {STRATEGIES.map(s => (
+          <button key={s.id} className={`plan-strategy-btn ${strategy===s.id?"active":""}`} onClick={() => applyStrategy(s.id)}>
+            <div className="plan-strategy-icon">{s.icon}</div>
+            <div className="plan-strategy-name">{s.name}</div>
+            <div className="plan-strategy-desc">{s.desc}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Visual bar */}
+      <div className="plan-total-bar">
+        <div className="plan-total-seg" style={{flex:pPct,background:"#d94f2b"}}/>
+        <div className="plan-total-seg" style={{flex:fPct,background:"#e8793a"}}/>
+        <div className="plan-total-seg" style={{flex:cPct,background:"#3a6e9e"}}/>
+      </div>
+      <div style={{display:"flex",gap:10,justifyContent:"center",marginBottom:14,flexWrap:"wrap"}}>
+        {[{label:"Proteína",pct:pPct,g:protG,color:"#d94f2b"},{label:"Grasa",pct:fPct,g:fatG,color:"#e8793a"},{label:"Carbos",pct:cPct,g:carbG,color:"#3a6e9e"}].map(m=>(
+          <span key={m.label} className="plan-info-pill" style={{color:m.color,background:m.color+"14",borderColor:m.color+"44"}}>
+            {m.label} {m.pct}% · {m.g}g
+          </span>
+        ))}
+      </div>
+
+      {/* Sliders */}
+      <div style={{fontFamily:"var(--font-mono)",fontSize:".56rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:12}}>Ajuste fino</div>
+      {[
+        {label:"Proteína", val:pPct, set:setPPct, color:"#d94f2b", g:protG, kcalPerG:4},
+        {label:"Grasa",    val:fPct, set:setFPct, color:"#e8793a", g:fatG,  kcalPerG:9},
+      ].map(m => {
+        const pct = (m.val - 10) / (70 - 10);
+        const grad = `linear-gradient(to right, ${m.color} ${pct*100}%, var(--surface-2) ${pct*100}%)`;
+        return (
+          <div key={m.label} className="plan-macro-slider">
+            <div className="plan-macro-top">
+              <div className="plan-macro-lbl">
+                <div className="plan-macro-dot" style={{background:m.color}}/>
+                {m.label}
+              </div>
+              <div style={{display:"flex",gap:8,alignItems:"baseline"}}>
+                <span className="plan-macro-val" style={{color:m.color}}>{m.val}%</span>
+                <span className="plan-macro-grams">{m.g}g · {Math.round(m.g*m.kcalPerG)} kcal</span>
+              </div>
+            </div>
+            <input type="range" min={10} max={70} step={1} value={m.val} style={{background:grad}}
+              onChange={e => m.set(Number(e.target.value))}/>
+          </div>
+        );
+      })}
+
+      {/* Carbs derived */}
+      <div className="plan-macro-slider" style={{opacity:.7}}>
+        <div className="plan-macro-top">
+          <div className="plan-macro-lbl">
+            <div className="plan-macro-dot" style={{background:"#3a6e9e"}}/>
+            Carbohidratos <span style={{fontSize:".58rem",color:"var(--text-dim)"}}>(calculado)</span>
+          </div>
+          <div style={{display:"flex",gap:8,alignItems:"baseline"}}>
+            <span className="plan-macro-val" style={{color:"#3a6e9e"}}>{cPct}%</span>
+            <span className="plan-macro-grams">{carbG}g · {Math.round(carbG*4)} kcal</span>
+          </div>
+        </div>
+      </div>
+
+      {!ok && <div className="plan-total-warn">⚠ Proteína + Grasa no puede superar 100%</div>}
+      {ok  && <div className="plan-total-ok">✓ Distribución válida — total 100%</div>}
+
+      <button className={`plan-save-btn ${planSaved?"saved":""}`} onClick={handleSave} disabled={!ok}>
+        {planSaved ? "✓ Plan guardado en Mi Nutrición" : "Guardar plan de macros"}
+      </button>
     </div>
   );
 }
@@ -1091,6 +1257,7 @@ function CalculatorPage() {
   const [tab,setTab]=useState(0);
   const [savedOk,setSavedOk]=useState(false);
   const [historial,setHistorial]=useState(()=>{try{return JSON.parse(localStorage.getItem(HIST_KEY)||"[]")}catch{return[]}});
+  const [macroPlan,setMacroPlan]=useState(()=>loadPlan());
 
   useEffect(()=>{
     const state={sexo,peso,altura,edad,grasa,diasF,duracion,rir,series,descanso,cardio,pasos,trabajo,direction,customDelta,pesoObj};
@@ -1510,29 +1677,49 @@ function CalculatorPage() {
               </div>
               {/* TAB 1 */}
               <div className={`tab-content ${tab===1?"active":""}`}>
+                {/* ── Active macros display (from plan or default) ── */}
                 <div className="psec">
-                  <div className="psec-title">Macros · {objLabel}</div>
-                  {resultado.carbG<0?(
-                    <div className="error-box"><span className="error-icon">⚠️</span><div><div className="error-title">Distribución imposible</div><div className="error-msg">Reduce el déficit o la proteína.</div></div></div>
-                  ):(
-                    <div className="macros-grid">
-                      {[{name:"Proteína",val:resultado.proteinG,color:"#d94f2b",kcal:resultado.proteinG*4},{name:"Grasa",val:resultado.fatG,color:"#e8793a",kcal:resultado.fatG*9},{name:"Carbohidrato",val:resultado.carbG,color:"#3a6e9e",kcal:resultado.carbG*4}]
-                        .map(m=>(
-                          <div className="macro-card" key={m.name}>
-                            <div className="macro-val" style={{color:m.color}}>{m.val}g</div>
-                            <div className="macro-name">{m.name}</div>
-                            <div className="macro-kcal">{m.kcal} kcal</div>
-                          </div>
-                        ))}
-                    </div>
-                  )}
+                  <div className="psec-title" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <span>Macros activos · {objLabel}</span>
+                    {macroPlan&&<span className="plan-info-pill" style={{color:"#5a8a4a",background:"rgba(90,138,74,.1)",borderColor:"rgba(90,138,74,.3)"}}>✓ Plan personalizado</span>}
+                  </div>
+                  {(()=>{
+                    const pG = macroPlan ? macroPlan.protG : resultado.proteinG;
+                    const fG = macroPlan ? macroPlan.fatG   : resultado.fatG;
+                    const cG = macroPlan ? macroPlan.carbG  : resultado.carbG;
+                    if(cG<0) return <div className="error-box"><span className="error-icon">⚠️</span><div><div className="error-title">Distribución imposible</div><div className="error-msg">Reduce el déficit o la proteína.</div></div></div>;
+                    return (
+                      <div className="macros-grid">
+                        {[{name:"Proteína",val:pG,color:"#d94f2b",kcal:pG*4},{name:"Grasa",val:fG,color:"#e8793a",kcal:fG*9},{name:"Carbohidrato",val:cG,color:"#3a6e9e",kcal:cG*4}]
+                          .map(m=>(
+                            <div className="macro-card" key={m.name}>
+                              <div className="macro-val" style={{color:m.color}}>{m.val}g</div>
+                              <div className="macro-name">{m.name}</div>
+                              <div className="macro-kcal">{m.kcal} kcal</div>
+                            </div>
+                          ))}
+                      </div>
+                    );
+                  })()}
                 </div>
-                {resultado.carbG>=0&&<div className="psec"><div className="psec-title">Por comidas</div><MealPlan kcal={resultado.kcalObj} proteinG={resultado.proteinG} fatG={resultado.fatG} carbG={resultado.carbG}/></div>}
+                {/* ── Meal distribution ── */}
+                {(()=>{
+                  const pG = macroPlan ? macroPlan.protG : resultado.proteinG;
+                  const fG = macroPlan ? macroPlan.fatG   : resultado.fatG;
+                  const cG = macroPlan ? macroPlan.carbG  : resultado.carbG;
+                  return cG>=0 ? <div className="psec"><div className="psec-title">Distribución por comidas</div><MealPlan kcal={resultado.kcalObj} proteinG={pG} fatG={fG} carbG={cG}/></div> : null;
+                })()}
+                {/* ── Other targets ── */}
                 <div className="psec">
                   <div className="psec-title">Otros objetivos</div>
                   <div className="xrow"><span className="xrow-lbl">💧 Agua</span><span className="xrow-val" style={{color:"#3a6e9e"}}>{resultado.agua} L</span></div>
                   <div className="xrow"><span className="xrow-lbl">🌾 Fibra mínima</span><span className="xrow-val" style={{color:"#5a8a4a"}}>{resultado.fibra} g</span></div>
                   <div className="xrow"><span className="xrow-lbl">🎯 Objetivo calórico</span><span className="xrow-val" style={{color:"var(--accent)"}}>{resultado.kcalObj.toLocaleString()} kcal</span></div>
+                </div>
+                {/* ── Macro plan customizer ── */}
+                <div className="psec">
+                  <div className="psec-title" style={{marginBottom:14}}>Personalizar plan de macros</div>
+                  <MacroPlanCustomizer kcalObj={resultado.kcalObj} onSave={plan=>setMacroPlan(plan)}/>
                 </div>
               </div>
               {/* TAB 2 */}
@@ -1726,14 +1913,17 @@ function NutritionPage() {
   const [openMeal, setOpenMeal] = useState("lunch");
   const [drafts, setDrafts] = useState({});  // {mealId: {name, grams, kcal, p, f, c}}
 
-  // Goal (pulled from calculator history if available)
+  // Goal — from saved macro plan (if exists) or from history
+  const [plan] = useState(() => loadPlan());
   const [goalKcal] = useState(() => {
     try {
+      if (plan?.kcalObj) return plan.kcalObj;
       const hist = JSON.parse(localStorage.getItem("tdee_hist") || "[]");
       return hist[0]?.kcalObj || 2000;
     } catch { return 2000; }
   });
   const [goalP] = useState(() => {
+    if (plan?.protG) return plan.protG;
     try {
       const hist = JSON.parse(localStorage.getItem("tdee_hist") || "[]");
       if (!hist[0]) return 150;
@@ -1797,8 +1987,8 @@ function NutritionPage() {
     saveNutrition(updated);
   };
 
-  const goalF = Math.round(goalKcal * 0.28 / 9);
-  const goalC = Math.round((goalKcal - goalP*4 - goalF*9) / 4);
+  const goalF = plan?.fatG  ?? Math.round(goalKcal * 0.28 / 9);
+  const goalC = plan?.carbG ?? Math.round((goalKcal - goalP*4 - goalF*9) / 4);
 
   const todayFormatted = new Date().toLocaleDateString("es-ES", { weekday:"long", day:"numeric", month:"long" });
 
@@ -1808,6 +1998,22 @@ function NutritionPage() {
         <h1>Mi <em>Nutrición</em></h1>
         <p>Diario de comidas · registro diario de calorías y macronutrientes</p>
       </div>
+
+      {/* ── Plan banner ── */}
+      {plan && (
+        <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"12px 18px",marginBottom:20,display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
+          <span style={{fontSize:"1.1rem"}}>{{"deficit":"🔥","recomp":"⚖️","superavit":"💪","lean_bulk":"🎯"}[plan.strategy]||"🎯"}</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:".72rem",fontWeight:500,color:"var(--text)",marginBottom:2}}>
+              Plan activo: <span style={{color:"var(--accent)"}}>{{"deficit":"Déficit","recomp":"Recomposición","superavit":"Superávit","lean_bulk":"Lean Bulk"}[plan.strategy]||plan.strategy}</span>
+            </div>
+            <div style={{fontFamily:"var(--font-mono)",fontSize:".62rem",color:"var(--text-muted)"}}>
+              {plan.kcalObj.toLocaleString()} kcal · P {plan.protG}g ({plan.pPct}%) · G {plan.fatG}g ({plan.fPct}%) · C {plan.carbG}g ({plan.cPct}%)
+            </div>
+          </div>
+          <span style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-dim)"}}>Edita en Mi Calculadora → Nutrición</span>
+        </div>
+      )}
 
       <div className="nutr-layout">
 
