@@ -190,8 +190,8 @@ const styles = `
   .field > label { font-size: .73rem; color: var(--text-muted); font-weight: 400; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .num-input-wrap { display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); overflow: hidden; transition: border-color .2s, box-shadow .2s; }
   .num-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-  .num-input-wrap input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 1rem; padding: 11px 13px; width: 100%; min-width: 0; text-align: center; }
-  .num-input-unit { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); padding: 0 10px 0 0; white-space: nowrap; }
+  .num-input-wrap input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-family: var(--font-mono); font-size: 1rem; padding: 11px 4px; min-width: 32px; text-align: center; }
+  .num-input-unit { font-family: var(--font-mono); font-size: .68rem; color: var(--text-muted); padding: 0 6px 0 0; white-space: nowrap; flex-shrink: 0; }
 
   /* ocultar spinners nativos */
   input[type=number]::-webkit-outer-spin-button,
@@ -200,9 +200,9 @@ const styles = `
 
   /* botones +/- personalizados */
   .spin-btn {
-    width: 34px; height: 100%; flex-shrink: 0;
+    width: 28px; height: 100%; flex-shrink: 0;
     background: transparent; border: none; outline: none;
-    color: var(--text-muted); font-size: 1.15rem; cursor: pointer;
+    color: var(--text-muted); font-size: 1.05rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: var(--tr); font-family: var(--font-mono); line-height: 1;
     padding: 0; user-select: none;
