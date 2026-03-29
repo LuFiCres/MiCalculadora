@@ -740,6 +740,94 @@ const styles = `
 
   .plan-info-pill { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: .6rem; padding: 3px 9px; border-radius: 100px; border: 1px solid; }
 
+  /* ── FOOD LIBRARY ── */
+  .food-lib-panel {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); overflow: hidden; margin-bottom: 4px;
+    animation: fadeUp .25s ease;
+  }
+  .food-lib-header {
+    padding: 13px 18px; background: var(--bg-warm); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .food-lib-title { font-family: var(--font-display); font-size: .95rem; }
+  .food-lib-title em { font-style: italic; color: var(--accent); }
+  .food-lib-close {
+    background: none; border: none; color: var(--text-muted); cursor: pointer;
+    font-size: 1.1rem; padding: 2px 6px; border-radius: 6px; transition: var(--tr);
+  }
+  .food-lib-close:hover { color: var(--accent); background: var(--accent-dim); }
+
+  .food-lib-form { padding: 16px 18px; border-bottom: 1px solid var(--border); }
+  .food-lib-form-title { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+
+  .food-lib-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .food-lib-field { display: flex; flex-direction: column; gap: 4px; }
+  .food-lib-field label { font-size: .6rem; color: var(--text-muted); font-family: var(--font-mono); white-space: nowrap; }
+  .food-lib-input {
+    background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r);
+    color: var(--text); font-family: var(--font-mono); font-size: .78rem;
+    padding: 6px 9px; outline: none; transition: border-color .2s, box-shadow .2s;
+  }
+  .food-lib-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .food-lib-input.name-input { width: 160px; }
+  .food-lib-input.num-input  { width: 62px; }
+  .food-lib-input.qty-input  { width: 72px; }
+
+  .food-lib-section-lbl { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .1em; color: var(--text-dim); text-transform: uppercase; margin: 8px 0 6px; width: 100%; }
+
+  .food-lib-add-btn {
+    padding: 7px 16px; background: var(--accent); color: #faf7f2;
+    border: none; border-radius: var(--r); font-family: var(--font-body);
+    font-size: .78rem; font-weight: 500; cursor: pointer; transition: var(--tr);
+    box-shadow: 0 2px 0 rgba(0,0,0,.15); white-space: nowrap; align-self: flex-end;
+  }
+  .food-lib-add-btn:hover { background: var(--accent-2); transform: translateY(-1px); }
+  .food-lib-add-btn:active { transform: translateY(1px); box-shadow: none; }
+
+  .food-lib-list { max-height: 260px; overflow-y: auto; }
+  .food-lib-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 18px; border-bottom: 1px solid var(--border);
+    transition: background .15s;
+  }
+  .food-lib-item:last-child { border-bottom: none; }
+  .food-lib-item:hover { background: var(--bg-warm); }
+  .food-lib-item-name { flex: 1; font-size: .79rem; }
+  .food-lib-item-macros { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); }
+  .food-lib-item-kcal { font-family: var(--font-mono); font-size: .74rem; color: var(--accent); min-width: 48px; text-align: right; }
+  .food-lib-item-use {
+    padding: 3px 10px; border-radius: 6px; font-size: .65rem; font-family: var(--font-mono);
+    cursor: pointer; border: 1.5px solid var(--border); background: var(--surface);
+    color: var(--text-muted); transition: var(--tr); white-space: nowrap;
+  }
+  .food-lib-item-use:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .food-lib-item-del {
+    background: none; border: none; color: var(--text-dim); cursor: pointer;
+    font-size: .85rem; padding: 2px 5px; border-radius: 4px; transition: var(--tr);
+    flex-shrink: 0;
+  }
+  .food-lib-item-del:hover { color: var(--accent); background: var(--accent-dim); }
+
+  .food-lib-empty { padding: 20px 18px; text-align: center; font-size: .76rem; color: var(--text-dim); font-style: italic; }
+
+  /* quick panel header */
+  .nutr-quick-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .nutr-quick-open-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: var(--r); font-size: .7rem; font-family: var(--font-mono);
+    cursor: pointer; border: 1.5px solid var(--border); background: var(--accent-dim);
+    color: var(--accent); transition: var(--tr); box-shadow: 0 2px 0 var(--border);
+  }
+  .nutr-quick-open-btn:hover { background: var(--accent); color: #faf7f2; border-color: var(--accent); }
+  .nutr-quick-open-btn:active { transform: translateY(1px); box-shadow: none; }
+
+  @media (max-width: 480px) {
+    .food-lib-input.name-input { width: 100%; }
+    .food-lib-row { flex-direction: column; }
+    .food-lib-input.num-input { width: 100%; }
+  }
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1822,20 +1910,14 @@ const MEAL_DEFS = [
   { id:"dinner",    name:"Cena",        emoji:"🌙" },
 ];
 
-const QUICK_FOODS = [
-  { name:"Pechuga pollo 100g", kcal:165, p:31,  f:3.6, c:0   },
-  { name:"Arroz cocido 150g",  kcal:195, p:3.6, f:0.3, c:43  },
-  { name:"Huevo L",            kcal:78,  p:6.3, f:5.3, c:0.6 },
-  { name:"Avena 50g",          kcal:188, p:6.5, f:3.5, c:32  },
-  { name:"Plátano",            kcal:89,  p:1.1, f:0.3, c:23  },
-  { name:"Aguacate ½",         kcal:120, p:1.5, f:11,  c:6.5 },
-  { name:"Atún lata 80g",      kcal:96,  p:21,  f:1,   c:0   },
-  { name:"Almendras 30g",      kcal:174, p:6,   f:15,  c:6   },
-  { name:"Leche 200ml",        kcal:98,  p:6.6, f:5,   c:9.4 },
-  { name:"Pan integral 40g",   kcal:100, p:4,   f:1.2, c:19  },
-  { name:"Salmon 120g",        kcal:250, p:25,  f:16,  c:0   },
-  { name:"Pasta cocida 180g",  kcal:264, p:9,   f:1.3, c:54  },
-];
+const QUICK_FOODS_KEY = "tdee_quick_foods_v1";
+
+function loadQuickFoods() {
+  try { return JSON.parse(localStorage.getItem(QUICK_FOODS_KEY) || "[]"); } catch { return []; }
+}
+function saveQuickFoods(list) {
+  try { localStorage.setItem(QUICK_FOODS_KEY, JSON.stringify(list)); } catch {}
+}
 
 const MACRO_COLORS = {
   p: "#d94f2b",
@@ -1911,7 +1993,10 @@ function NutritionPage() {
   const today = todayStr();
   const [allData, setAllData] = useState(loadNutrition);
   const [openMeal, setOpenMeal] = useState("lunch");
-  const [drafts, setDrafts] = useState({});  // {mealId: {name, grams, kcal, p, f, c}}
+  const [drafts, setDrafts] = useState({});
+  const [quickFoods, setQuickFoods] = useState(loadQuickFoods);
+  const [libOpen, setLibOpen] = useState(false);
+  const [libDraft, setLibDraft] = useState({ name:"", qty:"100", kcal:"", p:"", f:"", fSat:"", c:"", cSug:"", fiber:"", salt:"", kcalManual:false });
 
   // Goal — from saved macro plan (if exists) or from history
   const [plan] = useState(() => loadPlan());
@@ -1948,6 +2033,48 @@ function NutritionPage() {
 
   const updateDraft = (mealId, field, value) => {
     setDrafts(d => ({ ...d, [mealId]: { ...(d[mealId]||{}), [field]: value } }));
+  };
+
+  const updateLib = (field, val) => {
+    setLibDraft(d => {
+      const next = { ...d, [field]: val };
+      // If user manually edits kcal, flag it so auto-calc stops
+      if (field === "kcal") { next.kcalManual = val !== ""; return next; }
+      // Auto-calculate kcal from p, f, c whenever any of them change (and kcal not locked)
+      if (!next.kcalManual && ["p","f","c"].includes(field)) {
+        const p = parseFloat(next.p) || 0;
+        const f = parseFloat(next.f) || 0;
+        const c = parseFloat(next.c) || 0;
+        const auto = Math.round(p * 4 + f * 9 + c * 4);
+        next.kcal = auto > 0 ? String(auto) : "";
+      }
+      return next;
+    });
+  };
+
+  const addToLibrary = () => {
+    const name = libDraft.name.trim();
+    if (!name) return;
+    const qty   = parseFloat(libDraft.qty)   || 100;
+    const kcal  = parseFloat(libDraft.kcal)  || 0;
+    const p     = parseFloat(libDraft.p)     || 0;
+    const f     = parseFloat(libDraft.f)     || 0;
+    const fSat  = parseFloat(libDraft.fSat)  || 0;
+    const c     = parseFloat(libDraft.c)     || 0;
+    const cSug  = parseFloat(libDraft.cSug)  || 0;
+    const fiber = parseFloat(libDraft.fiber) || 0;
+    const salt  = parseFloat(libDraft.salt)  || 0;
+    const entry = { id: Date.now(), name: qty !== 100 ? `${name} ${qty}g` : name, qty, kcal, p, f, fSat, c, cSug, fiber, salt };
+    const updated = [entry, ...quickFoods];
+    setQuickFoods(updated);
+    saveQuickFoods(updated);
+    setLibDraft({ name:"", qty:"100", kcal:"", p:"", f:"", fSat:"", c:"", cSug:"", fiber:"", salt:"", kcalManual:false });
+  };
+
+  const removeFromLibrary = (id) => {
+    const updated = quickFoods.filter(f => f.id !== id);
+    setQuickFoods(updated);
+    saveQuickFoods(updated);
   };
 
   const addFood = (mealId, food) => {
@@ -2019,17 +2146,99 @@ function NutritionPage() {
 
         {/* ── LEFT: meals ── */}
         <div>
-          {/* Quick add */}
+          {/* ── Food library ── */}
           <div className="nutr-quick">
-            <div className="nutr-quick-title">Alimentos frecuentes — pulsa para añadir a la comida abierta</div>
-            <div className="nutr-quick-grid">
-              {QUICK_FOODS.map(qf => (
-                <button key={qf.name} className="nutr-quick-btn"
-                  onClick={() => addFood(openMeal, { ...qf, id: undefined })}>
-                  {qf.name}
-                </button>
-              ))}
+            <div className="nutr-quick-header">
+              <div className="nutr-quick-title">Mis alimentos frecuentes</div>
+              <button className="nutr-quick-open-btn" onClick={() => setLibOpen(v => !v)}>
+                <span style={{fontSize:"1rem",lineHeight:1}}>{libOpen ? "−" : "+"}</span>
+                {libOpen ? "Cerrar" : "Añadir alimento"}
+              </button>
             </div>
+
+            {/* Add-to-library form */}
+            {libOpen && (
+              <div className="food-lib-panel">
+                <div className="food-lib-header">
+                  <div className="food-lib-title">Nuevo <em>alimento</em></div>
+                  <button className="food-lib-close" onClick={() => setLibOpen(false)}>×</button>
+                </div>
+                <div className="food-lib-form">
+                  <div className="food-lib-form-title">Datos básicos</div>
+                  <div className="food-lib-row">
+                    <div className="food-lib-field" style={{flex:1}}>
+                      <label>Nombre del alimento</label>
+                      <input className="food-lib-input name-input" placeholder="Ej: Yogur griego 0%" value={libDraft.name} onChange={e=>updateLib("name",e.target.value)}/>
+                    </div>
+                    <div className="food-lib-field">
+                      <label>Cantidad (g/ml)</label>
+                      <input className="food-lib-input qty-input" type="number" min="1" placeholder="100" value={libDraft.qty} onChange={e=>updateLib("qty",e.target.value)}/>
+                    </div>
+                    <div className="food-lib-field">
+                      <label>Calorías (kcal) <span style={{color:"var(--text-dim)",fontSize:".55rem"}}>{libDraft.kcalManual?"manual":"auto"}</span></label>
+                      <input className="food-lib-input num-input" type="number" min="0" placeholder={libDraft.kcalManual?"":"auto"} value={libDraft.kcal} onChange={e=>updateLib("kcal",e.target.value)} title="Se calcula sola a partir de P·4 + G·9 + C·4. Edítala para fijar un valor manual."/>
+                    </div>
+                  </div>
+
+                  <div className="food-lib-section-lbl">Macronutrientes principales</div>
+                  <div className="food-lib-row">
+                    {[
+                      {key:"p",    label:"Proteínas (g)"},
+                      {key:"f",    label:"Grasas tot. (g)"},
+                      {key:"fSat", label:"— Saturadas (g)"},
+                      {key:"c",    label:"Carbohidratos (g)"},
+                      {key:"cSug", label:"— Azúcares (g)"},
+                    ].map(field => (
+                      <div key={field.key} className="food-lib-field">
+                        <label>{field.label}</label>
+                        <input className="food-lib-input num-input" type="number" min="0" step="0.1" placeholder="0"
+                          value={libDraft[field.key]} onChange={e=>updateLib(field.key,e.target.value)}/>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="food-lib-section-lbl">Otros nutrientes</div>
+                  <div className="food-lib-row">
+                    {[
+                      {key:"fiber", label:"Fibra (g)"},
+                      {key:"salt",  label:"Sal (g)"},
+                    ].map(field => (
+                      <div key={field.key} className="food-lib-field">
+                        <label>{field.label}</label>
+                        <input className="food-lib-input num-input" type="number" min="0" step="0.1" placeholder="0"
+                          value={libDraft[field.key]} onChange={e=>updateLib(field.key,e.target.value)}/>
+                      </div>
+                    ))}
+                    <div className="food-lib-field" style={{alignSelf:"flex-end"}}>
+                      <button className="food-lib-add-btn" onClick={addToLibrary}>+ Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Library list */}
+            {quickFoods.length === 0 ? (
+              <div className="food-lib-empty">Tu biblioteca está vacía. Pulsa «+ Añadir alimento» para crear tu primer alimento frecuente.</div>
+            ) : (
+              <div className="food-lib-list">
+                {quickFoods.map(qf => (
+                  <div key={qf.id} className="food-lib-item">
+                    <div style={{flex:1,minWidth:0}}>
+                      <div className="food-lib-item-name">{qf.name}</div>
+                      <div className="food-lib-item-macros">
+                        P{qf.p}g · G{qf.f}g{qf.fSat>0?` (sat${qf.fSat}g)`:""} · C{qf.c}g{qf.cSug>0?` (az${qf.cSug}g)`:""}
+                        {qf.fiber>0?` · Fib${qf.fiber}g`:""}
+                        {qf.salt>0?` · Sal${qf.salt}g`:""}
+                      </div>
+                    </div>
+                    <span className="food-lib-item-kcal">{qf.kcal} kcal</span>
+                    <button className="food-lib-item-use" onClick={() => addFood(openMeal, qf)}>+ Añadir</button>
+                    <button className="food-lib-item-del" onClick={() => removeFromLibrary(qf.id)} title="Eliminar de biblioteca">×</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Meals */}
