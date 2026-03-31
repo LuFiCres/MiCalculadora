@@ -26,6 +26,19 @@ const CAL_KEY   = "tdee_calendar_v1";
 const PESO_KEY  = "tdee_peso_v1";
 const CHECKIN_KEY  = "tdee_checkins_v1";
 const ADJUST_KEY   = "tdee_adjustments_v1";
+const NUTR_KEY        = "tdee_nutrition_v1";
+const QUICK_FOODS_KEY = "tdee_quick_foods_v1";
+
+const MEAL_DEFS = [
+  { id:"breakfast", name:"Desayuno",    emoji:"☕" },
+  { id:"midmorning",name:"Media mañana",emoji:"🍎" },
+  { id:"lunch",     name:"Almuerzo",    emoji:"🍽️" },
+  { id:"snack",     name:"Merienda",    emoji:"🫐" },
+  { id:"dinner",    name:"Cena",        emoji:"🌙" },
+];
+
+const MACRO_COLORS = { p: "#d94f2b", f: "#e8793a", c: "#3a6e9e" };
+
 
 const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const WEEKDAYS  = ["L","M","X","J","V","S","D"];
@@ -931,7 +944,7 @@ function getFirstWeekday(year, month) {
   return d === 0 ? 6 : d - 1;
 }
 
-function getCalStats(calendar, year) {
+function getCalStats(calendar) {
   let full = 0, partial = 0, failed = 0, streak = 0;
   const today = new Date();
   let checking = new Date(today);
@@ -989,6 +1002,11 @@ function loadAdjustments() {
 function saveAdjustments(data) {
   try { localStorage.setItem(ADJUST_KEY, JSON.stringify(data)); } catch {}
 }
+function loadQuickFoods() { try { return JSON.parse(localStorage.getItem(QUICK_FOODS_KEY) || "[]"); } catch { return []; } }
+function saveQuickFoods(list) { try { localStorage.setItem(QUICK_FOODS_KEY, JSON.stringify(list)); } catch {} }
+function loadNutrition() { try { return JSON.parse(localStorage.getItem(NUTR_KEY) || "{}"); } catch { return {}; } }
+function saveNutrition(data) { try { localStorage.setItem(NUTR_KEY, JSON.stringify(data)); } catch {} }
+
 
 // Get average weight for a given ISO week from peso entries
 function weekAvgWeight(pesoEntries, isoWeek) {
@@ -1020,7 +1038,7 @@ function weekAdherence(calendar, isoWeek) {
 }
 
 // Core analysis engine
-function runAnalysis({ pesoEntries, calendar, currentKcal, checkins }) {
+function runAnalysis({ pesoEntries, calendar, currentKcal }) {
   const now = new Date();
   const thisWeek = getISOWeek(now);
   const prevDate = new Date(now); prevDate.setDate(now.getDate() - 7);
@@ -1327,10 +1345,9 @@ const STRATEGIES = [
 ];
 
 function MacroPlanCustomizer({ kcalObj, onSave }) {
-  const existing = loadPlan();
-  const [strategy, setStrategy] = useState(existing?.strategy || "deficit");
-  const [pPct, setPPct] = useState(existing?.pPct ?? 35);
-  const [fPct, setFPct] = useState(existing?.fPct ?? 25);
+  const [strategy, setStrategy] = useState(() => loadPlan()?.strategy || "deficit");
+  const [pPct, setPPct] = useState(() => loadPlan()?.pPct ?? 35);
+  const [fPct, setFPct] = useState(() => loadPlan()?.fPct ?? 25);
   const [planSaved, setPlanSaved] = useState(false);
   const cPct = Math.max(0, 100 - pPct - fPct);
   const total = pPct + fPct + cPct;
@@ -1852,8 +1869,7 @@ function AnalysisPage({ onNavigate }) {
 
   const analysis = useMemo(() => runAnalysis({
     pesoEntries, calendar, currentKcal,
-    checkins,
-  }), [pesoEntries, calendar, currentKcal, checkins]);
+  }), [pesoEntries, calendar, currentKcal]);
 
   const coach = useMemo(() => buildCoachMessage(analysis, currentKcal, existingCheckin),
     [analysis, currentKcal, existingCheckin]);
@@ -2158,7 +2174,7 @@ function CalendarPage() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [toast, setToast] = useState(null);
   const now = new Date();
-  const stats = getCalStats(calendar, viewYear);
+  const stats = getCalStats(calendar);
   const prevStreak = useRef(stats.streak);
   useEffect(() => {
     const milestones = [3,7,14,21,30,60,100];
@@ -2291,7 +2307,7 @@ function CalculatorPage({ onNavigate }) {
   const limpiarHistorial=()=>{setHistorial([]);try{localStorage.removeItem(HIST_KEY);}catch{}};
 
   const total=resultado?resultado.bmr+resultado.eat+resultado.neat+resultado.tef:1;
-  const bResult=compareOn&&resultado?calcB():null;
+  const bResult=useMemo(()=>compareOn&&resultado?calcB():null,[compareOn,resultado,bDias,bDuracion,bCardio,bPasos]);
   const health=resultado?healthStatus(resultado):null;
   const currentMET=computeMET(rir,series,descanso);
   const currentCat=getCategory(direction,customDelta);
@@ -2770,24 +2786,6 @@ function CalculatorPage({ onNavigate }) {
 
 
 // ─── NUTRITION PAGE ──────────────────────────────────────────────────────────
-const NUTR_KEY = "tdee_nutrition_v1";
-const MEAL_DEFS = [
-  { id:"breakfast", name:"Desayuno",    emoji:"☕" },
-  { id:"midmorning",name:"Media mañana",emoji:"🍎" },
-  { id:"lunch",     name:"Almuerzo",    emoji:"🍽️" },
-  { id:"snack",     name:"Merienda",    emoji:"🫐" },
-  { id:"dinner",    name:"Cena",        emoji:"🌙" },
-];
-const QUICK_FOODS_KEY = "tdee_quick_foods_v1";
-function loadQuickFoods() { try { return JSON.parse(localStorage.getItem(QUICK_FOODS_KEY) || "[]"); } catch { return []; } }
-function saveQuickFoods(list) { try { localStorage.setItem(QUICK_FOODS_KEY, JSON.stringify(list)); } catch {} }
-const MACRO_COLORS = { p: "#d94f2b", f: "#e8793a", c: "#3a6e9e", rest: "var(--surface-2)" };
-function todayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-}
-function loadNutrition() { try { return JSON.parse(localStorage.getItem(NUTR_KEY) || "{}"); } catch { return {}; } }
-function saveNutrition(data) { try { localStorage.setItem(NUTR_KEY, JSON.stringify(data)); } catch {} }
 
 function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
   const cx = 90, cy = 90, r = 72, sw = 13;
@@ -2825,7 +2823,7 @@ function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
 }
 
 function NutritionPage() {
-  const today = todayStr();
+  const today = todayKey();
   const [allData, setAllData] = useState(loadNutrition);
   const [openMeal, setOpenMeal] = useState("lunch");
   const [drafts, setDrafts] = useState({});
