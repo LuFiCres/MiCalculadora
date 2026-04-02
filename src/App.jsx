@@ -26,6 +26,7 @@ const CAL_KEY   = "tdee_calendar_v1";
 const PESO_KEY  = "tdee_peso_v1";
 const CHECKIN_KEY  = "tdee_checkins_v1";
 const ADJUST_KEY   = "tdee_adjustments_v1";
+const PROFILE_KEY  = "tdee_profile_v1";
 const NUTR_KEY        = "tdee_nutrition_v1";
 const QUICK_FOODS_KEY = "tdee_quick_foods_v1";
 
@@ -799,6 +800,194 @@ const styles = `
   @media (max-width: 480px) {
     .rating-btns { gap: 4px; }
     .rating-btn { font-size: .65rem; padding: 8px 2px; }
+  }
+
+  /* ── PROFILE PAGE ── */
+  .profile-page { padding-bottom: 80px; }
+  .profile-layout { display: grid; grid-template-columns: 320px 1fr; gap: 32px; align-items: start; }
+
+  /* Avatar card */
+  .profile-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 32px;
+  }
+  .profile-card-header {
+    padding: 28px 24px 22px; text-align: center;
+    background: linear-gradient(160deg, var(--surface) 0%, var(--bg-warm) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .profile-avatar-wrap { position: relative; display: inline-block; margin-bottom: 14px; }
+  .profile-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--accent-dim); border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem; cursor: pointer; transition: var(--tr);
+    margin: 0 auto;
+  }
+  .profile-avatar:hover { transform: scale(1.05); box-shadow: 0 0 0 4px var(--accent-dim); }
+  .profile-avatar-hint {
+    position: absolute; bottom: -2px; right: -2px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: .65rem;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--surface);
+  }
+
+  .profile-emoji-picker {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    background: var(--bg-warm);
+  }
+  .profile-emoji-btn {
+    aspect-ratio: 1; border-radius: var(--r); border: 1.5px solid transparent;
+    background: var(--surface); cursor: pointer; font-size: 1.15rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--tr);
+  }
+  .profile-emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
+  .profile-emoji-btn.active { border-color: var(--accent); background: var(--accent-dim); }
+
+  .profile-name-wrap { margin-top: 12px; }
+  .profile-name-display {
+    font-family: var(--font-display); font-size: 1.4rem; line-height: 1.1; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .profile-name-display em { font-style: italic; color: var(--accent); }
+  .profile-name-edit-icon { font-size: .7rem; color: var(--text-dim); opacity: 0; transition: opacity .15s; }
+  .profile-name-display:hover .profile-name-edit-icon { opacity: 1; }
+  .profile-name-input {
+    width: 100%; background: var(--bg); border: 1.5px solid var(--accent);
+    border-radius: var(--r); color: var(--text); font-family: var(--font-display);
+    font-size: 1.2rem; padding: 6px 12px; outline: none; text-align: center;
+    box-shadow: 0 0 0 3px var(--accent-dim);
+  }
+  .profile-since {
+    font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim);
+    margin-top: 5px; letter-spacing: .06em;
+  }
+
+  /* Ficha personal */
+  .profile-ficha { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .ficha-row:last-child { border-bottom: none; }
+  .ficha-lbl { font-size: .72rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .ficha-val { font-family: var(--font-mono); font-size: .82rem; font-weight: 500; color: var(--text); }
+  .ficha-val.accent { color: var(--accent); }
+
+  /* Right column */
+  .profile-right { display: flex; flex-direction: column; gap: 20px; }
+
+  /* Logros grid */
+  .profile-section-title {
+    font-family: var(--font-mono); font-size: .58rem; letter-spacing: .18em;
+    color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .profile-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .logros-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .logro-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); padding: 16px 14px; text-align: center;
+    transition: var(--tr); position: relative; overflow: hidden;
+  }
+  .logro-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
+  .logro-icon { font-size: 1.6rem; margin-bottom: 6px; }
+  .logro-val {
+    font-family: var(--font-display); font-size: 1.8rem; line-height: 1;
+    color: var(--accent); margin-bottom: 2px;
+  }
+  .logro-val.green { color: #5a8a4a; }
+  .logro-val.blue { color: #3a6e9e; }
+  .logro-val.yellow { color: #c8860a; }
+  .logro-val.purple { color: #7a5a9e; }
+  .logro-lbl { font-family: var(--font-mono); font-size: .56rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
+  .logro-sub { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); margin-top: 3px; }
+
+  /* Plan activo card */
+  .plan-activo-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); overflow: hidden;
+  }
+  .plan-activo-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+    background: var(--bg-warm); display: flex; align-items: center; gap: 12px;
+  }
+  .plan-activo-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .plan-activo-title { font-family: var(--font-display); font-size: 1rem; }
+  .plan-activo-title em { font-style: italic; color: var(--accent); }
+  .plan-activo-badge {
+    margin-left: auto; font-family: var(--font-mono); font-size: .58rem;
+    padding: 3px 10px; border-radius: 100px; border: 1px solid;
+  }
+  .plan-activo-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+  .plan-macro-row { display: flex; align-items: center; gap: 10px; }
+  .plan-macro-bar-wrap { flex: 1; height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .plan-macro-bar-fill { height: 100%; border-radius: 3px; }
+  .plan-macro-info { display: flex; justify-content: space-between; font-size: .7rem; min-width: 120px; }
+  .plan-macro-name { color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+  .plan-macro-g { font-family: var(--font-mono); font-weight: 500; }
+
+  /* Objetivo card */
+  .objetivo-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); padding: 18px 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .objetivo-icon { font-size: 2rem; flex-shrink: 0; }
+  .objetivo-text { flex: 1; }
+  .objetivo-label { font-size: .74rem; color: var(--text-muted); margin-bottom: 2px; }
+  .objetivo-value { font-family: var(--font-display); font-size: 1.1rem; }
+  .objetivo-value em { font-style: italic; color: var(--accent); }
+  .objetivo-sub { font-family: var(--font-mono); font-size: .62rem; color: var(--text-dim); margin-top: 3px; }
+
+  /* Datos section */
+  .datos-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); overflow: hidden;
+  }
+  .datos-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 18px; border-bottom: 1px solid var(--border); gap: 14px;
+  }
+  .datos-item:last-child { border-bottom: none; }
+  .datos-item-left { display: flex; align-items: center; gap: 11px; }
+  .datos-item-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+  .datos-item-info strong { display: block; font-size: .8rem; color: var(--text); margin-bottom: 1px; }
+  .datos-item-info span { font-size: .68rem; color: var(--text-muted); }
+  .datos-clear-btn {
+    padding: 5px 12px; border-radius: var(--r); font-size: .68rem;
+    font-family: var(--font-mono); cursor: pointer; border: 1.5px solid var(--border);
+    background: transparent; color: var(--text-muted); transition: var(--tr);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .datos-clear-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .datos-clear-btn.danger:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.08); }
+
+  /* Motivational phrase */
+  .profile-quote {
+    background: linear-gradient(135deg, var(--accent-dim), var(--blue-dim));
+    border: 1.5px solid var(--border); border-radius: var(--r-lg);
+    padding: 20px 22px; text-align: center;
+  }
+  .profile-quote p { font-family: var(--font-display); font-size: 1rem; font-style: italic; line-height: 1.5; color: var(--text); }
+  .profile-quote span { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); display: block; margin-top: 6px; letter-spacing: .06em; }
+
+  @media (max-width: 1100px) {
+    .profile-layout { grid-template-columns: 280px 1fr; }
+    .logros-grid { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 900px) {
+    .profile-layout { grid-template-columns: 1fr; }
+    .profile-card { position: static; }
+    .logros-grid { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 600px) {
+    .logros-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 400px) {
+    .logros-grid { grid-template-columns: 1fr 1fr; }
+    .logro-val { font-size: 1.4rem; }
   }
 
 `;
@@ -2079,6 +2268,294 @@ function AnalysisPage({ onNavigate }) {
 }
 
 
+// ─── PROFILE PAGE ─────────────────────────────────────────────────────────────
+const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉"];
+
+const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
+const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
+const TRABAJO_LABELS = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
+const CARDIO_LABELS = { ninguno:"Sin cardio", poco:"Poco", moderado:"Moderado", bastante:"Bastante", mucho:"Mucho" };
+
+const MOTIVATIONAL = [
+  { quote:"El progreso, no la perfección, es lo que importa.", tag:"Mentalidad" },
+  { quote:"Cada registro es una promesa que te cumples a ti mismo.", tag:"Constancia" },
+  { quote:"Los datos no mienten. El cuerpo tampoco.", tag:"Evidencia" },
+  { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
+  { quote:"La racha más larga siempre empieza con el día de hoy.", tag:"Inicio" },
+];
+
+function loadProfile() {
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch { return null; }
+}
+function saveProfile(data) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {} }
+
+function ProfilePage({ onNavigate }) {
+  const [profile, setProfile] = useState(() => loadProfile() || { name:"", avatar:"💪", since: new Date().toISOString().slice(0,10) });
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState(profile.name);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [cleared, setCleared] = useState({});
+
+  // Load all data sources
+  const form      = useMemo(() => { try { return JSON.parse(localStorage.getItem(FORM_KEY)||"null"); } catch { return null; } }, []);
+  const hist      = useMemo(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); } catch { return []; } }, []);
+  const plan      = useMemo(() => loadPlan(), []);
+  const pesoData  = useMemo(() => loadPeso(), []);
+  const calendar  = useMemo(() => loadCalendar(), []);
+  const adjustments = useMemo(() => { try { return JSON.parse(localStorage.getItem(ADJUST_KEY)||"[]"); } catch { return []; } }, []);
+  const quickFoods  = useMemo(() => loadQuickFoods(), []);
+  const calStats  = useMemo(() => getCalStats(calendar), [calendar]);
+
+  // Computed stats
+  const totalDays = Object.keys(calendar).length;
+  const perfectDays = calStats.full;
+  const pesoChange = pesoData.length >= 2
+    ? (pesoData[pesoData.length-1].weight - pesoData[0].weight)
+    : null;
+  const latestTdee = hist[0]?.tdee ?? null;
+  const daysActive = useMemo(() => {
+    if (!profile.since) return 0;
+    return Math.max(0, Math.floor((Date.now() - new Date(profile.since).getTime()) / 86400000));
+  }, [profile.since]);
+
+  const quote = useMemo(() => MOTIVATIONAL[Math.floor(Date.now() / 86400000) % MOTIVATIONAL.length], []);
+
+  const updateProfile = (patch) => {
+    const next = { ...profile, ...patch };
+    setProfile(next);
+    saveProfile(next);
+  };
+
+  const saveName = () => {
+    updateProfile({ name: nameDraft.trim() });
+    setEditingName(false);
+  };
+
+  const clearSection = (key, label) => {
+    if (!window.confirm(`¿Limpiar todos los datos de ${label}? Esta acción no se puede deshacer.`)) return;
+    try { localStorage.removeItem(key); } catch {}
+    setCleared(c => ({ ...c, [key]: true }));
+  };
+
+  const displayName = profile.name || "Tu nombre";
+  const ficha = form || {};
+  const sexoLabel = ficha.sexo === "mujer" ? "Mujer" : "Hombre";
+  const imc = ficha.peso && ficha.altura ? (ficha.peso / ((ficha.altura/100)**2)).toFixed(1) : null;
+
+  const planIcon = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
+
+  return (
+    <div className="profile-page">
+      <div className="page-header">
+        <h1>Mi <em>Perfil</em></h1>
+        <p>Tu punto de partida, tu progreso real y todo lo que has construido</p>
+      </div>
+
+      <div className="profile-layout">
+        {/* ── LEFT: avatar + ficha ── */}
+        <div>
+          <div className="profile-card">
+            <div className="profile-card-header">
+              <div className="profile-avatar-wrap">
+                <div className="profile-avatar" onClick={() => setPickerOpen(v => !v)} title="Cambiar avatar">
+                  {profile.avatar}
+                </div>
+                <div className="profile-avatar-hint">✏</div>
+              </div>
+
+              {pickerOpen && (
+                <div className="profile-emoji-picker">
+                  {AVATAR_EMOJIS.map(e => (
+                    <button key={e} className={`profile-emoji-btn ${profile.avatar===e?"active":""}`}
+                      onClick={() => { updateProfile({ avatar: e }); setPickerOpen(false); }}>
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="profile-name-wrap">
+                {editingName ? (
+                  <input className="profile-name-input" autoFocus
+                    value={nameDraft}
+                    onChange={e => setNameDraft(e.target.value)}
+                    onBlur={saveName}
+                    onKeyDown={e => { if (e.key==="Enter") saveName(); if (e.key==="Escape") setEditingName(false); }}
+                    placeholder="Tu nombre..."
+                    maxLength={30}
+                  />
+                ) : (
+                  <div className="profile-name-display" onClick={() => { setNameDraft(profile.name); setEditingName(true); }}>
+                    <em>{displayName}</em>
+                    <span className="profile-name-edit-icon">✏</span>
+                  </div>
+                )}
+                <div className="profile-since">
+                  {daysActive > 0 ? `${daysActive} días usando MiCalculadora` : "Bienvenido a MiCalculadora"}
+                </div>
+              </div>
+            </div>
+
+            {/* Ficha personal */}
+            <div className="profile-ficha">
+              {[
+                { lbl:"⚧ Sexo",    val: ficha.sexo ? sexoLabel : "—" },
+                { lbl:"📅 Edad",   val: ficha.edad ? `${ficha.edad} años` : "—" },
+                { lbl:"📏 Altura", val: ficha.altura ? `${ficha.altura} cm` : "—" },
+                { lbl:"⚖️ Peso actual", val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent: true },
+                { lbl:"📊 IMC",    val: imc || "—" },
+                { lbl:"💧 Grasa", val: ficha.grasa ? `${ficha.grasa}%` : "No indicado" },
+                { lbl:"🏃 Trabajo", val: TRABAJO_LABELS[ficha.trabajo] || "—" },
+                { lbl:"🚶 Pasos/día", val: ficha.pasos ? ficha.pasos.toLocaleString() : "—" },
+              ].map(r => (
+                <div key={r.lbl} className="ficha-row">
+                  <span className="ficha-lbl">{r.lbl}</span>
+                  <span className={`ficha-val ${r.accent?"accent":""}`}>{r.val}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── RIGHT ── */}
+        <div className="profile-right">
+
+          {/* Objetivo activo */}
+          {(plan || ficha.direction) && (
+            <div className="objetivo-card">
+              <div className="objetivo-icon">{plan ? planIcon : "🎯"}</div>
+              <div className="objetivo-text">
+                <div className="objetivo-label">Objetivo actual</div>
+                <div className="objetivo-value">
+                  <em>{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</em>
+                </div>
+                <div className="objetivo-sub">
+                  {plan
+                    ? `${plan.kcalObj?.toLocaleString()} kcal/día · P${plan.pPct}% G${plan.fPct}% C${plan.cPct}%`
+                    : latestTdee ? `TDEE: ${latestTdee.toLocaleString()} kcal/día` : "Calcula tu TDEE para empezar"}
+                </div>
+              </div>
+              {plan && (
+                <button className="today-banner-cta" onClick={() => onNavigate("calculator")}
+                  style={{flexShrink:0}}>Editar →</button>
+              )}
+            </div>
+          )}
+
+          {/* Logros */}
+          <div>
+            <div className="profile-section-title">Tus logros</div>
+            <div className="logros-grid">
+              {[
+                { icon:"🔥", val: calStats.streak, label:"Racha actual", sub:"días seguidos", color:"accent" },
+                { icon:"✅", val: perfectDays, label:"Días perfectos", sub:"3/3 hábitos", color:"green" },
+                { icon:"📅", val: totalDays, label:"Días registrados", sub:"en el calendario", color:"blue" },
+                { icon:"⚖️", val: pesoData.length, label:"Pesajes", sub: pesoChange !== null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
+                { icon:"🧠", val: adjustments.length, label:"Ajustes aplicados", sub:"por Mi Análisis", color:"purple" },
+                { icon:"🥗", val: quickFoods.length, label:"Alimentos", sub:"en tu biblioteca", color:"accent" },
+              ].map((l, i) => (
+                <div key={i} className="logro-card">
+                  <div className="logro-icon">{l.icon}</div>
+                  <div className={`logro-val ${l.color}`}>{l.val}</div>
+                  <div className="logro-lbl">{l.label}</div>
+                  <div className="logro-sub">{l.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Plan activo macros */}
+          {plan && (
+            <div className="plan-activo-card">
+              <div className="plan-activo-header">
+                <div className="plan-activo-icon">{planIcon}</div>
+                <div>
+                  <div className="plan-activo-title">Plan de <em>macros</em> activo</div>
+                  <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-muted)",marginTop:1}}>
+                    {plan.kcalObj?.toLocaleString()} kcal objetivo
+                  </div>
+                </div>
+                <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
+              </div>
+              <div className="plan-activo-body">
+                {[
+                  { name:"Proteína", g: plan.protG, pct: plan.pPct, color:"#d94f2b" },
+                  { name:"Grasa",    g: plan.fatG,  pct: plan.fPct, color:"#e8793a" },
+                  { name:"Carbos",   g: plan.carbG, pct: plan.cPct, color:"#3a6e9e" },
+                ].map(m => (
+                  <div key={m.name} className="plan-macro-row">
+                    <div className="plan-macro-info">
+                      <span className="plan-macro-name">
+                        <span style={{width:8,height:8,borderRadius:2,background:m.color,display:"inline-block",flexShrink:0}}/>
+                        {m.name}
+                      </span>
+                    </div>
+                    <div className="plan-macro-bar-wrap">
+                      <div className="plan-macro-bar-fill" style={{width:`${m.pct}%`,background:m.color}}/>
+                    </div>
+                    <div style={{fontFamily:"var(--font-mono)",fontSize:".7rem",minWidth:68,textAlign:"right"}}>
+                      <span className="plan-macro-g" style={{color:m.color}}>{m.g}g</span>
+                      <span style={{color:"var(--text-dim)",marginLeft:4}}>{m.pct}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Cita motivacional */}
+          <div className="profile-quote">
+            <p>"{quote.quote}"</p>
+            <span>{quote.tag}</span>
+          </div>
+
+          {/* Gestión de datos */}
+          <div>
+            <div className="profile-section-title">Gestión de datos</div>
+            <div className="datos-card">
+              {[
+                { key: CAL_KEY,       icon:"📅", label:"Calendario y hábitos", desc:"Todos los registros diarios" },
+                { key: PESO_KEY,      icon:"⚖️", label:"Registros de peso",    desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
+                { key: NUTR_KEY,      icon:"🥗", label:"Diario de nutrición",  desc:"Alimentos registrados" },
+                { key: QUICK_FOODS_KEY,icon:"📚",label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
+                { key: HIST_KEY,      icon:"🧮", label:"Historial de cálculos", desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
+                { key: ADJUST_KEY,    icon:"🧠", label:"Historial de ajustes", desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
+              ].map(item => (
+                <div key={item.key} className="datos-item">
+                  <div className="datos-item-left">
+                    <span className="datos-item-icon">{item.icon}</span>
+                    <div className="datos-item-info">
+                      <strong>{item.label}</strong>
+                      <span>{cleared[item.key] ? "✓ Limpiado" : item.desc}</span>
+                    </div>
+                  </div>
+                  <button className="datos-clear-btn danger"
+                    onClick={() => clearSection(item.key, item.label)}
+                    disabled={!!cleared[item.key]}>
+                    {cleared[item.key] ? "Limpiado" : "Limpiar"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer info */}
+          <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"14px 18px",display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:"1rem"}}>🔒</span>
+            <div>
+              <div style={{fontSize:".75rem",fontWeight:500,color:"var(--text)",marginBottom:1}}>Tus datos son solo tuyos</div>
+              <div style={{fontSize:".68rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. No se envía nada a servidores externos.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 // ─── DAY MODAL ───────────────────────────────────────────────────────────────
 function DayModal({ dateKey, calendar, onSave, onClose }) {
   const existing = calendar[dateKey] || {};
@@ -3085,13 +3562,13 @@ export default function App() {
         {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
         {id:"peso",       icon:"⚖️", label:"Mi Peso"},
         {id:"analisis",   icon:"🧠", label:"Mi Análisis"},
+        {id:"profile",   icon:"👤", label:"Mi Perfil"},
       ]
     },
     {
       section: "Próximamente",
       items: [
         {id:"progress",  icon:"🏆", label:"Mi Progreso",    badge:"Soon"},
-        {id:"profile",   icon:"👤", label:"Mi Perfil",      badge:"Soon"},
       ]
     },
   ];
@@ -3107,7 +3584,7 @@ export default function App() {
         <nav className={`sidebar ${sidebarOpen?"open":""}`}>
           <div className="sidebar-logo">
             <h2>Gasto <em>calórico</em></h2>
-            <p>TDEE CALCULATOR v4.0</p>
+            <p>TDEE CALCULATOR v4.1</p>
           </div>
           <div className="sidebar-nav">
             {NAV.map(group=>(
@@ -3140,6 +3617,7 @@ export default function App() {
           {page==="nutrition"  && <NutritionPage/>}
           {page==="peso"       && <PesoPage/>}
           {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
+          {page==="profile"   && <ProfilePage onNavigate={navigate}/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
