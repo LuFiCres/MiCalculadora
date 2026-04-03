@@ -2491,7 +2491,7 @@ const MOTIVATIONAL = [
   { quote:"La racha más larga siempre empieza con el día de hoy.", tag:"Inicio" },
 ];
 
-function ProfilePage({ user, onLogout, onNavigate }) {
+function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
   const [profile, setProfile] = useState(() => loadProfile() || { avatar: user?.avatar || "💪" });
   const [pickerOpen, setPickerOpen] = useState(false);
   const [cleared, setCleared] = useState({});
@@ -2531,6 +2531,21 @@ function ProfilePage({ user, onLogout, onNavigate }) {
 
   const NUTR_KEY_LOCAL = "tdee_nutrition_v1";
   const QF_KEY_LOCAL   = "tdee_quick_foods_v1";
+
+  // ── Not logged in: show auth inline ─────────────────────────────────────
+  if (!user) {
+    return (
+      <div className="profile-page">
+        <div className="page-header">
+          <h1>Mi <em>Perfil</em></h1>
+          <p>Crea una cuenta o inicia sesión para guardar tu perfil — sin cuenta puedes seguir usando la app normalmente</p>
+        </div>
+        <div style={{maxWidth:440,margin:"0 auto"}}>
+          <AuthPage onLogin={onLogin}/>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-page">
@@ -4007,8 +4022,7 @@ export default function App() {
   return (
     <>
       <style>{styles}</style>
-      {!currentUser && <AuthPage onLogin={handleLogin}/>}
-      {currentUser && <div className="app-shell">
+      <div className="app-shell">
 
         <button className="burger" onClick={()=>setSidebarOpen(v=>!v)}>
           <span/><span/><span/>
@@ -4046,6 +4060,8 @@ export default function App() {
               <span>{darkMode?"Modo claro":"Modo oscuro"}</span>
             </button>
             {autoSaveTs&&<div className="autosave-badge">✓ Guardado automático {autoSaveTs}</div>}
+            {currentUser && <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-muted)",textAlign:"center",padding:"2px 0"}}>👤 {currentUser.username}</div>}
+            {!currentUser && <button onClick={()=>navigate("profile")} style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--accent)",background:"var(--accent-dim)",border:"1px solid var(--accent-dim)",borderRadius:6,padding:"4px 10px",cursor:"pointer",width:"100%"}}>Iniciar sesión →</button>}
           </div>
         </nav>
 
@@ -4055,7 +4071,7 @@ export default function App() {
           {page==="nutrition"  && <NutritionPage/>}
           {page==="peso"       && <PesoPage/>}
           {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
-          {page==="profile"    && <ProfilePage user={currentUser} onLogout={handleLogout} onNavigate={navigate}/>}
+          {page==="profile"    && <ProfilePage user={currentUser} onLogin={handleLogin} onLogout={handleLogout} onNavigate={navigate}/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
@@ -4063,7 +4079,7 @@ export default function App() {
             </div>
           )}
         </div>
-      </div>}
+      </div>
     </>
   );
 }
