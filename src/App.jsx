@@ -26,6 +26,8 @@ const CAL_KEY   = "tdee_calendar_v1";
 const PESO_KEY  = "tdee_peso_v1";
 const CHECKIN_KEY  = "tdee_checkins_v1";
 const ADJUST_KEY   = "tdee_adjustments_v1";
+const PROFILE_KEY  = "tdee_profile_v1";
+const AUTH_KEY     = "tdee_auth_v1";
 
 const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const WEEKDAYS  = ["L","M","X","J","V","S","D"];
@@ -1017,6 +1019,124 @@ const styles = `
     .rating-btn { font-size: .65rem; padding: 8px 2px; }
   }
 
+  /* ── AUTH PAGE ── */
+  .auth-shell {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--bg); padding: 24px;
+  }
+  .auth-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); width: 100%; max-width: 400px;
+    overflow: hidden; animation: fadeUp .35s ease;
+    box-shadow: 0 8px 40px rgba(0,0,0,.08);
+  }
+  .auth-header {
+    padding: 28px 28px 20px;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg-warm) 100%);
+    border-bottom: 1px solid var(--border); text-align: center;
+  }
+  .auth-logo { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 4px; }
+  .auth-logo em { font-style: italic; color: var(--accent); }
+  .auth-logo-sub { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); letter-spacing: .1em; }
+  .auth-tabs { display: flex; border-bottom: 1px solid var(--border); }
+  .auth-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: .78rem; font-family: var(--font-body); color: var(--text-muted); border: none; background: transparent; border-bottom: 2px solid transparent; transition: var(--tr); }
+  .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--accent-dim); }
+  .auth-body { padding: 24px 28px; }
+  .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .auth-field label { font-size: .72rem; color: var(--text-muted); font-family: var(--font-mono); }
+  .auth-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font-body); font-size: .88rem; padding: 10px 13px; outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
+  .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .auth-input::placeholder { color: var(--text-dim); }
+  .auth-input.error { border-color: #d94f2b; box-shadow: 0 0 0 3px rgba(217,79,43,.12); }
+  .auth-btn { width: 100%; padding: 13px; background: var(--accent); color: #faf7f2; border: none; border-radius: var(--r); font-family: var(--font-body); font-size: .88rem; font-weight: 500; cursor: pointer; transition: var(--tr); box-shadow: var(--shadow-btn), 0 4px 0 rgba(0,0,0,.12); margin-top: 4px; }
+  .auth-btn:hover { background: var(--accent-2); transform: translateY(-2px); }
+  .auth-btn:active { transform: translateY(2px); box-shadow: none; }
+  .auth-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .auth-error { background: rgba(217,79,43,.08); border: 1px solid rgba(217,79,43,.3); border-radius: var(--r); padding: 9px 13px; font-size: .75rem; color: #d94f2b; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+  .auth-success { background: rgba(90,138,74,.08); border: 1px solid rgba(90,138,74,.3); border-radius: var(--r); padding: 9px 13px; font-size: .75rem; color: #5a8a4a; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+  .auth-link { font-size: .72rem; color: var(--accent); cursor: pointer; background: none; border: none; text-decoration: underline; font-family: var(--font-body); padding: 0; }
+  .auth-link:hover { color: var(--accent-2); }
+  .auth-footer { text-align: center; margin-top: 14px; font-size: .72rem; color: var(--text-muted); }
+  .auth-hint { font-size: .68rem; color: var(--text-dim); line-height: 1.5; margin-top: -10px; margin-bottom: 12px; }
+  .pw-wrap { position: relative; }
+  .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: .8rem; padding: 2px 5px; transition: color .15s; }
+  .pw-toggle:hover { color: var(--accent); }
+
+  /* ── PROFILE PAGE ── */
+  .profile-page { padding-bottom: 80px; }
+  .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
+  .profile-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 32px; }
+  .profile-card-header { padding: 28px 22px 20px; text-align: center; background: linear-gradient(160deg, var(--surface) 0%, var(--bg-warm) 100%); border-bottom: 1px solid var(--border); }
+  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; transition: var(--tr); margin: 0 auto 14px; }
+  .profile-avatar:hover { transform: scale(1.06); box-shadow: 0 0 0 4px var(--accent-dim); }
+  .profile-emoji-picker { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); }
+  .profile-emoji-btn { aspect-ratio:1; border-radius: var(--r); border: 1.5px solid transparent; background: var(--surface); cursor: pointer; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; transition: var(--tr); }
+  .profile-emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
+  .profile-emoji-btn.active { border-color: var(--accent); background: var(--accent-dim); }
+  .profile-name { font-family: var(--font-display); font-size: 1.3rem; }
+  .profile-name em { font-style: italic; color: var(--accent); }
+  .profile-username { font-family: var(--font-mono); font-size: .62rem; color: var(--text-dim); margin-top: 3px; }
+  .profile-since { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); margin-top: 5px; letter-spacing: .04em; }
+  .profile-ficha { padding: 14px 18px; }
+  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .ficha-row:last-child { border-bottom: none; }
+  .ficha-lbl { font-size: .71rem; color: var(--text-muted); }
+  .ficha-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
+  .ficha-val.accent { color: var(--accent); }
+  .profile-logout-btn { width: calc(100% - 36px); margin: 14px 18px; padding: 9px; border: 1.5px solid var(--border); border-radius: var(--r); background: transparent; color: var(--text-muted); font-family: var(--font-mono); font-size: .68rem; cursor: pointer; transition: var(--tr); }
+  .profile-logout-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
+  .profile-right { display: flex; flex-direction: column; gap: 20px; }
+  .profile-section-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .18em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .profile-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .logros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .logro-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 14px 12px; text-align: center; transition: var(--tr); }
+  .logro-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
+  .logro-icon { font-size: 1.5rem; margin-bottom: 5px; }
+  .logro-val { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--accent); margin-bottom: 1px; }
+  .logro-val.green { color: #5a8a4a; }
+  .logro-val.blue { color: #3a6e9e; }
+  .logro-val.yellow { color: #c8860a; }
+  .logro-val.purple { color: #7a5a9e; }
+  .logro-lbl { font-family: var(--font-mono); font-size: .55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+  .logro-sub { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); margin-top: 2px; }
+  .objetivo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
+  .objetivo-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .objetivo-text { flex: 1; }
+  .objetivo-label { font-size: .72rem; color: var(--text-muted); margin-bottom: 2px; }
+  .objetivo-value { font-family: var(--font-display); font-size: 1.05rem; }
+  .objetivo-value em { font-style: italic; color: var(--accent); }
+  .objetivo-sub { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); margin-top: 2px; }
+  .plan-activo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .plan-activo-header { padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
+  .plan-activo-title { font-family: var(--font-display); font-size: .95rem; }
+  .plan-activo-title em { font-style: italic; color: var(--accent); }
+  .plan-activo-badge { margin-left: auto; font-family: var(--font-mono); font-size: .57rem; padding: 2px 8px; border-radius: 100px; border: 1px solid; }
+  .plan-activo-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .plan-macro-row { display: flex; align-items: center; gap: 8px; }
+  .plan-macro-bar-wrap { flex: 1; height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .plan-macro-bar-fill { height: 100%; border-radius: 3px; }
+  .datos-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .datos-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
+  .datos-item:last-child { border-bottom: none; }
+  .datos-item-left { display: flex; align-items: center; gap: 10px; }
+  .datos-item-icon { font-size: .95rem; width: 18px; text-align: center; flex-shrink: 0; }
+  .datos-item-info strong { display: block; font-size: .78rem; color: var(--text); margin-bottom: 1px; }
+  .datos-item-info span { font-size: .66rem; color: var(--text-muted); }
+  .datos-clear-btn { padding: 4px 10px; border-radius: var(--r); font-size: .65rem; font-family: var(--font-mono); cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); transition: var(--tr); white-space: nowrap; flex-shrink: 0; }
+  .datos-clear-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
+  .datos-clear-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .profile-quote { background: linear-gradient(135deg, var(--accent-dim), var(--blue-dim)); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px 20px; text-align: center; }
+  .profile-quote p { font-family: var(--font-display); font-size: .95rem; font-style: italic; line-height: 1.55; color: var(--text); }
+  .profile-quote span { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); display: block; margin-top: 5px; letter-spacing: .06em; }
+
+  @media (max-width: 1100px) { .profile-layout { grid-template-columns: 270px 1fr; } }
+  @media (max-width: 900px) {
+    .profile-layout { grid-template-columns: 1fr; }
+    .profile-card { position: static; }
+    .logros-grid { grid-template-columns: repeat(3,1fr); }
+  }
+  @media (max-width: 600px) { .logros-grid { grid-template-columns: repeat(2,1fr); } }
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1148,6 +1268,28 @@ function savePlan(plan) {
   try { localStorage.setItem(PLAN_KEY, JSON.stringify(plan)); } catch {}
 }
 
+
+
+// ─── AUTH & PROFILE HELPERS ──────────────────────────────────────────────────
+function hashPw(str) {
+  // Deterministic hash for localStorage — client-side only demo auth
+  let h = 0;
+  for (let i = 0; i < str.length; i++) { h = (Math.imul(31, h) + str.charCodeAt(i)) | 0; }
+  return h.toString(36);
+}
+
+function loadUsers() {
+  try { return JSON.parse(localStorage.getItem(AUTH_KEY) || "[]"); } catch { return []; }
+}
+function saveUsers(list) {
+  try { localStorage.setItem(AUTH_KEY, JSON.stringify(list)); } catch {}
+}
+function loadProfile() {
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch { return null; }
+}
+function saveProfileData(data) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
+}
 
 function loadPeso() {
   try { return JSON.parse(localStorage.getItem(PESO_KEY) || "[]"); }
@@ -2178,6 +2320,371 @@ function AnalysisPage({ onNavigate }) {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+// ─── AUTH PAGE ────────────────────────────────────────────────────────────────
+const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉"];
+
+function AuthPage({ onLogin }) {
+  const [tab, setTab] = useState("login");
+  const [form, setForm] = useState({ username:"", email:"", password:"", password2:"" });
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const set = (k, v) => { setForm(f => ({...f, [k]: v})); setError(""); setSuccess(""); };
+
+  const handleLogin = () => {
+    if (!form.username.trim() || !form.password) { setError("Rellena usuario y contraseña."); return; }
+    const users = loadUsers();
+    const user = users.find(u => u.username.toLowerCase() === form.username.trim().toLowerCase());
+    if (!user) { setError("Usuario no encontrado."); return; }
+    if (user.pwHash !== hashPw(form.password)) { setError("Contraseña incorrecta."); return; }
+    setLoading(true);
+    setTimeout(() => onLogin(user), 400);
+  };
+
+  const handleRegister = () => {
+    const u = form.username.trim();
+    if (!u || !form.email.trim() || !form.password) { setError("Completa todos los campos."); return; }
+    if (u.length < 3) { setError("El usuario debe tener al menos 3 caracteres."); return; }
+    if (!/^[a-zA-Z0-9_-]{3,20}$/.test(u)) { setError("Solo letras, números, guiones y guiones bajos (3-20 caracteres)."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) { setError("Introduce un email válido."); return; }
+    if (form.password.length < 6) { setError("La contraseña debe tener al menos 6 caracteres."); return; }
+    if (form.password !== form.password2) { setError("Las contraseñas no coinciden."); return; }
+    const users = loadUsers();
+    if (users.find(x => x.username.toLowerCase() === u.toLowerCase())) { setError("Ese usuario ya existe."); return; }
+    const newUser = { id: Date.now().toString(36), username: u, email: form.email.trim().toLowerCase(), pwHash: hashPw(form.password), avatar: "💪", since: new Date().toISOString().slice(0,10) };
+    saveUsers([...users, newUser]);
+    setLoading(true);
+    setTimeout(() => onLogin(newUser), 400);
+  };
+
+  const handleForgot = () => {
+    if (!form.username.trim()) { setError("Introduce tu usuario."); return; }
+    const users = loadUsers();
+    const user = users.find(u => u.username.toLowerCase() === form.username.trim().toLowerCase());
+    if (!user) { setError("No encontramos ese usuario."); return; }
+    const parts = user.email.split("@");
+    const masked = parts[0].slice(0,2) + "***@" + parts[1];
+    setSuccess(`Tu email de recuperación es: ${masked}`);
+  };
+
+  return (
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">Gasto <em>calórico</em></div>
+          <div className="auth-logo-sub">TDEE CALCULATOR v5.0</div>
+        </div>
+
+        {tab !== "forgot" && (
+          <div className="auth-tabs">
+            <button className={`auth-tab ${tab==="login"?"active":""}`} onClick={()=>{setTab("login");setError("");setSuccess("");}}>Iniciar sesión</button>
+            <button className={`auth-tab ${tab==="register"?"active":""}`} onClick={()=>{setTab("register");setError("");setSuccess("");}}>Crear cuenta</button>
+          </div>
+        )}
+
+        <div className="auth-body">
+          {error   && <div className="auth-error">⚠ {error}</div>}
+          {success && <div className="auth-success">✓ {success}</div>}
+
+          {tab === "login" && (
+            <>
+              <div className="auth-field">
+                <label>Nombre de usuario</label>
+                <input className={`auth-input ${error&&!form.username?"error":""}`} placeholder="tucuenta"
+                  value={form.username} onChange={e=>set("username",e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&handleLogin()}/>
+              </div>
+              <div className="auth-field">
+                <label>Contraseña</label>
+                <div className="pw-wrap">
+                  <input className={`auth-input ${error&&!form.password?"error":""}`}
+                    type={showPw?"text":"password"} placeholder="••••••••"
+                    value={form.password} onChange={e=>set("password",e.target.value)}
+                    onKeyDown={e=>e.key==="Enter"&&handleLogin()} style={{paddingRight:38}}/>
+                  <button className="pw-toggle" type="button" onClick={()=>setShowPw(v=>!v)}>{showPw?"🙈":"👁"}</button>
+                </div>
+              </div>
+              <button className="auth-btn" onClick={handleLogin} disabled={loading}>
+                {loading ? "Entrando…" : "Iniciar sesión"}
+              </button>
+              <div className="auth-footer">
+                <button className="auth-link" onClick={()=>{setTab("forgot");setError("");setSuccess("");}}>¿Olvidaste tu contraseña?</button>
+              </div>
+            </>
+          )}
+
+          {tab === "register" && (
+            <>
+              <div className="auth-field">
+                <label>Nombre de usuario</label>
+                <input className="auth-input" placeholder="minombre (min. 3 caracteres)"
+                  value={form.username} onChange={e=>set("username",e.target.value)}/>
+                <span className="auth-hint">Letras, números, - y _. Entre 3 y 20 caracteres.</span>
+              </div>
+              <div className="auth-field">
+                <label>Email (para recuperar contraseña)</label>
+                <input className="auth-input" type="email" placeholder="tu@email.com"
+                  value={form.email} onChange={e=>set("email",e.target.value)}/>
+                <span className="auth-hint">Solo lo usamos si olvidas tu contraseña.</span>
+              </div>
+              <div className="auth-field">
+                <label>Contraseña</label>
+                <div className="pw-wrap">
+                  <input className="auth-input" type={showPw?"text":"password"} placeholder="Mín. 6 caracteres"
+                    value={form.password} onChange={e=>set("password",e.target.value)} style={{paddingRight:38}}/>
+                  <button className="pw-toggle" type="button" onClick={()=>setShowPw(v=>!v)}>{showPw?"🙈":"👁"}</button>
+                </div>
+              </div>
+              <div className="auth-field">
+                <label>Confirmar contraseña</label>
+                <input className="auth-input" type={showPw?"text":"password"} placeholder="Repite la contraseña"
+                  value={form.password2} onChange={e=>set("password2",e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&handleRegister()}/>
+              </div>
+              <button className="auth-btn" onClick={handleRegister} disabled={loading}>
+                {loading ? "Creando cuenta…" : "Crear cuenta"}
+              </button>
+            </>
+          )}
+
+          {tab === "forgot" && (
+            <>
+              <div style={{marginBottom:16,fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.6}}>
+                Introduce tu usuario y te mostraremos el email enmascarado con el que te registraste.
+              </div>
+              <div className="auth-field">
+                <label>Nombre de usuario</label>
+                <input className="auth-input" placeholder="tucuenta"
+                  value={form.username} onChange={e=>set("username",e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&handleForgot()}/>
+              </div>
+              <button className="auth-btn" onClick={handleForgot}>Ver email de recuperación</button>
+              <div className="auth-footer" style={{marginTop:12}}>
+                <button className="auth-link" onClick={()=>{setTab("login");setError("");setSuccess("");}}>← Volver al login</button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROFILE PAGE ─────────────────────────────────────────────────────────────
+const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
+const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
+const TRABAJO_LABELS   = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
+const MOTIVATIONAL = [
+  { quote:"El progreso, no la perfección, es lo que importa.", tag:"Mentalidad" },
+  { quote:"Cada registro es una promesa que te cumples a ti mismo.", tag:"Constancia" },
+  { quote:"Los datos no mienten. El cuerpo tampoco.", tag:"Evidencia" },
+  { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
+  { quote:"La racha más larga siempre empieza con el día de hoy.", tag:"Inicio" },
+];
+
+function ProfilePage({ user, onLogout, onNavigate }) {
+  const [profile, setProfile] = useState(() => loadProfile() || { avatar: user?.avatar || "💪" });
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [cleared, setCleared] = useState({});
+
+  const form        = useMemo(() => { try { return JSON.parse(localStorage.getItem(FORM_KEY)||"null"); } catch { return null; } }, []);
+  const hist        = useMemo(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); } catch { return []; } }, []);
+  const plan        = useMemo(() => loadPlan(), []);
+  const pesoData    = useMemo(() => loadPeso(), []);
+  const calendar    = useMemo(() => loadCalendar(), []);
+  const adjustments = useMemo(() => { try { return JSON.parse(localStorage.getItem(ADJUST_KEY)||"[]"); } catch { return []; } }, []);
+  const quickFoods  = useMemo(() => loadQuickFoods(), []);
+  const calStats    = useMemo(() => getCalStats(calendar), [calendar]);
+  const pesoChange  = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
+  const ficha       = form || {};
+  const imc         = ficha.peso && ficha.altura ? (ficha.peso / ((ficha.altura/100)**2)).toFixed(1) : null;
+  const planIcon    = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
+  const quote       = useMemo(() => MOTIVATIONAL[Math.floor(Date.now() / 86400000) % MOTIVATIONAL.length], []);
+  const daysActive  = useMemo(() => {
+    if (!user?.since) return 0;
+    return Math.max(0, Math.floor((Date.now() - new Date(user.since).getTime()) / 86400000));
+  }, [user]);
+
+  const updateAvatar = (emoji) => {
+    const p = { ...profile, avatar: emoji };
+    setProfile(p); saveProfileData(p);
+    const users = loadUsers();
+    const idx = users.findIndex(u => u.id === user.id);
+    if (idx >= 0) { users[idx].avatar = emoji; saveUsers(users); }
+    setPickerOpen(false);
+  };
+
+  const clearSection = (key, label) => {
+    if (!window.confirm(`¿Limpiar todos los datos de "${label}"? No se puede deshacer.`)) return;
+    try { localStorage.removeItem(key); } catch {}
+    setCleared(c => ({ ...c, [key]: true }));
+  };
+
+  const NUTR_KEY_LOCAL = "tdee_nutrition_v1";
+  const QF_KEY_LOCAL   = "tdee_quick_foods_v1";
+
+  return (
+    <div className="profile-page">
+      <div className="page-header">
+        <h1>Mi <em>Perfil</em></h1>
+        <p>Tu cuenta, tus logros y la gestión de tus datos</p>
+      </div>
+
+      <div className="profile-layout">
+        {/* LEFT: user card */}
+        <div>
+          <div className="profile-card">
+            <div className="profile-card-header">
+              <div className="profile-avatar" onClick={()=>setPickerOpen(v=>!v)} title="Cambiar avatar">
+                {profile.avatar}
+              </div>
+              {pickerOpen && (
+                <div className="profile-emoji-picker">
+                  {AVATAR_EMOJIS.map(e=>(
+                    <button key={e} className={`profile-emoji-btn ${profile.avatar===e?"active":""}`} onClick={()=>updateAvatar(e)}>{e}</button>
+                  ))}
+                </div>
+              )}
+              <div className="profile-name"><em>{user?.username || "Usuario"}</em></div>
+              <div className="profile-username">@{user?.username?.toLowerCase() || "—"}</div>
+              <div className="profile-since">{daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando la app` : "Cuenta nueva"}</div>
+            </div>
+
+            <div className="profile-ficha">
+              {[
+                { lbl:"📧 Email",     val: user?.email ? (()=>{ const p=user.email.split("@"); return p[0].slice(0,3)+"***@"+p[1]; })() : "—" },
+                { lbl:"⚧ Sexo",      val: ficha.sexo === "mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
+                { lbl:"📅 Edad",      val: ficha.edad ? `${ficha.edad} años` : "—" },
+                { lbl:"📏 Altura",    val: ficha.altura ? `${ficha.altura} cm` : "—" },
+                { lbl:"⚖️ Peso",      val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent:true },
+                { lbl:"📊 IMC",       val: imc || "—" },
+                { lbl:"🏃 Trabajo",   val: TRABAJO_LABELS[ficha.trabajo] || "—" },
+              ].map(r => (
+                <div key={r.lbl} className="ficha-row">
+                  <span className="ficha-lbl">{r.lbl}</span>
+                  <span className={`ficha-val ${r.accent?"accent":""}`}>{r.val}</span>
+                </div>
+              ))}
+            </div>
+            <button className="profile-logout-btn" onClick={onLogout}>Cerrar sesión →</button>
+          </div>
+        </div>
+
+        {/* RIGHT: logros + plan + datos */}
+        <div className="profile-right">
+
+          {/* Objetivo activo */}
+          {(plan || ficha.direction) && (
+            <div className="objetivo-card">
+              <div className="objetivo-icon">{plan ? planIcon : "🎯"}</div>
+              <div className="objetivo-text">
+                <div className="objetivo-label">Objetivo actual</div>
+                <div className="objetivo-value"><em>{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</em></div>
+                <div className="objetivo-sub">
+                  {plan ? `${plan.kcalObj?.toLocaleString()} kcal/día · P${plan.pPct}% G${plan.fPct}% C${plan.cPct}%`
+                        : "Calcula tu TDEE para personalizar"}
+                </div>
+              </div>
+              {plan && <button className="today-banner-cta" onClick={()=>onNavigate("calculator")} style={{flexShrink:0}}>Editar →</button>}
+            </div>
+          )}
+
+          {/* Logros */}
+          <div>
+            <div className="profile-section-title">Tus logros</div>
+            <div className="logros-grid">
+              {[
+                { icon:"🔥", val:calStats.streak,              label:"Racha",           sub:"días seguidos",   color:"" },
+                { icon:"✅", val:calStats.full,                label:"Días perfectos",  sub:"3/3 hábitos",     color:"green" },
+                { icon:"📅", val:Object.keys(calendar).length, label:"Días registrados",sub:"en calendario",   color:"blue" },
+                { icon:"⚖️", val:pesoData.length,             label:"Pesajes",         sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
+                { icon:"🧠", val:adjustments.length,           label:"Ajustes",         sub:"por Mi Análisis", color:"purple" },
+                { icon:"🥗", val:quickFoods.length,            label:"Alimentos",       sub:"en biblioteca",   color:"" },
+              ].map((l,i) => (
+                <div key={i} className="logro-card">
+                  <div className="logro-icon">{l.icon}</div>
+                  <div className={`logro-val ${l.color}`}>{l.val}</div>
+                  <div className="logro-lbl">{l.label}</div>
+                  <div className="logro-sub">{l.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Plan activo */}
+          {plan && (
+            <div className="plan-activo-card">
+              <div className="plan-activo-header">
+                <span style={{fontSize:"1.2rem"}}>{planIcon}</span>
+                <div className="plan-activo-title">Plan de <em>macros</em></div>
+                <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
+              </div>
+              <div className="plan-activo-body">
+                {[{name:"Proteína",g:plan.protG,pct:plan.pPct,color:"#d94f2b"},{name:"Grasa",g:plan.fatG,pct:plan.fPct,color:"#e8793a"},{name:"Carbos",g:plan.carbG,pct:plan.cPct,color:"#3a6e9e"}].map(m=>(
+                  <div key={m.name} className="plan-macro-row">
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
+                    <div className="plan-macro-bar-wrap"><div className="plan-macro-bar-fill" style={{width:`${m.pct}%`,background:m.color}}/></div>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",minWidth:60,textAlign:"right"}}>
+                      <span style={{color:m.color,fontWeight:500}}>{m.g}g</span>
+                      <span style={{color:"var(--text-dim)",marginLeft:3}}>{m.pct}%</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Frase motivacional */}
+          <div className="profile-quote">
+            <p>"{quote.quote}"</p>
+            <span>{quote.tag}</span>
+          </div>
+
+          {/* Gestión de datos */}
+          <div>
+            <div className="profile-section-title">Gestión de datos</div>
+            <div className="datos-card">
+              {[
+                { key:CAL_KEY,         icon:"📅", label:"Calendario y hábitos",   desc:`${Object.keys(calendar).length} día${Object.keys(calendar).length!==1?"s":""} registrado${Object.keys(calendar).length!==1?"s":""}` },
+                { key:PESO_KEY,        icon:"⚖️", label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
+                { key:NUTR_KEY_LOCAL,  icon:"🥗", label:"Diario de nutrición",     desc:"Alimentos del día" },
+                { key:QF_KEY_LOCAL,    icon:"📚", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
+                { key:HIST_KEY,        icon:"🧮", label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
+                { key:ADJUST_KEY,      icon:"🧠", label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
+              ].map(item=>(
+                <div key={item.key} className="datos-item">
+                  <div className="datos-item-left">
+                    <span className="datos-item-icon">{item.icon}</span>
+                    <div className="datos-item-info">
+                      <strong>{item.label}</strong>
+                      <span>{cleared[item.key] ? "✓ Limpiado" : item.desc}</span>
+                    </div>
+                  </div>
+                  <button className="datos-clear-btn" onClick={()=>clearSection(item.key,item.label)} disabled={!!cleared[item.key]}>
+                    {cleared[item.key] ? "Limpiado" : "Limpiar"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"13px 16px",display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:"1rem"}}>🔒</span>
+            <div>
+              <div style={{fontSize:".74rem",fontWeight:500,color:"var(--text)",marginBottom:1}}>Tus datos son solo tuyos</div>
+              <div style={{fontSize:".67rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. Nada se envía a ningún servidor.</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -3439,6 +3946,15 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(()=>{ try{return localStorage.getItem("tdee_dark")==="1";}catch{return false;} });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [autoSaveTs, setAutoSaveTs] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("tdee_session");
+      if (!saved) return null;
+      const session = JSON.parse(saved);
+      const users = loadUsers();
+      return users.find(u => u.id === session.id) || null;
+    } catch { return null; }
+  });
 
   useEffect(()=>{
     document.body.classList.toggle("dark", darkMode);
@@ -3458,6 +3974,15 @@ export default function App() {
     return ()=>clearInterval(interval);
   },[]);
 
+  const handleLogin = (user) => {
+    try { localStorage.setItem("tdee_session", JSON.stringify({id: user.id})); } catch {}
+    setCurrentUser(user);
+  };
+  const handleLogout = () => {
+    try { localStorage.removeItem("tdee_session"); } catch {}
+    setCurrentUser(null);
+    setPage("calculator");
+  };
   const navigate = (p) => { setPage(p); setSidebarOpen(false); window.scrollTo(0,0); };
 
   const NAV = [
@@ -3482,7 +4007,8 @@ export default function App() {
   return (
     <>
       <style>{styles}</style>
-      <div className="app-shell">
+      {!currentUser && <AuthPage onLogin={handleLogin}/>}
+      {currentUser && <div className="app-shell">
 
         <button className="burger" onClick={()=>setSidebarOpen(v=>!v)}>
           <span/><span/><span/>
@@ -3493,7 +4019,7 @@ export default function App() {
         <nav className={`sidebar ${sidebarOpen?"open":""}`}>
           <div className="sidebar-logo">
             <h2>Gasto <em>calórico</em></h2>
-            <p>TDEE CALCULATOR v3.2</p>
+            <p>TDEE CALCULATOR v5.0</p>
           </div>
 
           <div className="sidebar-nav">
@@ -3527,7 +4053,9 @@ export default function App() {
           {page==="calculator" && <CalculatorPage onNavigate={navigate}/>}
           {page==="calendar"   && <CalendarPage/>}
           {page==="nutrition"  && <NutritionPage/>}
-          {page==="peso"        && <PesoPage/>}
+          {page==="peso"       && <PesoPage/>}
+          {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
+          {page==="profile"    && <ProfilePage user={currentUser} onLogout={handleLogout} onNavigate={navigate}/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
@@ -3535,7 +4063,7 @@ export default function App() {
             </div>
           )}
         </div>
-      </div>
+      </div>}
     </>
   );
 }
