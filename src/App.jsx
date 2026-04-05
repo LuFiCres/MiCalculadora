@@ -1019,152 +1019,123 @@ const styles = `
     .rating-btn { font-size: .65rem; padding: 8px 2px; }
   }
 
+  /* ── AUTH PAGE ── */
+  .auth-shell {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--bg); padding: 24px;
+  }
+  .auth-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); width: 100%; max-width: 400px;
+    overflow: hidden; animation: fadeUp .35s ease;
+    box-shadow: 0 8px 40px rgba(0,0,0,.08);
+  }
+  .auth-header {
+    padding: 28px 28px 20px;
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg-warm) 100%);
+    border-bottom: 1px solid var(--border); text-align: center;
+  }
+  .auth-logo { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 4px; }
+  .auth-logo em { font-style: italic; color: var(--accent); }
+  .auth-logo-sub { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); letter-spacing: .1em; }
+  .auth-tabs { display: flex; border-bottom: 1px solid var(--border); }
+  .auth-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: .78rem; font-family: var(--font-body); color: var(--text-muted); border: none; background: transparent; border-bottom: 2px solid transparent; transition: var(--tr); }
+  .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--accent-dim); }
+  .auth-body { padding: 24px 28px; }
+  .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .auth-field label { font-size: .72rem; color: var(--text-muted); font-family: var(--font-mono); }
+  .auth-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font-body); font-size: .88rem; padding: 10px 13px; outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
+  .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .auth-input::placeholder { color: var(--text-dim); }
+  .auth-input.error { border-color: #d94f2b; box-shadow: 0 0 0 3px rgba(217,79,43,.12); }
+  .auth-btn { width: 100%; padding: 13px; background: var(--accent); color: #faf7f2; border: none; border-radius: var(--r); font-family: var(--font-body); font-size: .88rem; font-weight: 500; cursor: pointer; transition: var(--tr); box-shadow: var(--shadow-btn), 0 4px 0 rgba(0,0,0,.12); margin-top: 4px; }
+  .auth-btn:hover { background: var(--accent-2); transform: translateY(-2px); }
+  .auth-btn:active { transform: translateY(2px); box-shadow: none; }
+  .auth-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .auth-error { background: rgba(217,79,43,.08); border: 1px solid rgba(217,79,43,.3); border-radius: var(--r); padding: 9px 13px; font-size: .75rem; color: #d94f2b; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+  .auth-success { background: rgba(90,138,74,.08); border: 1px solid rgba(90,138,74,.3); border-radius: var(--r); padding: 9px 13px; font-size: .75rem; color: #5a8a4a; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
+  .auth-link { font-size: .72rem; color: var(--accent); cursor: pointer; background: none; border: none; text-decoration: underline; font-family: var(--font-body); padding: 0; }
+  .auth-link:hover { color: var(--accent-2); }
+  .auth-footer { text-align: center; margin-top: 14px; font-size: .72rem; color: var(--text-muted); }
+  .auth-hint { font-size: .68rem; color: var(--text-dim); line-height: 1.5; margin-top: -10px; margin-bottom: 12px; }
+  .pw-wrap { position: relative; }
+  .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: .8rem; padding: 2px 5px; transition: color .15s; }
+  .pw-toggle:hover { color: var(--accent); }
+
   /* ── PROFILE PAGE ── */
   .profile-page { padding-bottom: 80px; }
+  .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
+  .profile-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 32px; }
+  .profile-card-header { padding: 28px 22px 20px; text-align: center; background: linear-gradient(160deg, var(--surface) 0%, var(--bg-warm) 100%); border-bottom: 1px solid var(--border); }
+  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; transition: var(--tr); margin: 0 auto 14px; }
+  .profile-avatar:hover { transform: scale(1.06); box-shadow: 0 0 0 4px var(--accent-dim); }
+  .profile-emoji-picker { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); }
+  .profile-emoji-btn { aspect-ratio:1; border-radius: var(--r); border: 1.5px solid transparent; background: var(--surface); cursor: pointer; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; transition: var(--tr); }
+  .profile-emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
+  .profile-emoji-btn.active { border-color: var(--accent); background: var(--accent-dim); }
+  .profile-name { font-family: var(--font-display); font-size: 1.3rem; }
+  .profile-name em { font-style: italic; color: var(--accent); }
+  .profile-username { font-family: var(--font-mono); font-size: .62rem; color: var(--text-dim); margin-top: 3px; }
+  .profile-since { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); margin-top: 5px; letter-spacing: .04em; }
+  .profile-ficha { padding: 14px 18px; }
+  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .ficha-row:last-child { border-bottom: none; }
+  .ficha-lbl { font-size: .71rem; color: var(--text-muted); }
+  .ficha-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
+  .ficha-val.accent { color: var(--accent); }
+  .profile-logout-btn { width: calc(100% - 36px); margin: 14px 18px; padding: 9px; border: 1.5px solid var(--border); border-radius: var(--r); background: transparent; color: var(--text-muted); font-family: var(--font-mono); font-size: .68rem; cursor: pointer; transition: var(--tr); }
+  .profile-logout-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
+  .profile-right { display: flex; flex-direction: column; gap: 20px; }
+  .profile-section-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .18em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .profile-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .logros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .logro-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 14px 12px; text-align: center; transition: var(--tr); }
+  .logro-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
+  .logro-icon { font-size: 1.5rem; margin-bottom: 5px; }
+  .logro-val { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--accent); margin-bottom: 1px; }
+  .logro-val.green { color: #5a8a4a; }
+  .logro-val.blue { color: #3a6e9e; }
+  .logro-val.yellow { color: #c8860a; }
+  .logro-val.purple { color: #7a5a9e; }
+  .logro-lbl { font-family: var(--font-mono); font-size: .55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+  .logro-sub { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); margin-top: 2px; }
+  .objetivo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
+  .objetivo-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .objetivo-text { flex: 1; }
+  .objetivo-label { font-size: .72rem; color: var(--text-muted); margin-bottom: 2px; }
+  .objetivo-value { font-family: var(--font-display); font-size: 1.05rem; }
+  .objetivo-value em { font-style: italic; color: var(--accent); }
+  .objetivo-sub { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); margin-top: 2px; }
+  .plan-activo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .plan-activo-header { padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
+  .plan-activo-title { font-family: var(--font-display); font-size: .95rem; }
+  .plan-activo-title em { font-style: italic; color: var(--accent); }
+  .plan-activo-badge { margin-left: auto; font-family: var(--font-mono); font-size: .57rem; padding: 2px 8px; border-radius: 100px; border: 1px solid; }
+  .plan-activo-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .plan-macro-row { display: flex; align-items: center; gap: 8px; }
+  .plan-macro-bar-wrap { flex: 1; height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+  .plan-macro-bar-fill { height: 100%; border-radius: 3px; }
+  .datos-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .datos-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
+  .datos-item:last-child { border-bottom: none; }
+  .datos-item-left { display: flex; align-items: center; gap: 10px; }
+  .datos-item-icon { font-size: .95rem; width: 18px; text-align: center; flex-shrink: 0; }
+  .datos-item-info strong { display: block; font-size: .78rem; color: var(--text); margin-bottom: 1px; }
+  .datos-item-info span { font-size: .66rem; color: var(--text-muted); }
+  .datos-clear-btn { padding: 4px 10px; border-radius: var(--r); font-size: .65rem; font-family: var(--font-mono); cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); transition: var(--tr); white-space: nowrap; flex-shrink: 0; }
+  .datos-clear-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
+  .datos-clear-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .profile-quote { background: linear-gradient(135deg, var(--accent-dim), var(--blue-dim)); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px 20px; text-align: center; }
+  .profile-quote p { font-family: var(--font-display); font-size: .95rem; font-style: italic; line-height: 1.55; color: var(--text); }
+  .profile-quote span { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); display: block; margin-top: 5px; letter-spacing: .06em; }
 
-  .prof-hero {
-    background: linear-gradient(135deg, var(--surface) 0%, var(--bg-warm) 100%);
-    border: 1.5px solid var(--border); border-radius: var(--r-lg);
-    padding: 32px 28px; margin-bottom: 24px;
-    display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
-    position: relative; overflow: hidden;
+  @media (max-width: 1100px) { .profile-layout { grid-template-columns: 270px 1fr; } }
+  @media (max-width: 900px) {
+    .profile-layout { grid-template-columns: 1fr; }
+    .profile-card { position: static; }
+    .logros-grid { grid-template-columns: repeat(3,1fr); }
   }
-  .prof-hero::before {
-    content: ''; position: absolute; top: -50px; right: -50px;
-    width: 220px; height: 220px; border-radius: 50%;
-    background: var(--accent-dim); pointer-events: none;
-  }
-  .prof-avatar-wrap { position: relative; flex-shrink: 0; }
-  .prof-avatar {
-    width: 90px; height: 90px; border-radius: 50%;
-    background: var(--accent-dim); border: 3px solid var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 2.6rem; cursor: pointer; transition: var(--tr);
-    box-shadow: 0 4px 20px var(--accent-glow);
-  }
-  .prof-avatar:hover { transform: scale(1.07); box-shadow: 0 6px 28px var(--accent-glow); }
-  .prof-avatar-badge {
-    position: absolute; bottom: 0; right: 0;
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--accent); border: 2px solid var(--surface);
-    display: flex; align-items: center; justify-content: center;
-    font-size: .75rem; color: #fff; cursor: pointer; transition: var(--tr);
-  }
-  .prof-avatar-badge:hover { transform: scale(1.1); }
-  .prof-emoji-picker {
-    position: absolute; top: 100%; left: 0; z-index: 20; margin-top: 10px;
-    background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--r-lg); padding: 12px;
-    display: grid; grid-template-columns: repeat(7,1fr); gap: 5px;
-    box-shadow: 0 12px 40px rgba(0,0,0,.18); animation: fadeUp .15s ease;
-    min-width: 230px;
-  }
-  .prof-emoji-btn {
-    aspect-ratio: 1; border-radius: 8px; border: 1.5px solid transparent;
-    background: var(--bg-warm); cursor: pointer; font-size: 1.1rem;
-    display: flex; align-items: center; justify-content: center; transition: var(--tr);
-  }
-  .prof-emoji-btn:hover { border-color: var(--accent); transform: scale(1.12); background: var(--accent-dim); }
-  .prof-emoji-btn.active { border-color: var(--accent); background: var(--accent-dim); box-shadow: 0 0 0 2px var(--accent-glow); }
-  .prof-info { flex: 1; min-width: 180px; }
-  .prof-name-input {
-    font-family: var(--font-display); font-size: 1.9rem; line-height: 1.1;
-    background: transparent; border: none; outline: none; color: var(--text);
-    border-bottom: 1.5px dashed var(--border); transition: border-color .2s;
-    padding-bottom: 2px; cursor: text; width: 100%;
-  }
-  .prof-name-input:focus { border-bottom-color: var(--accent); }
-  .prof-name-input::placeholder { color: var(--text-dim); font-style: italic; }
-  .prof-tagline { font-family: var(--font-mono); font-size: .7rem; color: var(--text-muted); margin-top: 6px; letter-spacing: .03em; }
-  .prof-tagline em { color: var(--accent); font-style: normal; font-weight: 500; }
-  .prof-since { font-family: var(--font-mono); font-size: .62rem; color: var(--text-dim); margin-top: 5px; }
-
-  /* Stats */
-  .prof-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
-  .prof-stat {
-    background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--r-lg); padding: 18px 14px; text-align: center;
-    transition: var(--tr); cursor: default; position: relative; overflow: hidden;
-  }
-  .prof-stat::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity .25s; background: linear-gradient(135deg, var(--accent-dim), transparent); }
-  .prof-stat:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 8px 24px var(--accent-glow); }
-  .prof-stat:hover::before { opacity: 1; }
-  .prof-stat-icon { font-size: 1.5rem; margin-bottom: 6px; position: relative; }
-  .prof-stat-val { font-family: var(--font-display); font-size: 2rem; line-height: 1; margin-bottom: 3px; position: relative; }
-  .prof-stat-lbl { font-family: var(--font-mono); font-size: .56rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; position: relative; }
-  .prof-stat-sub { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); margin-top: 3px; position: relative; }
-
-  /* Two-col cards */
-  .prof-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-  .prof-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
-  .prof-card-hdr { padding: 13px 18px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 9px; }
-  .prof-card-hdr-icon { font-size: 1rem; }
-  .prof-card-title { font-family: var(--font-display); font-size: .92rem; }
-  .prof-card-title em { font-style: italic; color: var(--accent); }
-  .prof-card-body { padding: 14px 18px; }
-  .prof-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); }
-  .prof-row:last-child { border-bottom: none; }
-  .prof-row-lbl { font-size: .71rem; color: var(--text-muted); }
-  .prof-row-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
-  .prof-row-val.accent { color: var(--accent); }
-  .prof-macro-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .prof-macro-row:last-child { margin-bottom: 0; }
-  .prof-macro-bar { flex: 1; height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
-  .prof-macro-fill { height: 100%; border-radius: 3px; transition: width .5s cubic-bezier(.34,1.2,.64,1); }
-
-  /* Quote */
-  .prof-quote { background: linear-gradient(135deg, var(--accent-dim), var(--blue-dim)); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 20px 24px; text-align: center; margin-bottom: 24px; }
-  .prof-quote p { font-family: var(--font-display); font-size: 1rem; font-style: italic; line-height: 1.65; color: var(--text); }
-  .prof-quote span { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); display: block; margin-top: 6px; letter-spacing: .06em; }
-
-  /* Transfer */
-  .prof-transfer { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 24px; }
-  .prof-transfer-hdr { padding: 16px 22px; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, var(--surface) 0%, var(--bg-warm) 100%); display: flex; align-items: center; gap: 14px; }
-  .prof-transfer-hdr-icon { font-size: 1.5rem; flex-shrink: 0; }
-  .prof-transfer-hdr-text strong { display: block; font-size: .9rem; color: var(--text); margin-bottom: 2px; }
-  .prof-transfer-hdr-text span { font-size: .7rem; color: var(--text-muted); }
-  .prof-transfer-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 16px; }
-  .prof-transfer-tabs { display: flex; gap: 8px; }
-  .prof-transfer-tab { flex: 1; padding: 10px 8px; text-align: center; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--bg-warm); font-family: var(--font-mono); font-size: .7rem; color: var(--text-muted); cursor: pointer; transition: var(--tr); }
-  .prof-transfer-tab.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); font-weight: 500; }
-  .prof-transfer-tab:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
-  .prof-code-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); padding: 12px 14px; font-family: var(--font-mono); font-size: .6rem; color: var(--text-muted); word-break: break-all; line-height: 1.65; max-height: 90px; overflow-y: auto; cursor: text; user-select: all; }
-  .prof-btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
-  .prof-btn { padding: 9px 18px; border-radius: var(--r); font-family: var(--font-mono); font-size: .72rem; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); transition: var(--tr); white-space: nowrap; box-shadow: 0 2px 0 var(--border); }
-  .prof-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); transform: translateY(-1px); }
-  .prof-btn:active { transform: translateY(1px); box-shadow: none; }
-  .prof-btn.primary { background: var(--accent); color: #faf7f2; border-color: var(--accent); box-shadow: var(--shadow-btn); }
-  .prof-btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
-  .prof-btn.ok { background: var(--green-dim); color: var(--green); border-color: rgba(90,138,74,.35); box-shadow: none; }
-  .prof-import-row { display: flex; gap: 8px; }
-  .prof-import-input { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font-mono); font-size: .7rem; padding: 9px 12px; outline: none; transition: border-color .2s, box-shadow .2s; min-width: 0; }
-  .prof-import-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-  .prof-transfer-note { font-family: var(--font-mono); font-size: .63rem; color: var(--text-muted); line-height: 1.65; padding: 10px 13px; background: var(--bg-warm); border-radius: var(--r); border: 1px solid var(--border); }
-  .prof-transfer-note strong { color: var(--text); }
-  .prof-msg-ok { font-family: var(--font-mono); font-size: .67rem; color: var(--green); background: var(--green-dim); border: 1px solid rgba(90,138,74,.3); border-radius: var(--r); padding: 9px 13px; }
-  .prof-msg-err { font-family: var(--font-mono); font-size: .67rem; color: #d94f2b; background: rgba(217,79,43,.08); border: 1px solid rgba(217,79,43,.3); border-radius: var(--r); padding: 9px 13px; }
-
-  /* Data management */
-  .prof-data-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 24px; }
-  .prof-data-item { display: flex; align-items: center; gap: 12px; padding: 11px 18px; border-bottom: 1px solid var(--border); transition: background .15s; }
-  .prof-data-item:last-child { border-bottom: none; }
-  .prof-data-item:hover { background: var(--bg-warm); }
-  .prof-data-icon { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
-  .prof-data-info { flex: 1; }
-  .prof-data-info strong { display: block; font-size: .78rem; color: var(--text); margin-bottom: 1px; }
-  .prof-data-info span { font-size: .65rem; color: var(--text-muted); }
-  .prof-data-btn { padding: 4px 12px; border-radius: var(--r); font-size: .65rem; font-family: var(--font-mono); cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); transition: var(--tr); white-space: nowrap; flex-shrink: 0; }
-  .prof-data-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
-  .prof-data-btn:disabled { opacity: .4; cursor: not-allowed; }
-
-  /* Privacy + section label */
-  .prof-privacy { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 14px 20px; display: flex; align-items: center; gap: 14px; }
-  .prof-section-lbl { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .18em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-  .prof-section-lbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-  @media (max-width: 900px) { .prof-cols { grid-template-columns: 1fr; } .prof-hero { flex-direction: column; align-items: flex-start; } }
-  @media (max-width: 600px) { .prof-stats { grid-template-columns: repeat(2,1fr); } .prof-btn-row { flex-direction: column; } }
-  @media (max-width: 400px) { .prof-stats { grid-template-columns: 1fr 1fr; } .prof-transfer-tabs { flex-direction: column; } }
+  @media (max-width: 600px) { .logros-grid { grid-template-columns: repeat(2,1fr); } }
 
 `;
 
@@ -1298,6 +1269,27 @@ function savePlan(plan) {
 }
 
 
+
+// ─── AUTH & PROFILE HELPERS ──────────────────────────────────────────────────
+function hashPw(str) {
+  // Deterministic hash for localStorage — client-side only demo auth
+  let h = 0;
+  for (let i = 0; i < str.length; i++) { h = (Math.imul(31, h) + str.charCodeAt(i)) | 0; }
+  return h.toString(36);
+}
+
+function loadUsers() {
+  try { return JSON.parse(localStorage.getItem(AUTH_KEY) || "[]"); } catch { return []; }
+}
+function saveUsers(list) {
+  try { localStorage.setItem(AUTH_KEY, JSON.stringify(list)); } catch {}
+}
+function loadProfile() {
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch { return null; }
+}
+function saveProfileData(data) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
+}
 
 function loadPeso() {
   try { return JSON.parse(localStorage.getItem(PESO_KEY) || "[]"); }
@@ -2335,39 +2327,161 @@ function AnalysisPage({ onNavigate }) {
 }
 
 
+// ─── AUTH PAGE ────────────────────────────────────────────────────────────────
+const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉"];
+
+function AuthPage({ onLogin }) {
+  const [tab, setTab] = useState("login");
+  const [form, setForm] = useState({ username:"", email:"", password:"", password2:"" });
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const set = (k, v) => { setForm(f => ({...f, [k]: v})); setError(""); setSuccess(""); };
+
+  const handleLogin = () => {
+    if (!form.username.trim() || !form.password) { setError("Rellena usuario y contraseña."); return; }
+    const users = loadUsers();
+    const user = users.find(u => u.username.toLowerCase() === form.username.trim().toLowerCase());
+    if (!user) { setError("Usuario no encontrado."); return; }
+    if (user.pwHash !== hashPw(form.password)) { setError("Contraseña incorrecta."); return; }
+    setLoading(true);
+    setTimeout(() => onLogin(user), 400);
+  };
+
+  const handleRegister = () => {
+    const u = form.username.trim();
+    if (!u || !form.email.trim() || !form.password) { setError("Completa todos los campos."); return; }
+    if (u.length < 3) { setError("El usuario debe tener al menos 3 caracteres."); return; }
+    if (!/^[a-zA-Z0-9_-]{3,20}$/.test(u)) { setError("Solo letras, números, guiones y guiones bajos (3-20 caracteres)."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) { setError("Introduce un email válido."); return; }
+    if (form.password.length < 6) { setError("La contraseña debe tener al menos 6 caracteres."); return; }
+    if (form.password !== form.password2) { setError("Las contraseñas no coinciden."); return; }
+    const users = loadUsers();
+    if (users.find(x => x.username.toLowerCase() === u.toLowerCase())) { setError("Ese usuario ya existe."); return; }
+    const newUser = { id: Date.now().toString(36), username: u, email: form.email.trim().toLowerCase(), pwHash: hashPw(form.password), avatar: "💪", since: new Date().toISOString().slice(0,10) };
+    saveUsers([...users, newUser]);
+    setLoading(true);
+    setTimeout(() => onLogin(newUser), 400);
+  };
+
+  const handleForgot = () => {
+    if (!form.username.trim()) { setError("Introduce tu usuario."); return; }
+    const users = loadUsers();
+    const user = users.find(u => u.username.toLowerCase() === form.username.trim().toLowerCase());
+    if (!user) { setError("No encontramos ese usuario."); return; }
+    const parts = user.email.split("@");
+    const masked = parts[0].slice(0,2) + "***@" + parts[1];
+    setSuccess(`Tu email de recuperación es: ${masked}`);
+  };
+
+  return (
+    <div className="auth-shell">
+      <div className="auth-card">
+        <div className="auth-header">
+          <div className="auth-logo">Gasto <em>calórico</em></div>
+          <div className="auth-logo-sub">TDEE CALCULATOR v5.0</div>
+        </div>
+
+        {tab !== "forgot" && (
+          <div className="auth-tabs">
+            <button className={`auth-tab ${tab==="login"?"active":""}`} onClick={()=>{setTab("login");setError("");setSuccess("");}}>Iniciar sesión</button>
+            <button className={`auth-tab ${tab==="register"?"active":""}`} onClick={()=>{setTab("register");setError("");setSuccess("");}}>Crear cuenta</button>
+          </div>
+        )}
+
+        <div className="auth-body">
+          {error   && <div className="auth-error">⚠ {error}</div>}
+          {success && <div className="auth-success">✓ {success}</div>}
+
+          {tab === "login" && (
+            <>
+              <div className="auth-field">
+                <label>Nombre de usuario</label>
+                <input className={`auth-input ${error&&!form.username?"error":""}`} placeholder="tucuenta"
+                  value={form.username} onChange={e=>set("username",e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&handleLogin()}/>
+              </div>
+              <div className="auth-field">
+                <label>Contraseña</label>
+                <div className="pw-wrap">
+                  <input className={`auth-input ${error&&!form.password?"error":""}`}
+                    type={showPw?"text":"password"} placeholder="••••••••"
+                    value={form.password} onChange={e=>set("password",e.target.value)}
+                    onKeyDown={e=>e.key==="Enter"&&handleLogin()} style={{paddingRight:38}}/>
+                  <button className="pw-toggle" type="button" onClick={()=>setShowPw(v=>!v)}>{showPw?"🙈":"👁"}</button>
+                </div>
+              </div>
+              <button className="auth-btn" onClick={handleLogin} disabled={loading}>
+                {loading ? "Entrando…" : "Iniciar sesión"}
+              </button>
+              <div className="auth-footer">
+                <button className="auth-link" onClick={()=>{setTab("forgot");setError("");setSuccess("");}}>¿Olvidaste tu contraseña?</button>
+              </div>
+            </>
+          )}
+
+          {tab === "register" && (
+            <>
+              <div className="auth-field">
+                <label>Nombre de usuario</label>
+                <input className="auth-input" placeholder="minombre (min. 3 caracteres)"
+                  value={form.username} onChange={e=>set("username",e.target.value)}/>
+                <span className="auth-hint">Letras, números, - y _. Entre 3 y 20 caracteres.</span>
+              </div>
+              <div className="auth-field">
+                <label>Email (para recuperar contraseña)</label>
+                <input className="auth-input" type="email" placeholder="tu@email.com"
+                  value={form.email} onChange={e=>set("email",e.target.value)}/>
+                <span className="auth-hint">Solo lo usamos si olvidas tu contraseña.</span>
+              </div>
+              <div className="auth-field">
+                <label>Contraseña</label>
+                <div className="pw-wrap">
+                  <input className="auth-input" type={showPw?"text":"password"} placeholder="Mín. 6 caracteres"
+                    value={form.password} onChange={e=>set("password",e.target.value)} style={{paddingRight:38}}/>
+                  <button className="pw-toggle" type="button" onClick={()=>setShowPw(v=>!v)}>{showPw?"🙈":"👁"}</button>
+                </div>
+              </div>
+              <div className="auth-field">
+                <label>Confirmar contraseña</label>
+                <input className="auth-input" type={showPw?"text":"password"} placeholder="Repite la contraseña"
+                  value={form.password2} onChange={e=>set("password2",e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&handleRegister()}/>
+              </div>
+              <button className="auth-btn" onClick={handleRegister} disabled={loading}>
+                {loading ? "Creando cuenta…" : "Crear cuenta"}
+              </button>
+            </>
+          )}
+
+          {tab === "forgot" && (
+            <>
+              <div style={{marginBottom:16,fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.6}}>
+                Introduce tu usuario y te mostraremos el email enmascarado con el que te registraste.
+              </div>
+              <div className="auth-field">
+                <label>Nombre de usuario</label>
+                <input className="auth-input" placeholder="tucuenta"
+                  value={form.username} onChange={e=>set("username",e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&handleForgot()}/>
+              </div>
+              <button className="auth-btn" onClick={handleForgot}>Ver email de recuperación</button>
+              <div className="auth-footer" style={{marginTop:12}}>
+                <button className="auth-link" onClick={()=>{setTab("login");setError("");setSuccess("");}}>← Volver al login</button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // ─── PROFILE PAGE ─────────────────────────────────────────────────────────────
-const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉","🐻","🦈","🌵","🏔","🌙","☀️","🎸","🏄","🧗","🥋"];
-
-const TRANSFER_KEYS = [
-  FORM_KEY, HIST_KEY, PLAN_KEY, CAL_KEY, PESO_KEY,
-  CHECKIN_KEY, ADJUST_KEY, PROFILE_KEY,
-  "tdee_nutrition_v1", "tdee_quick_foods_v1", "tdee_dark",
-];
-
-function generateCode() {
-  const snap = {};
-  TRANSFER_KEYS.forEach(k => {
-    try { const v = localStorage.getItem(k); if (v !== null) snap[k] = v; } catch {}
-  });
-  try { return btoa(unescape(encodeURIComponent(JSON.stringify({ v:2, ts: Date.now(), snap })))); }
-  catch { return null; }
-}
-
-function applyCode(raw) {
-  const payload = JSON.parse(decodeURIComponent(escape(atob(raw.trim()))));
-  if (!payload.v || !payload.snap) throw new Error("Código inválido");
-  Object.entries(payload.snap).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch {} });
-}
-
-function loadProfileLocal() {
-  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch { return null; }
-}
-function saveProfileLocal(data) {
-  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
-}
-
-const STRATEGY_LABELS = { deficit:"Pérdida de grasa 🔥", recomp:"Recomposición ⚖️", superavit:"Superávit 💪", lean_bulk:"Lean Bulk 🎯" };
+const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
+const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
 const TRABAJO_LABELS   = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
 const MOTIVATIONAL = [
   { quote:"El progreso, no la perfección, es lo que importa.", tag:"Mentalidad" },
@@ -2375,341 +2489,219 @@ const MOTIVATIONAL = [
   { quote:"Los datos no mienten. El cuerpo tampoco.", tag:"Evidencia" },
   { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
   { quote:"La racha más larga siempre empieza con el día de hoy.", tag:"Inicio" },
-  { quote:"Mide, ajusta, repite. Sin drama.", tag:"Proceso" },
-  { quote:"Tu cuerpo lleva el registro aunque tú no lo hagas.", tag:"Consistencia" },
 ];
 
-function ProfilePage({ onNavigate }) {
-  const [prof, setProf] = useState(() => loadProfileLocal() || { avatar:"💪", name:"" });
-  const [pickerOpen, setPicker] = useState(false);
+function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
+  const [profile, setProfile] = useState(() => loadProfile() || { avatar: user?.avatar || "💪" });
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [cleared, setCleared] = useState({});
 
-  // Transfer
-  const [tab, setTab] = useState("export");
-  const [code, setCode] = useState("");
-  const [importInput, setImportInput] = useState("");
-  const [copied, setCopied] = useState(false);
-  const [msg, setMsg] = useState(null);
+  const form        = useMemo(() => { try { return JSON.parse(localStorage.getItem(FORM_KEY)||"null"); } catch { return null; } }, []);
+  const hist        = useMemo(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); } catch { return []; } }, []);
+  const plan        = useMemo(() => loadPlan(), []);
+  const pesoData    = useMemo(() => loadPeso(), []);
+  const calendar    = useMemo(() => loadCalendar(), []);
+  const adjustments = useMemo(() => { try { return JSON.parse(localStorage.getItem(ADJUST_KEY)||"[]"); } catch { return []; } }, []);
+  const quickFoods  = useMemo(() => loadQuickFoods(), []);
+  const calStats    = useMemo(() => getCalStats(calendar), [calendar]);
+  const pesoChange  = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
+  const ficha       = form || {};
+  const imc         = ficha.peso && ficha.altura ? (ficha.peso / ((ficha.altura/100)**2)).toFixed(1) : null;
+  const planIcon    = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
+  const quote       = useMemo(() => MOTIVATIONAL[Math.floor(Date.now() / 86400000) % MOTIVATIONAL.length], []);
+  const daysActive  = useMemo(() => {
+    if (!user?.since) return 0;
+    return Math.max(0, Math.floor((Date.now() - new Date(user.since).getTime()) / 86400000));
+  }, [user]);
 
-  // Data
-  const formData = useMemo(() => { try { return JSON.parse(localStorage.getItem(FORM_KEY)||"null"); } catch { return null; } }, []);
-  const hist     = useMemo(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); } catch { return []; } }, []);
-  const plan     = useMemo(() => loadPlan(), []);
-  const pesoData = useMemo(() => loadPeso(), []);
-  const calendar = useMemo(() => loadCalendar(), []);
-  const adjusts  = useMemo(() => { try { return JSON.parse(localStorage.getItem(ADJUST_KEY)||"[]"); } catch { return []; } }, []);
-  const qFoods   = useMemo(() => loadQuickFoods(), []);
-  const calStats = useMemo(() => getCalStats(calendar), [calendar]);
-
-  const ficha      = formData || {};
-  const imc        = ficha.peso && ficha.altura ? (ficha.peso/((ficha.altura/100)**2)).toFixed(1) : null;
-  const pesoActual = pesoData.length ? pesoData[pesoData.length-1].weight : ficha.peso;
-  const pesoChange = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
-  const quote      = useMemo(() => MOTIVATIONAL[Math.floor(Date.now()/86400000) % MOTIVATIONAL.length], []);
-
-  const saveProf = (patch) => {
-    const next = {...prof,...patch};
-    setProf(next);
-    saveProfileLocal(next);
-  };
-
-  const doExport = () => {
-    const c = generateCode();
-    if (c) { setCode(c); setMsg(null); }
-    else setMsg({type:"err",text:"Error generando el código. Inténtalo de nuevo."});
-  };
-
-  const doCopy = () => {
-    if (!code) return;
-    navigator.clipboard?.writeText(code)
-      .then(()=>{ setCopied(true); setTimeout(()=>setCopied(false),2400); })
-      .catch(()=>{ setMsg({type:"ok",text:"Selecciona el texto del cuadro de código y cópialo manualmente (Ctrl+A, Ctrl+C)."}); });
-  };
-
-  const doImport = () => {
-    setMsg(null);
-    if (!importInput.trim()) { setMsg({type:"err",text:"Pega tu código primero."}); return; }
-    try {
-      applyCode(importInput.trim());
-      setMsg({type:"ok",text:"✓ Datos importados correctamente. Recarga la página para verlos todos actualizados."});
-      setImportInput("");
-    } catch {
-      setMsg({type:"err",text:"Código inválido o incompleto. Asegúrate de copiarlo entero desde el dispositivo de origen."});
-    }
+  const updateAvatar = (emoji) => {
+    const p = { ...profile, avatar: emoji };
+    setProfile(p); saveProfileData(p);
+    const users = loadUsers();
+    const idx = users.findIndex(u => u.id === user.id);
+    if (idx >= 0) { users[idx].avatar = emoji; saveUsers(users); }
+    setPickerOpen(false);
   };
 
   const clearSection = (key, label) => {
-    if (!window.confirm(`¿Eliminar todos los datos de "${label}"? Esta acción no se puede deshacer.`)) return;
+    if (!window.confirm(`¿Limpiar todos los datos de "${label}"? No se puede deshacer.`)) return;
     try { localStorage.removeItem(key); } catch {}
-    setCleared(c=>({...c,[key]:true}));
+    setCleared(c => ({ ...c, [key]: true }));
   };
 
-  const NUTR_KEY_L = "tdee_nutrition_v1";
-  const QF_KEY_L   = "tdee_quick_foods_v1";
+  const NUTR_KEY_LOCAL = "tdee_nutrition_v1";
+  const QF_KEY_LOCAL   = "tdee_quick_foods_v1";
 
-  const stats = [
-    { icon:"🔥", val:calStats.streak,              lbl:"Racha",          sub:`día${calStats.streak!==1?"s":""}`,                                             color:"#d94f2b" },
-    { icon:"✅", val:calStats.full,                lbl:"Días perfectos", sub:"3/3 hábitos",                                                                  color:"#5a8a4a" },
-    { icon:"📅", val:Object.keys(calendar).length, lbl:"Registrados",    sub:"en calendario",                                                                color:"#3a6e9e" },
-    { icon:"⚖️", val:pesoData.length,             lbl:"Pesajes",         sub:pesoChange!==null?`${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total`:"registros", color:"#c8860a" },
-    { icon:"🧠", val:adjusts.length,               lbl:"Ajustes",         sub:"calóricos",                                                                   color:"#7a5a9e" },
-    { icon:"🥗", val:qFoods.length,                lbl:"Alimentos",       sub:"en biblioteca",                                                               color:"#5a8a4a" },
-  ];
+  // ── Not logged in: show auth inline ─────────────────────────────────────
+  if (!user) {
+    return (
+      <div className="profile-page">
+        <div className="page-header">
+          <h1>Mi <em>Perfil</em></h1>
+          <p>Crea una cuenta o inicia sesión para guardar tu perfil — sin cuenta puedes seguir usando la app normalmente</p>
+        </div>
+        <div style={{maxWidth:440,margin:"0 auto"}}>
+          <AuthPage onLogin={onLogin}/>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="profile-page" onClick={()=>pickerOpen&&setPicker(false)}>
+    <div className="profile-page">
       <div className="page-header">
         <h1>Mi <em>Perfil</em></h1>
-        <p>Estadísticas, personalización y herramientas para llevar tus datos a cualquier dispositivo</p>
+        <p>Tu cuenta, tus logros y la gestión de tus datos</p>
       </div>
 
-      {/* ── HERO ── */}
-      <div className="prof-hero">
-        <div className="prof-avatar-wrap" onClick={e=>e.stopPropagation()}>
-          <div className="prof-avatar" onClick={()=>setPicker(v=>!v)}>
-            {prof.avatar}
-          </div>
-          <div className="prof-avatar-badge" onClick={()=>setPicker(v=>!v)}>✏</div>
-          {pickerOpen && (
-            <div className="prof-emoji-picker">
-              {AVATAR_EMOJIS.map(e=>(
-                <button key={e} className={`prof-emoji-btn ${prof.avatar===e?"active":""}`}
-                  onClick={()=>{saveProf({avatar:e});setPicker(false);}}>
-                  {e}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="prof-info">
-          <input
-            className="prof-name-input"
-            value={prof.name}
-            onChange={e=>saveProf({name:e.target.value})}
-            placeholder="¿Cómo te llamas?"
-            maxLength={32}
-          />
-          <div className="prof-tagline">
-            {plan
-              ? <><em>{STRATEGY_LABELS[plan.strategy]||plan.strategy}</em>{" · "}{plan.kcalObj?.toLocaleString()} kcal/día</>
-              : <span style={{color:"var(--text-dim)"}}>Sin plan — ve a Mi Calculadora</span>
-            }
-          </div>
-          {pesoActual && (
-            <div className="prof-since">
-              Peso actual: <strong style={{color:"var(--accent)"}}>{Number(pesoActual).toFixed(1)} kg</strong>
-              {pesoChange!==null && (
-                <span style={{color:pesoChange<0?"#5a8a4a":pesoChange>0?"#d94f2b":"#8a6a50",marginLeft:8}}>
-                  ({pesoChange>0?"+":""}{pesoChange.toFixed(1)} kg total)
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        {!plan && (
-          <button className="prof-btn primary" style={{flexShrink:0}} onClick={()=>onNavigate("calculator")}>
-            Calcular TDEE →
-          </button>
-        )}
-      </div>
-
-      {/* ── STATS ── */}
-      <div className="prof-stats">
-        {stats.map((s,i)=>(
-          <div key={i} className="prof-stat">
-            <div className="prof-stat-icon">{s.icon}</div>
-            <div className="prof-stat-val" style={{color:s.color}}>{s.val}</div>
-            <div className="prof-stat-lbl">{s.lbl}</div>
-            <div className="prof-stat-sub">{s.sub}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* ── DOS COLUMNAS ── */}
-      <div className="prof-cols">
-        {/* Biometría */}
-        <div className="prof-card">
-          <div className="prof-card-hdr">
-            <span className="prof-card-hdr-icon">📊</span>
-            <span className="prof-card-title">Datos <em>biométricos</em></span>
-          </div>
-          <div className="prof-card-body">
-            {[
-              {lbl:"Sexo",      val:ficha.sexo?(ficha.sexo==="mujer"?"Mujer":"Hombre"):"—"},
-              {lbl:"Edad",      val:ficha.edad?`${ficha.edad} años`:"—"},
-              {lbl:"Altura",    val:ficha.altura?`${ficha.altura} cm`:"—"},
-              {lbl:"IMC",       val:imc||"—"},
-              {lbl:"Actividad", val:TRABAJO_LABELS[ficha.trabajo]||"—"},
-              {lbl:"Pasos/día", val:ficha.pasos?Number(ficha.pasos).toLocaleString():"—"},
-              {lbl:"Cálculos",  val:`${hist.length} guardado${hist.length!==1?"s":""}`, accent:true},
-            ].map(r=>(
-              <div key={r.lbl} className="prof-row">
-                <span className="prof-row-lbl">{r.lbl}</span>
-                <span className={`prof-row-val${r.accent?" accent":""}`}>{r.val}</span>
+      <div className="profile-layout">
+        {/* LEFT: user card */}
+        <div>
+          <div className="profile-card">
+            <div className="profile-card-header">
+              <div className="profile-avatar" onClick={()=>setPickerOpen(v=>!v)} title="Cambiar avatar">
+                {profile.avatar}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Plan de macros */}
-        <div className="prof-card">
-          <div className="prof-card-hdr">
-            <span className="prof-card-hdr-icon">🎯</span>
-            <span className="prof-card-title">Plan de <em>macros</em></span>
-          </div>
-          <div className="prof-card-body">
-            {plan ? (
-              <>
-                <div style={{marginBottom:14}}>
-                  {[
-                    {name:"Proteína",g:plan.protG,pct:plan.pPct,color:"#d94f2b"},
-                    {name:"Grasa",   g:plan.fatG, pct:plan.fPct,color:"#e8793a"},
-                    {name:"Carbos",  g:plan.carbG,pct:plan.cPct,color:"#3a6e9e"},
-                  ].map(m=>(
-                    <div key={m.name} className="prof-macro-row">
-                      <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--text-muted)",width:58}}>{m.name}</span>
-                      <div className="prof-macro-bar"><div className="prof-macro-fill" style={{width:`${m.pct}%`,background:m.color}}/></div>
-                      <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",minWidth:54,textAlign:"right"}}>
-                        <span style={{color:m.color,fontWeight:500}}>{m.g}g</span>
-                        <span style={{color:"var(--text-dim)",marginLeft:3}}>{m.pct}%</span>
-                      </span>
-                    </div>
+              {pickerOpen && (
+                <div className="profile-emoji-picker">
+                  {AVATAR_EMOJIS.map(e=>(
+                    <button key={e} className={`profile-emoji-btn ${profile.avatar===e?"active":""}`} onClick={()=>updateAvatar(e)}>{e}</button>
                   ))}
                 </div>
-                {[
-                  {lbl:"Objetivo",   val:`${plan.kcalObj?.toLocaleString()} kcal/día`, accent:true},
-                  {lbl:"Estrategia", val:STRATEGY_LABELS[plan.strategy]?.replace(/ .*/,"")||"—"},
-                  {lbl:"Ajustes",    val:`${adjusts.length} realizado${adjusts.length!==1?"s":""}`},
-                ].map(r=>(
-                  <div key={r.lbl} className="prof-row">
-                    <span className="prof-row-lbl">{r.lbl}</span>
-                    <span className={`prof-row-val${r.accent?" accent":""}`}>{r.val}</span>
+              )}
+              <div className="profile-name"><em>{user?.username || "Usuario"}</em></div>
+              <div className="profile-username">@{user?.username?.toLowerCase() || "—"}</div>
+              <div className="profile-since">{daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando la app` : "Cuenta nueva"}</div>
+            </div>
+
+            <div className="profile-ficha">
+              {[
+                { lbl:"📧 Email",     val: user?.email ? (()=>{ const p=user.email.split("@"); return p[0].slice(0,3)+"***@"+p[1]; })() : "—" },
+                { lbl:"⚧ Sexo",      val: ficha.sexo === "mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
+                { lbl:"📅 Edad",      val: ficha.edad ? `${ficha.edad} años` : "—" },
+                { lbl:"📏 Altura",    val: ficha.altura ? `${ficha.altura} cm` : "—" },
+                { lbl:"⚖️ Peso",      val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent:true },
+                { lbl:"📊 IMC",       val: imc || "—" },
+                { lbl:"🏃 Trabajo",   val: TRABAJO_LABELS[ficha.trabajo] || "—" },
+              ].map(r => (
+                <div key={r.lbl} className="ficha-row">
+                  <span className="ficha-lbl">{r.lbl}</span>
+                  <span className={`ficha-val ${r.accent?"accent":""}`}>{r.val}</span>
+                </div>
+              ))}
+            </div>
+            <button className="profile-logout-btn" onClick={onLogout}>Cerrar sesión →</button>
+          </div>
+        </div>
+
+        {/* RIGHT: logros + plan + datos */}
+        <div className="profile-right">
+
+          {/* Objetivo activo */}
+          {(plan || ficha.direction) && (
+            <div className="objetivo-card">
+              <div className="objetivo-icon">{plan ? planIcon : "🎯"}</div>
+              <div className="objetivo-text">
+                <div className="objetivo-label">Objetivo actual</div>
+                <div className="objetivo-value"><em>{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</em></div>
+                <div className="objetivo-sub">
+                  {plan ? `${plan.kcalObj?.toLocaleString()} kcal/día · P${plan.pPct}% G${plan.fPct}% C${plan.cPct}%`
+                        : "Calcula tu TDEE para personalizar"}
+                </div>
+              </div>
+              {plan && <button className="today-banner-cta" onClick={()=>onNavigate("calculator")} style={{flexShrink:0}}>Editar →</button>}
+            </div>
+          )}
+
+          {/* Logros */}
+          <div>
+            <div className="profile-section-title">Tus logros</div>
+            <div className="logros-grid">
+              {[
+                { icon:"🔥", val:calStats.streak,              label:"Racha",           sub:"días seguidos",   color:"" },
+                { icon:"✅", val:calStats.full,                label:"Días perfectos",  sub:"3/3 hábitos",     color:"green" },
+                { icon:"📅", val:Object.keys(calendar).length, label:"Días registrados",sub:"en calendario",   color:"blue" },
+                { icon:"⚖️", val:pesoData.length,             label:"Pesajes",         sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
+                { icon:"🧠", val:adjustments.length,           label:"Ajustes",         sub:"por Mi Análisis", color:"purple" },
+                { icon:"🥗", val:quickFoods.length,            label:"Alimentos",       sub:"en biblioteca",   color:"" },
+              ].map((l,i) => (
+                <div key={i} className="logro-card">
+                  <div className="logro-icon">{l.icon}</div>
+                  <div className={`logro-val ${l.color}`}>{l.val}</div>
+                  <div className="logro-lbl">{l.label}</div>
+                  <div className="logro-sub">{l.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Plan activo */}
+          {plan && (
+            <div className="plan-activo-card">
+              <div className="plan-activo-header">
+                <span style={{fontSize:"1.2rem"}}>{planIcon}</span>
+                <div className="plan-activo-title">Plan de <em>macros</em></div>
+                <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
+              </div>
+              <div className="plan-activo-body">
+                {[{name:"Proteína",g:plan.protG,pct:plan.pPct,color:"#d94f2b"},{name:"Grasa",g:plan.fatG,pct:plan.fPct,color:"#e8793a"},{name:"Carbos",g:plan.carbG,pct:plan.cPct,color:"#3a6e9e"}].map(m=>(
+                  <div key={m.name} className="plan-macro-row">
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
+                    <div className="plan-macro-bar-wrap"><div className="plan-macro-bar-fill" style={{width:`${m.pct}%`,background:m.color}}/></div>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",minWidth:60,textAlign:"right"}}>
+                      <span style={{color:m.color,fontWeight:500}}>{m.g}g</span>
+                      <span style={{color:"var(--text-dim)",marginLeft:3}}>{m.pct}%</span>
+                    </span>
                   </div>
                 ))}
-              </>
-            ) : (
-              <div style={{textAlign:"center",padding:"24px 12px"}}>
-                <div style={{fontSize:"2rem",marginBottom:10,opacity:.3}}>🎯</div>
-                <p style={{fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.65}}>Calcula tu TDEE y guarda un plan para verlo aquí.</p>
-                <button className="prof-btn primary" style={{marginTop:14}} onClick={()=>onNavigate("calculator")}>Ir a Mi Calculadora →</button>
               </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ── QUOTE ── */}
-      <div className="prof-quote">
-        <p>"{quote.quote}"</p>
-        <span>— {quote.tag}</span>
-      </div>
-
-      {/* ── TRANSFER ── */}
-      <div className="prof-transfer">
-        <div className="prof-transfer-hdr">
-          <span className="prof-transfer-hdr-icon">📲</span>
-          <div className="prof-transfer-hdr-text">
-            <strong>Llevar mis datos a otro dispositivo</strong>
-            <span>Un código portable con todo tu historial: peso, calendario, nutrición, macros, ajustes</span>
-          </div>
-        </div>
-        <div className="prof-transfer-body">
-
-          <div className="prof-transfer-tabs">
-            <button className={`prof-transfer-tab ${tab==="export"?"active":""}`} onClick={()=>{setTab("export");setMsg(null);}}>
-              ⬆ Exportar mis datos
-            </button>
-            <button className={`prof-transfer-tab ${tab==="import"?"active":""}`} onClick={()=>{setTab("import");setMsg(null);}}>
-              ⬇ Importar desde código
-            </button>
-          </div>
-
-          {tab==="export" && (
-            <>
-              <div className="prof-transfer-note">
-                Genera un código que contiene <strong>todos tus datos</strong>. Cópialo y pégalo en <strong>Mi Perfil → Importar</strong> del otro dispositivo.
-              </div>
-              {!code ? (
-                <div className="prof-btn-row">
-                  <button className="prof-btn primary" onClick={doExport}>⚡ Generar mi código</button>
-                </div>
-              ) : (
-                <>
-                  <div className="prof-code-box">{code}</div>
-                  <div className="prof-btn-row">
-                    <button className={`prof-btn${copied?" ok":""}`} onClick={doCopy}>
-                      {copied?"✓ Copiado al portapapeles":"📋 Copiar código"}
-                    </button>
-                    <button className="prof-btn" onClick={doExport}>🔄 Regenerar</button>
-                  </div>
-                  <div className="prof-transfer-note">
-                    💡 El código refleja el estado <strong>actual</strong>. Si añades más datos después, genera uno nuevo.
-                  </div>
-                </>
-              )}
-            </>
-          )}
-
-          {tab==="import" && (
-            <>
-              <div className="prof-transfer-note">
-                Ve a <strong>Mi Perfil → Exportar</strong> en el dispositivo de origen. Copia el código completo y pégalo aquí. Se reemplazarán los datos de este dispositivo.
-              </div>
-              <div className="prof-import-row">
-                <input
-                  className="prof-import-input"
-                  placeholder="Pega aquí tu código..."
-                  value={importInput}
-                  onChange={e=>{setImportInput(e.target.value);setMsg(null);}}
-                  onKeyDown={e=>e.key==="Enter"&&doImport()}
-                />
-                <button className="prof-btn primary" onClick={doImport}>Importar</button>
-              </div>
-            </>
-          )}
-
-          {msg && <div className={msg.type==="ok"?"prof-msg-ok":"prof-msg-err"}>{msg.text}</div>}
-
-        </div>
-      </div>
-
-      {/* ── GESTIÓN DE DATOS ── */}
-      <div className="prof-section-lbl">Gestión de datos</div>
-      <div className="prof-data-card">
-        {[
-          {key:CAL_KEY,    icon:"📅", lbl:"Calendario y hábitos",    desc:`${Object.keys(calendar).length} días`},
-          {key:PESO_KEY,   icon:"⚖️", lbl:"Registros de peso",       desc:`${pesoData.length} pesajes`},
-          {key:NUTR_KEY_L, icon:"🥗", lbl:"Diario de nutrición",     desc:"Alimentos del día"},
-          {key:QF_KEY_L,   icon:"📚", lbl:"Biblioteca de alimentos", desc:`${qFoods.length} alimentos`},
-          {key:HIST_KEY,   icon:"🧮", lbl:"Historial de cálculos",   desc:`${hist.length} cálculos guardados`},
-          {key:ADJUST_KEY, icon:"🧠", lbl:"Historial de ajustes",    desc:`${adjusts.length} ajustes calóricos`},
-          {key:PLAN_KEY,   icon:"🎯", lbl:"Plan de macros",          desc:plan?`${plan.kcalObj?.toLocaleString()} kcal · ${STRATEGY_LABELS[plan.strategy]?.replace(/ .*/,"")}`:"Sin plan"},
-        ].map(item=>(
-          <div key={item.key} className="prof-data-item">
-            <span className="prof-data-icon">{item.icon}</span>
-            <div className="prof-data-info">
-              <strong>{item.lbl}</strong>
-              <span>{cleared[item.key]?"✓ Eliminado":item.desc}</span>
             </div>
-            <button className="prof-data-btn" disabled={!!cleared[item.key]}
-              onClick={()=>clearSection(item.key,item.lbl)}>
-              {cleared[item.key]?"Hecho":"Limpiar"}
-            </button>
-          </div>
-        ))}
-      </div>
+          )}
 
-      {/* ── PRIVACIDAD ── */}
-      <div className="prof-privacy">
-        <span style={{fontSize:"1.2rem",flexShrink:0}}>🔒</span>
-        <div>
-          <div style={{fontSize:".78rem",fontWeight:500,color:"var(--text)",marginBottom:2}}>Tus datos son solo tuyos</div>
-          <div style={{fontSize:".68rem",color:"var(--text-muted)"}}>Todo se guarda localmente en tu navegador. Nada se envía a ningún servidor externo.</div>
+          {/* Frase motivacional */}
+          <div className="profile-quote">
+            <p>"{quote.quote}"</p>
+            <span>{quote.tag}</span>
+          </div>
+
+          {/* Gestión de datos */}
+          <div>
+            <div className="profile-section-title">Gestión de datos</div>
+            <div className="datos-card">
+              {[
+                { key:CAL_KEY,         icon:"📅", label:"Calendario y hábitos",   desc:`${Object.keys(calendar).length} día${Object.keys(calendar).length!==1?"s":""} registrado${Object.keys(calendar).length!==1?"s":""}` },
+                { key:PESO_KEY,        icon:"⚖️", label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
+                { key:NUTR_KEY_LOCAL,  icon:"🥗", label:"Diario de nutrición",     desc:"Alimentos del día" },
+                { key:QF_KEY_LOCAL,    icon:"📚", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
+                { key:HIST_KEY,        icon:"🧮", label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
+                { key:ADJUST_KEY,      icon:"🧠", label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
+              ].map(item=>(
+                <div key={item.key} className="datos-item">
+                  <div className="datos-item-left">
+                    <span className="datos-item-icon">{item.icon}</span>
+                    <div className="datos-item-info">
+                      <strong>{item.label}</strong>
+                      <span>{cleared[item.key] ? "✓ Limpiado" : item.desc}</span>
+                    </div>
+                  </div>
+                  <button className="datos-clear-btn" onClick={()=>clearSection(item.key,item.label)} disabled={!!cleared[item.key]}>
+                    {cleared[item.key] ? "Limpiado" : "Limpiar"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"13px 16px",display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:"1rem"}}>🔒</span>
+            <div>
+              <div style={{fontSize:".74rem",fontWeight:500,color:"var(--text)",marginBottom:1}}>Tus datos son solo tuyos</div>
+              <div style={{fontSize:".67rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. Nada se envía a ningún servidor.</div>
+            </div>
+          </div>
+
         </div>
       </div>
-
     </div>
   );
 }
@@ -3969,6 +3961,14 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(()=>{ try{return localStorage.getItem("tdee_dark")==="1";}catch{return false;} });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [autoSaveTs, setAutoSaveTs] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("tdee_session");
+      if (!saved) return null;
+      const session = JSON.parse(saved);
+      const users = loadUsers();
+      return users.find(u => u.id === session.id) || null;
+    } catch { return null; }
   });
 
   useEffect(()=>{
@@ -3989,6 +3989,15 @@ export default function App() {
     return ()=>clearInterval(interval);
   },[]);
 
+  const handleLogin = (user) => {
+    try { localStorage.setItem("tdee_session", JSON.stringify({id: user.id})); } catch {}
+    setCurrentUser(user);
+  };
+  const handleLogout = () => {
+    try { localStorage.removeItem("tdee_session"); } catch {}
+    setCurrentUser(null);
+    setPage("calculator");
+  };
   const navigate = (p) => { setPage(p); setSidebarOpen(false); window.scrollTo(0,0); };
 
   const NAV = [
@@ -3999,17 +4008,16 @@ export default function App() {
         {id:"calendar",   icon:"📅", label:"Mi Calendario"},
         {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
         {id:"peso",       icon:"⚖️", label:"Mi Peso"},
-        {id:"analisis",   icon:"🧠", label:"Mi Análisis"},
-        {id:"profile",    icon:"👤", label:"Mi Perfil"},
       ]
-    },
     },
     {
       section: "Próximamente",
       items: [
-        {id:"progress", icon:"🏆", label:"Mi Progreso", badge:"Soon"},
+        {id:"progress",  icon:"🏆", label:"Mi Progreso",    badge:"Soon"},
+        {id:"profile",   icon:"👤", label:"Mi Perfil",      badge:"Soon"},
       ]
     },
+  ];
 
   return (
     <>
@@ -4052,6 +4060,8 @@ export default function App() {
               <span>{darkMode?"Modo claro":"Modo oscuro"}</span>
             </button>
             {autoSaveTs&&<div className="autosave-badge">✓ Guardado automático {autoSaveTs}</div>}
+            {currentUser && <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-muted)",textAlign:"center",padding:"2px 0"}}>👤 {currentUser.username}</div>}
+            {!currentUser && <button onClick={()=>navigate("profile")} style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--accent)",background:"var(--accent-dim)",border:"1px solid var(--accent-dim)",borderRadius:6,padding:"4px 10px",cursor:"pointer",width:"100%"}}>Iniciar sesión →</button>}
           </div>
         </nav>
 
@@ -4061,7 +4071,8 @@ export default function App() {
           {page==="nutrition"  && <NutritionPage/>}
           {page==="peso"       && <PesoPage/>}
           {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
-          {page==="profile"    && <ProfilePage onNavigate={navigate}/>}
+          {page==="profile"    && <ProfilePage user={currentUser} onLogin={handleLogin} onLogout={handleLogout} onNavigate={navigate}/>}
+          {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
               <p style={{marginTop:20,padding:"18px 22px",background:"var(--accent-dim)",borderRadius:"var(--r)",border:"1px solid rgba(217,79,43,.2)",fontSize:".85rem",color:"var(--text-muted)"}}>🚀 Esta sección está en desarrollo. Pronto podrás ver tus niveles, rachas y estadísticas de progreso.</p>
