@@ -79,15 +79,17 @@ const styles = `
     --shadow-btn: 0 2px 12px rgba(30,60,160,0.28);
   }
 
+  html { overflow-x: hidden; max-width: 100%; }
   body {
     background: var(--bg); color: var(--text); font-family: var(--font-body);
     min-height: 100vh; -webkit-font-smoothing: antialiased;
     overflow-x: hidden; transition: background .3s, color .3s;
+    max-width: 100%; position: relative;
   }
   body.sidebar-open { overflow: hidden; }
 
   /* ── APP SHELL ── */
-  .app-shell { display: flex; min-height: 100vh; }
+  .app-shell { display: flex; min-height: 100vh; overflow-x: hidden; max-width: 100%; }
 
   /* ── SIDEBAR ── */
   .sidebar {
@@ -96,6 +98,7 @@ const styles = `
     display: flex; flex-direction: column;
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
     transition: transform .3s ease;
+    will-change: transform;
   }
 
   .sidebar-logo {
@@ -481,7 +484,8 @@ const styles = `
   .cal-stat-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
 
   /* ── MOBILE BURGER ── */
-  .burger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; width: 40px; height: 40px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+  .burger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; width: 40px; height: 40px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: opacity .2s, transform .2s; }
+  body.sidebar-open .burger { opacity: 0; pointer-events: none; transform: scale(0.85); }
   .burger span { display: block; width: 18px; height: 2px; background: var(--text-muted); border-radius: 2px; transition: .2s; }
   .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
 
