@@ -106,7 +106,8 @@ const styles = `
     font-family: var(--font-display); font-size: 1.15rem; line-height: 1.15;
   }
   .sidebar-logo h2 em { font-style: italic; color: var(--accent); }
-  .sidebar-logo p { font-size: .62rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px; letter-spacing: .06em; }
+  .sidebar-logo p { font-size: .62rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px; letter-spacing: .06em; display:flex; align-items:center; gap:6px; }
+  .sidebar-v-badge { background: var(--accent-dim); color: var(--accent); border-radius: 4px; padding: 1px 5px; font-size: .52rem; font-family: var(--font-mono); letter-spacing: .04em; border: 1px solid var(--accent-dim); }
 
   .sidebar-nav { flex: 1; padding: 16px 12px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 
@@ -124,7 +125,7 @@ const styles = `
   }
   .nav-item:hover { background: var(--bg-warm); color: var(--text); }
   .nav-item:active { transform: scale(0.97); }
-  .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; box-shadow: inset 3px 0 0 var(--accent); }
   .nav-item .nav-icon { font-size: 1rem; flex-shrink: 0; width: 20px; text-align: center; }
   .nav-item .nav-badge { font-family: var(--font-mono); font-size: .5rem; padding: 1px 6px; border-radius: 100px; background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-dim); margin-left: auto; }
 
@@ -144,10 +145,12 @@ const styles = `
   .dark-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
   .dark-toggle:active { transform: scale(0.97); }
 
+  @keyframes savePulse { 0%,100%{opacity:.6} 50%{opacity:1} }
   .autosave-badge {
     font-family: var(--font-mono); font-size: .55rem; color: var(--green);
     background: var(--green-dim); border: 1px solid rgba(90,138,74,.2);
     padding: 3px 9px; border-radius: 100px; letter-spacing: .06em; text-align: center;
+    animation: savePulse 3s ease-in-out infinite;
   }
 
   /* ── MAIN CONTENT ── */
@@ -160,8 +163,10 @@ const styles = `
   /* ── PAGE HEADER ── */
   .page-header {
     padding: 44px 0 36px;
-    border-bottom: 1.5px solid var(--border); margin-bottom: 52px;
+    border-bottom: none; margin-bottom: 52px;
+    position: relative;
   }
+  .page-header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1.5px; background:linear-gradient(90deg,var(--accent),var(--accent-2),transparent); border-radius:2px; }
   .page-header h1 { font-family: var(--font-display); font-size: 2.8rem; line-height: 1; letter-spacing: -.02em; }
   .page-header h1 em { font-style: italic; color: var(--accent); }
   .page-header p { font-size: .82rem; color: var(--text-muted); margin-top: 10px; font-weight: 300; letter-spacing: .03em; }
@@ -242,7 +247,10 @@ const styles = `
     border: none; border-radius: 12px; font-family: var(--font-body); font-size: .9rem;
     font-weight: 500; cursor: pointer; letter-spacing: .03em; margin-top: 8px;
     transition: var(--tr); box-shadow: var(--shadow-btn), 0 4px 0 rgba(0,0,0,.15);
+    position: relative; overflow: hidden;
   }
+  .cta::after { content:''; position:absolute; inset:0; background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%); transform:translateX(-100%); transition:transform .4s ease; }
+  .cta:hover::after { transform:translateX(100%); }
   .cta:hover { background: var(--accent-2); transform: translateY(-2px); box-shadow: var(--shadow-btn), 0 6px 0 rgba(0,0,0,.12), 0 8px 20px var(--accent-glow); }
   .cta:active { transform: translateY(2px) scale(0.985); box-shadow: 0 1px 0 rgba(0,0,0,.15); }
 
@@ -467,7 +475,8 @@ const styles = `
 
   /* ── CAL SUMMARY ── */
   .cal-summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 28px; }
-  .cal-stat { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 16px; text-align: center; }
+  .cal-stat { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 16px; text-align: center; transition: var(--tr); }
+  .cal-stat:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 16px var(--accent-glow); }
   .cal-stat-val { font-family: var(--font-display); font-size: 1.8rem; line-height: 1; margin-bottom: 3px; }
   .cal-stat-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
 
@@ -1142,9 +1151,20 @@ const styles = `
 
   .profile-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 32px; }
   .profile-card-top { padding: 26px 22px 20px; text-align: center; background: linear-gradient(160deg,var(--surface) 0%,var(--bg-warm) 100%); border-bottom: 1px solid var(--border); }
-  .profile-avatar { width: 76px; height: 76px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.1rem; cursor: pointer; transition: var(--tr); margin: 0 auto 12px; }
-  .profile-avatar:hover { transform: scale(1.06); box-shadow: 0 0 0 4px var(--accent-dim); }
-  .profile-emoji-picker { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; padding: 11px 15px; border-bottom: 1px solid var(--border); background: var(--bg-warm); }
+  .profile-avatar-wrap { position: relative; width: 90px; margin: 0 auto 14px; cursor: pointer; }
+  .profile-avatar { width: 90px; height: 90px; border-radius: 50%; background: var(--accent-dim); border: 2.5px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.4rem; transition: var(--tr); overflow: hidden; box-shadow: 0 4px 18px var(--accent-glow); }
+  .profile-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .profile-avatar-overlay { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .18s; pointer-events: none; }
+  .profile-avatar-overlay span { font-size: 1.4rem; }
+  .profile-avatar-wrap:hover .profile-avatar { border-color: var(--accent-2); box-shadow: 0 6px 26px var(--accent-glow); }
+  .profile-avatar-wrap:hover .profile-avatar-overlay { opacity: 1; }
+  .profile-avatar-badge { position: absolute; bottom: 2px; right: 2px; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); border: 2px solid var(--surface); display: flex; align-items: center; justify-content: center; font-size: .75rem; color: #fff; pointer-events: none; }
+  .profile-emoji-picker { padding: 11px 15px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; flex-direction: column; gap: 8px; }
+  .profile-emoji-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; }
+  .profile-photo-row { display: flex; gap: 6px; padding-top: 4px; border-top: 1px solid var(--border); }
+  .profile-photo-btn { flex:1; padding: 6px 10px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); font-family: var(--font-mono); font-size: .65rem; cursor: pointer; transition: var(--tr); text-align: center; }
+  .profile-photo-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .profile-photo-btn.danger:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.07); }
   .profile-emoji-btn { aspect-ratio:1; border-radius: var(--r); border: 1.5px solid transparent; background: var(--surface); cursor: pointer; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; transition: var(--tr); }
   .profile-emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
   .profile-emoji-btn.sel { border-color: var(--accent); background: var(--accent-dim); }
@@ -1883,6 +1903,7 @@ function PesoPage() {
   const [draftWeight, setDraftWeight] = useState("");
   const [draftDate,   setDraftDate]   = useState(() => new Date().toISOString().slice(0,10));
   const [draftNote,   setDraftNote]   = useState("");
+  const [addedOk,     setAddedOk]     = useState(false);
 
   const addEntry = () => {
     const w = parseFloat(draftWeight);
@@ -1892,6 +1913,7 @@ function PesoPage() {
     setEntries(updated);
     savePeso(updated);
     setDraftWeight(""); setDraftNote("");
+    setAddedOk(true); setTimeout(() => setAddedOk(false), 1800);
   };
 
   const removeEntry = (id) => {
@@ -1944,7 +1966,7 @@ function PesoPage() {
                   value={draftNote} onChange={e=>setDraftNote(e.target.value)}
                   onKeyDown={e=>e.key==="Enter"&&addEntry()}/>
               </div>
-              <button className="peso-add-btn" onClick={addEntry}>+ Añadir</button>
+              <button className="peso-add-btn" onClick={addEntry} style={addedOk?{background:"var(--green)"}:{}}>{addedOk?"✓ Guardado":"+ Añadir"}</button>
             </div>
           </div>
           <div className="peso-log">
@@ -2448,6 +2470,7 @@ function ProfilePage({ onNavigate }) {
   const [pickerOpen, setPickerOpen]   = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft]     = useState(profile.name);
+  const fileInputRef = useRef(null);
   const [xferTab, setXferTab]         = useState("export"); // export | import
   const [xferCode, setXferCode]       = useState("");
   const [importInput, setImportInput] = useState("");
@@ -2483,6 +2506,22 @@ function ProfilePage({ onNavigate }) {
     setProfile(next); saveProfileData(next);
   };
 
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return;
+    if (file.size > 2 * 1024 * 1024) { alert("La imagen no debe superar 2 MB."); return; }
+    const reader = new FileReader();
+    reader.onload = ev => {
+      updateProfile({ photoUrl: ev.target.result });
+      setPickerOpen(false);
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const clearPhoto = () => { updateProfile({ photoUrl: null }); };
+
   const saveName = () => { updateProfile({ name: nameDraft.trim() }); setEditingName(false); };
 
   const doExport = () => {
@@ -2516,7 +2555,7 @@ function ProfilePage({ onNavigate }) {
   const displayName = profile.name || "Tu nombre";
 
   return (
-    <div className="profile-page">
+    <div className="profile-page" onClick={() => setPickerOpen(false)}>
       <div className="page-header">
         <h1>Mi <em>Perfil</em></h1>
         <p>Personaliza tu perfil, ve tus logros y transfiere tus datos a cualquier dispositivo</p>
@@ -2530,16 +2569,40 @@ function ProfilePage({ onNavigate }) {
             <div className="profile-card-top">
 
               {/* Avatar */}
-              <div className="profile-avatar" onClick={() => setPickerOpen(v => !v)} title="Cambiar avatar">
-                {profile.avatar}
+              <div className="profile-avatar-wrap" onClick={e => { e.stopPropagation(); setPickerOpen(v => !v); }}>
+                <div className="profile-avatar">
+                  {profile.photoUrl
+                    ? <img src={profile.photoUrl} alt="avatar"/>
+                    : profile.avatar}
+                </div>
+                <div className="profile-avatar-overlay"><span>📷</span></div>
+                <div className="profile-avatar-badge">✏</div>
               </div>
 
+              {/* Hidden file input */}
+              <input ref={fileInputRef} type="file" accept="image/*"
+                style={{display:"none"}} onChange={handlePhotoUpload}/>
+
               {pickerOpen && (
-                <div className="profile-emoji-picker">
-                  {AVATAR_EMOJIS.map(e => (
-                    <button key={e} className={`profile-emoji-btn ${profile.avatar===e?"sel":""}`}
-                      onClick={() => { updateProfile({ avatar: e }); setPickerOpen(false); }}>{e}</button>
-                  ))}
+                <div className="profile-emoji-picker" onClick={e => e.stopPropagation()}>
+                  <div className="profile-emoji-grid">
+                    {AVATAR_EMOJIS.map(e => (
+                      <button key={e} className={`profile-emoji-btn ${!profile.photoUrl&&profile.avatar===e?"sel":""}`}
+                        onClick={() => { updateProfile({ avatar: e, photoUrl: null }); setPickerOpen(false); }}>{e}</button>
+                    ))}
+                  </div>
+                  <div className="profile-photo-row">
+                    <button className="profile-photo-btn"
+                      onClick={e => { e.stopPropagation(); fileInputRef.current?.click(); }}>
+                      📷 Subir foto
+                    </button>
+                    {profile.photoUrl && (
+                      <button className="profile-photo-btn danger"
+                        onClick={e => { e.stopPropagation(); clearPhoto(); setPickerOpen(false); }}>
+                        🗑 Quitar foto
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -3999,6 +4062,29 @@ function NutritionPage() {
   );
 }
 
+// ─── SIDEBAR USER ─────────────────────────────────────────────────────────────
+function SidebarUser({ onNavigate }) {
+  const prof = useMemo(() => { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null"); } catch { return null; } }, []);
+  if (!prof?.name) return null;
+  return (
+    <button onClick={() => onNavigate("profile")}
+      style={{display:"flex",alignItems:"center",gap:9,padding:"7px 14px",borderRadius:"var(--r)",
+        border:"1px solid var(--border)",background:"transparent",cursor:"pointer",
+        width:"100%",transition:"var(--tr)",color:"var(--text-muted)"}}>
+      <div style={{width:26,height:26,borderRadius:"50%",background:"var(--accent-dim)",
+        border:"1.5px solid var(--accent)",display:"flex",alignItems:"center",justifyContent:"center",
+        fontSize:"1rem",flexShrink:0,overflow:"hidden"}}>
+        {prof.photoUrl
+          ? <img src={prof.photoUrl} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+          : (prof.avatar || "💪")}
+      </div>
+      <span style={{fontFamily:"var(--font-mono)",fontSize:".65rem",overflow:"hidden",
+        textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{prof.name}</span>
+    </button>
+  );
+}
+
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("calculator");
@@ -4063,7 +4149,7 @@ export default function App() {
         <nav className={`sidebar ${sidebarOpen?"open":""}`}>
           <div className="sidebar-logo">
             <h2>Gasto <em>calórico</em></h2>
-            <p>TDEE CALCULATOR v5.0</p>
+            <p>TDEE CALCULATOR <span className="sidebar-v-badge">v5.0</span></p>
           </div>
 
           <div className="sidebar-nav">
@@ -4085,6 +4171,7 @@ export default function App() {
           </div>
 
           <div className="sidebar-footer">
+            <SidebarUser onNavigate={navigate}/>
             <button className="dark-toggle" onClick={()=>setDarkMode(d=>!d)}>
               <span>{darkMode?"☀️":"🌙"}</span>
               <span>{darkMode?"Modo claro":"Modo oscuro"}</span>
