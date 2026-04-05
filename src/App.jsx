@@ -27,7 +27,6 @@ const PESO_KEY  = "tdee_peso_v1";
 const CHECKIN_KEY  = "tdee_checkins_v1";
 const ADJUST_KEY   = "tdee_adjustments_v1";
 const PROFILE_KEY  = "tdee_profile_v1";
-const AUTH_KEY     = "tdee_auth_v1";
 
 const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const WEEKDAYS  = ["L","M","X","J","V","S","D"];
@@ -1137,6 +1136,103 @@ const styles = `
   }
   @media (max-width: 600px) { .logros-grid { grid-template-columns: repeat(2,1fr); } }
 
+  /* ── PROFILE PAGE ── */
+  .profile-page { padding-bottom: 80px; }
+  .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
+
+  .profile-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 32px; }
+  .profile-card-top { padding: 26px 22px 20px; text-align: center; background: linear-gradient(160deg,var(--surface) 0%,var(--bg-warm) 100%); border-bottom: 1px solid var(--border); }
+  .profile-avatar { width: 76px; height: 76px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.1rem; cursor: pointer; transition: var(--tr); margin: 0 auto 12px; }
+  .profile-avatar:hover { transform: scale(1.06); box-shadow: 0 0 0 4px var(--accent-dim); }
+  .profile-emoji-picker { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; padding: 11px 15px; border-bottom: 1px solid var(--border); background: var(--bg-warm); }
+  .profile-emoji-btn { aspect-ratio:1; border-radius: var(--r); border: 1.5px solid transparent; background: var(--surface); cursor: pointer; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; transition: var(--tr); }
+  .profile-emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
+  .profile-emoji-btn.sel { border-color: var(--accent); background: var(--accent-dim); }
+  .profile-name-wrap { cursor: pointer; }
+  .profile-name-display { font-family: var(--font-display); font-size: 1.3rem; }
+  .profile-name-display em { font-style: italic; color: var(--accent); }
+  .profile-edit-hint { font-size: .62rem; color: var(--text-dim); opacity: 0; transition: opacity .15s; margin-top: 2px; }
+  .profile-name-wrap:hover .profile-edit-hint { opacity: 1; }
+  .profile-name-input { font-family: var(--font-display); font-size: 1.15rem; background: var(--bg); border: 1.5px solid var(--accent); border-radius: var(--r); color: var(--text); padding: 5px 11px; outline: none; text-align: center; width: 100%; box-shadow: 0 0 0 3px var(--accent-dim); }
+  .profile-since { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); letter-spacing: .05em; margin-top: 6px; }
+  .profile-ficha { padding: 13px 18px; }
+  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .ficha-row:last-child { border-bottom: none; }
+  .ficha-lbl { font-size: .71rem; color: var(--text-muted); }
+  .ficha-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
+  .ficha-val.accent { color: var(--accent); }
+
+  .profile-right { display: flex; flex-direction: column; gap: 20px; }
+  .profile-section-title { font-family: var(--font-mono); font-size: .57rem; letter-spacing: .17em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 13px; display: flex; align-items: center; gap: 10px; }
+  .profile-section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .logros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .logro-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 14px 12px; text-align: center; transition: var(--tr); }
+  .logro-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 18px var(--accent-glow); }
+  .logro-icon { font-size: 1.5rem; margin-bottom: 4px; }
+  .logro-val { font-family: var(--font-display); font-size: 1.65rem; line-height: 1; color: var(--accent); margin-bottom: 1px; }
+  .logro-val.green { color: #5a8a4a; } .logro-val.blue { color: #3a6e9e; } .logro-val.yellow { color: #c8860a; } .logro-val.purple { color: #7a5a9e; }
+  .logro-lbl { font-family: var(--font-mono); font-size: .54rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+  .logro-sub { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); margin-top: 2px; }
+
+  .objetivo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 15px 18px; display: flex; align-items: center; gap: 14px; }
+  .objetivo-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .objetivo-text { flex: 1; }
+  .objetivo-label { font-size: .71rem; color: var(--text-muted); margin-bottom: 2px; }
+  .objetivo-value { font-family: var(--font-display); font-size: 1.05rem; }
+  .objetivo-value em { font-style: italic; color: var(--accent); }
+  .objetivo-sub { font-family: var(--font-mono); font-size: .59rem; color: var(--text-dim); margin-top: 2px; }
+
+  .plan-activo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .plan-activo-header { padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
+  .plan-activo-title { font-family: var(--font-display); font-size: .93rem; }
+  .plan-activo-title em { font-style: italic; color: var(--accent); }
+  .plan-activo-badge { margin-left: auto; font-family: var(--font-mono); font-size: .56rem; padding: 2px 8px; border-radius: 100px; border: 1px solid; }
+  .plan-activo-body { padding: 13px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .plan-macro-row { display: flex; align-items: center; gap: 8px; }
+  .plan-macro-bar-wrap { flex:1; height:5px; background:var(--surface-2); border-radius:3px; overflow:hidden; }
+  .plan-macro-bar-fill { height:100%; border-radius:3px; }
+
+  .profile-quote { background: linear-gradient(135deg,var(--accent-dim),var(--blue-dim)); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 17px 20px; text-align: center; }
+  .profile-quote p { font-family: var(--font-display); font-size: .93rem; font-style: italic; line-height: 1.55; color: var(--text); }
+  .profile-quote span { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); display: block; margin-top: 5px; letter-spacing: .06em; }
+
+  /* Transfer / import-export */
+  .transfer-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+  .transfer-card-header { padding: 13px 18px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
+  .transfer-card-title { font-family: var(--font-display); font-size: .93rem; }
+  .transfer-card-title em { font-style: italic; color: var(--accent); }
+  .xfer-tabs { display: flex; border-bottom: 1px solid var(--border); }
+  .xfer-tab { flex: 1; padding: 9px 4px; text-align: center; cursor: pointer; font-size: .65rem; font-family: var(--font-mono); color: var(--text-muted); border: none; background: transparent; border-bottom: 2px solid transparent; transition: var(--tr); letter-spacing: .06em; text-transform: uppercase; }
+  .xfer-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--accent-dim); }
+  .xfer-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .xfer-code-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 13px; font-family: var(--font-mono); font-size: .63rem; color: var(--text-muted); word-break: break-all; line-height: 1.6; max-height: 88px; overflow-y: auto; cursor: text; user-select: all; transition: border-color .2s; }
+  .xfer-note { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); line-height: 1.55; padding: 8px 11px; background: var(--bg-warm); border-radius: var(--r); border: 1px solid var(--border); }
+  .xfer-note strong { color: var(--text-muted); }
+  .xfer-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .xfer-btn { padding: 8px 14px; border-radius: var(--r); font-family: var(--font-mono); font-size: .7rem; cursor: pointer; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); transition: var(--tr); white-space: nowrap; flex-shrink: 0; }
+  .xfer-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .xfer-btn.ok { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+  .xfer-btn.primary { background: var(--accent); color: #faf7f2; border-color: var(--accent); }
+  .xfer-btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .xfer-input { flex:1; background:var(--bg); border:1.5px solid var(--border); border-radius:var(--r); color:var(--text); font-family:var(--font-mono); font-size:.68rem; padding:8px 11px; outline:none; transition:border-color .2s,box-shadow .2s; min-width:0; }
+  .xfer-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
+  .xfer-error { background:rgba(217,79,43,.08); border:1px solid rgba(217,79,43,.3); border-radius:var(--r); padding:8px 12px; font-size:.71rem; color:#d94f2b; font-family:var(--font-mono); }
+  .xfer-success { background:rgba(90,138,74,.08); border:1px solid rgba(90,138,74,.3); border-radius:var(--r); padding:8px 12px; font-size:.71rem; color:#5a8a4a; font-family:var(--font-mono); }
+  .datos-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); overflow:hidden; }
+  .datos-item { display:flex; align-items:center; justify-content:space-between; padding:11px 16px; border-bottom:1px solid var(--border); gap:12px; }
+  .datos-item:last-child { border-bottom:none; }
+  .datos-item-left { display:flex; align-items:center; gap:10px; }
+  .datos-item-icon { font-size:.95rem; width:18px; text-align:center; flex-shrink:0; }
+  .datos-item-info strong { display:block; font-size:.78rem; color:var(--text); margin-bottom:1px; }
+  .datos-item-info span { font-size:.66rem; color:var(--text-muted); }
+  .datos-clear-btn { padding:4px 10px; border-radius:var(--r); font-size:.65rem; font-family:var(--font-mono); cursor:pointer; border:1.5px solid var(--border); background:transparent; color:var(--text-muted); transition:var(--tr); white-space:nowrap; flex-shrink:0; }
+  .datos-clear-btn:hover { border-color:#d94f2b; color:#d94f2b; background:rgba(217,79,43,.06); }
+
+  @media (max-width:1100px) { .profile-layout { grid-template-columns:270px 1fr; } }
+  @media (max-width:900px)  { .profile-layout { grid-template-columns:1fr; } .profile-card { position:static; } .logros-grid { grid-template-columns:repeat(3,1fr); } }
+  @media (max-width:600px)  { .logros-grid { grid-template-columns:repeat(2,1fr); } }
+
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -1271,26 +1367,6 @@ function savePlan(plan) {
 
 
 // ─── AUTH & PROFILE HELPERS ──────────────────────────────────────────────────
-function hashPw(str) {
-  // Deterministic hash for localStorage — client-side only demo auth
-  let h = 0;
-  for (let i = 0; i < str.length; i++) { h = (Math.imul(31, h) + str.charCodeAt(i)) | 0; }
-  return h.toString(36);
-}
-
-function loadUsers() {
-  try { return JSON.parse(localStorage.getItem(AUTH_KEY) || "[]"); } catch { return []; }
-}
-function saveUsers(list) {
-  try { localStorage.setItem(AUTH_KEY, JSON.stringify(list)); } catch {}
-}
-function loadProfile() {
-  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch { return null; }
-}
-function saveProfileData(data) {
-  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
-}
-
 function loadPeso() {
   try { return JSON.parse(localStorage.getItem(PESO_KEY) || "[]"); }
   catch { return []; }
@@ -2328,174 +2404,59 @@ function AnalysisPage({ onNavigate }) {
 
 
 // ─── AUTH PAGE ────────────────────────────────────────────────────────────────
-const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉"];
+// ─── PROFILE + TRANSFER HELPERS ──────────────────────────────────────────────
+function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null"); } catch { return null; } }
+function saveProfileData(d) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(d)); } catch {} }
 
-function AuthPage({ onLogin }) {
-  const [tab, setTab] = useState("login");
-  const [form, setForm] = useState({ username:"", email:"", password:"", password2:"" });
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+const TRANSFER_KEYS = [
+  "tdee_form_v1","tdee_hist","tdee_macro_plan_v1","tdee_calendar_v1",
+  "tdee_peso_v1","tdee_checkins_v1","tdee_adjustments_v1","tdee_profile_v1",
+  "tdee_nutrition_v1","tdee_quick_foods_v1","tdee_dark",
+];
 
-  const set = (k, v) => { setForm(f => ({...f, [k]: v})); setError(""); setSuccess(""); };
+function generateTransferCode() {
+  const snapshot = {};
+  TRANSFER_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) snapshot[k] = v; } catch {} });
+  try { return btoa(unescape(encodeURIComponent(JSON.stringify({ v:1, data:snapshot, ts:Date.now() })))); }
+  catch { return null; }
+}
 
-  const handleLogin = () => {
-    if (!form.username.trim() || !form.password) { setError("Rellena usuario y contraseña."); return; }
-    const users = loadUsers();
-    const user = users.find(u => u.username.toLowerCase() === form.username.trim().toLowerCase());
-    if (!user) { setError("Usuario no encontrado."); return; }
-    if (user.pwHash !== hashPw(form.password)) { setError("Contraseña incorrecta."); return; }
-    setLoading(true);
-    setTimeout(() => onLogin(user), 400);
-  };
-
-  const handleRegister = () => {
-    const u = form.username.trim();
-    if (!u || !form.email.trim() || !form.password) { setError("Completa todos los campos."); return; }
-    if (u.length < 3) { setError("El usuario debe tener al menos 3 caracteres."); return; }
-    if (!/^[a-zA-Z0-9_-]{3,20}$/.test(u)) { setError("Solo letras, números, guiones y guiones bajos (3-20 caracteres)."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) { setError("Introduce un email válido."); return; }
-    if (form.password.length < 6) { setError("La contraseña debe tener al menos 6 caracteres."); return; }
-    if (form.password !== form.password2) { setError("Las contraseñas no coinciden."); return; }
-    const users = loadUsers();
-    if (users.find(x => x.username.toLowerCase() === u.toLowerCase())) { setError("Ese usuario ya existe."); return; }
-    const newUser = { id: Date.now().toString(36), username: u, email: form.email.trim().toLowerCase(), pwHash: hashPw(form.password), avatar: "💪", since: new Date().toISOString().slice(0,10) };
-    saveUsers([...users, newUser]);
-    setLoading(true);
-    setTimeout(() => onLogin(newUser), 400);
-  };
-
-  const handleForgot = () => {
-    if (!form.username.trim()) { setError("Introduce tu usuario."); return; }
-    const users = loadUsers();
-    const user = users.find(u => u.username.toLowerCase() === form.username.trim().toLowerCase());
-    if (!user) { setError("No encontramos ese usuario."); return; }
-    const parts = user.email.split("@");
-    const masked = parts[0].slice(0,2) + "***@" + parts[1];
-    setSuccess(`Tu email de recuperación es: ${masked}`);
-  };
-
-  return (
-    <div className="auth-shell">
-      <div className="auth-card">
-        <div className="auth-header">
-          <div className="auth-logo">Gasto <em>calórico</em></div>
-          <div className="auth-logo-sub">TDEE CALCULATOR v5.0</div>
-        </div>
-
-        {tab !== "forgot" && (
-          <div className="auth-tabs">
-            <button className={`auth-tab ${tab==="login"?"active":""}`} onClick={()=>{setTab("login");setError("");setSuccess("");}}>Iniciar sesión</button>
-            <button className={`auth-tab ${tab==="register"?"active":""}`} onClick={()=>{setTab("register");setError("");setSuccess("");}}>Crear cuenta</button>
-          </div>
-        )}
-
-        <div className="auth-body">
-          {error   && <div className="auth-error">⚠ {error}</div>}
-          {success && <div className="auth-success">✓ {success}</div>}
-
-          {tab === "login" && (
-            <>
-              <div className="auth-field">
-                <label>Nombre de usuario</label>
-                <input className={`auth-input ${error&&!form.username?"error":""}`} placeholder="tucuenta"
-                  value={form.username} onChange={e=>set("username",e.target.value)}
-                  onKeyDown={e=>e.key==="Enter"&&handleLogin()}/>
-              </div>
-              <div className="auth-field">
-                <label>Contraseña</label>
-                <div className="pw-wrap">
-                  <input className={`auth-input ${error&&!form.password?"error":""}`}
-                    type={showPw?"text":"password"} placeholder="••••••••"
-                    value={form.password} onChange={e=>set("password",e.target.value)}
-                    onKeyDown={e=>e.key==="Enter"&&handleLogin()} style={{paddingRight:38}}/>
-                  <button className="pw-toggle" type="button" onClick={()=>setShowPw(v=>!v)}>{showPw?"🙈":"👁"}</button>
-                </div>
-              </div>
-              <button className="auth-btn" onClick={handleLogin} disabled={loading}>
-                {loading ? "Entrando…" : "Iniciar sesión"}
-              </button>
-              <div className="auth-footer">
-                <button className="auth-link" onClick={()=>{setTab("forgot");setError("");setSuccess("");}}>¿Olvidaste tu contraseña?</button>
-              </div>
-            </>
-          )}
-
-          {tab === "register" && (
-            <>
-              <div className="auth-field">
-                <label>Nombre de usuario</label>
-                <input className="auth-input" placeholder="minombre (min. 3 caracteres)"
-                  value={form.username} onChange={e=>set("username",e.target.value)}/>
-                <span className="auth-hint">Letras, números, - y _. Entre 3 y 20 caracteres.</span>
-              </div>
-              <div className="auth-field">
-                <label>Email (para recuperar contraseña)</label>
-                <input className="auth-input" type="email" placeholder="tu@email.com"
-                  value={form.email} onChange={e=>set("email",e.target.value)}/>
-                <span className="auth-hint">Solo lo usamos si olvidas tu contraseña.</span>
-              </div>
-              <div className="auth-field">
-                <label>Contraseña</label>
-                <div className="pw-wrap">
-                  <input className="auth-input" type={showPw?"text":"password"} placeholder="Mín. 6 caracteres"
-                    value={form.password} onChange={e=>set("password",e.target.value)} style={{paddingRight:38}}/>
-                  <button className="pw-toggle" type="button" onClick={()=>setShowPw(v=>!v)}>{showPw?"🙈":"👁"}</button>
-                </div>
-              </div>
-              <div className="auth-field">
-                <label>Confirmar contraseña</label>
-                <input className="auth-input" type={showPw?"text":"password"} placeholder="Repite la contraseña"
-                  value={form.password2} onChange={e=>set("password2",e.target.value)}
-                  onKeyDown={e=>e.key==="Enter"&&handleRegister()}/>
-              </div>
-              <button className="auth-btn" onClick={handleRegister} disabled={loading}>
-                {loading ? "Creando cuenta…" : "Crear cuenta"}
-              </button>
-            </>
-          )}
-
-          {tab === "forgot" && (
-            <>
-              <div style={{marginBottom:16,fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.6}}>
-                Introduce tu usuario y te mostraremos el email enmascarado con el que te registraste.
-              </div>
-              <div className="auth-field">
-                <label>Nombre de usuario</label>
-                <input className="auth-input" placeholder="tucuenta"
-                  value={form.username} onChange={e=>set("username",e.target.value)}
-                  onKeyDown={e=>e.key==="Enter"&&handleForgot()}/>
-              </div>
-              <button className="auth-btn" onClick={handleForgot}>Ver email de recuperación</button>
-              <div className="auth-footer" style={{marginTop:12}}>
-                <button className="auth-link" onClick={()=>{setTab("login");setError("");setSuccess("");}}>← Volver al login</button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+function applyTransferCode(raw, onOk, onErr) {
+  try {
+    const payload = JSON.parse(decodeURIComponent(escape(atob(raw.trim()))));
+    if (!payload.v || !payload.data) { onErr("Código inválido o corrupto."); return; }
+    Object.entries(payload.data).forEach(([k,v]) => { try { localStorage.setItem(k,v); } catch {} });
+    onOk();
+  } catch { onErr("No se pudo leer el código. Cópialo completo sin espacios."); }
 }
 
 // ─── PROFILE PAGE ─────────────────────────────────────────────────────────────
+const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉"];
 const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
 const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
-const TRABAJO_LABELS   = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
+const TRABAJO_LABELS = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
 const MOTIVATIONAL = [
-  { quote:"El progreso, no la perfección, es lo que importa.", tag:"Mentalidad" },
-  { quote:"Cada registro es una promesa que te cumples a ti mismo.", tag:"Constancia" },
-  { quote:"Los datos no mienten. El cuerpo tampoco.", tag:"Evidencia" },
+  { quote:"El progreso, no la perfección, es lo que importa.",          tag:"Mentalidad" },
+  { quote:"Cada registro es una promesa que te cumples a ti mismo.",     tag:"Constancia" },
+  { quote:"Los datos no mienten. El cuerpo tampoco.",                    tag:"Evidencia"  },
   { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
-  { quote:"La racha más larga siempre empieza con el día de hoy.", tag:"Inicio" },
+  { quote:"La racha más larga siempre empieza con el día de hoy.",      tag:"Inicio"     },
 ];
 
-function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
-  const [profile, setProfile] = useState(() => loadProfile() || { avatar: user?.avatar || "💪" });
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const [cleared, setCleared] = useState({});
+function ProfilePage({ onNavigate }) {
+  const [profile, setProfile] = useState(() => loadProfile() || { name:"", avatar:"💪", since: new Date().toISOString().slice(0,10) });
+  const [pickerOpen, setPickerOpen]   = useState(false);
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft]     = useState(profile.name);
+  const [xferTab, setXferTab]         = useState("export"); // export | import
+  const [xferCode, setXferCode]       = useState("");
+  const [importInput, setImportInput] = useState("");
+  const [copied, setCopied]           = useState(false);
+  const [xferErr, setXferErr]         = useState("");
+  const [xferOk, setXferOk]           = useState("");
+  const [cleared, setCleared]         = useState({});
 
+  // Live data from all modules
   const form        = useMemo(() => { try { return JSON.parse(localStorage.getItem(FORM_KEY)||"null"); } catch { return null; } }, []);
   const hist        = useMemo(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); } catch { return []; } }, []);
   const plan        = useMemo(() => loadPlan(), []);
@@ -2504,85 +2465,114 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
   const adjustments = useMemo(() => { try { return JSON.parse(localStorage.getItem(ADJUST_KEY)||"[]"); } catch { return []; } }, []);
   const quickFoods  = useMemo(() => loadQuickFoods(), []);
   const calStats    = useMemo(() => getCalStats(calendar), [calendar]);
-  const pesoChange  = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
-  const ficha       = form || {};
-  const imc         = ficha.peso && ficha.altura ? (ficha.peso / ((ficha.altura/100)**2)).toFixed(1) : null;
-  const planIcon    = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
-  const quote       = useMemo(() => MOTIVATIONAL[Math.floor(Date.now() / 86400000) % MOTIVATIONAL.length], []);
-  const daysActive  = useMemo(() => {
-    if (!user?.since) return 0;
-    return Math.max(0, Math.floor((Date.now() - new Date(user.since).getTime()) / 86400000));
-  }, [user]);
 
-  const updateAvatar = (emoji) => {
-    const p = { ...profile, avatar: emoji };
-    setProfile(p); saveProfileData(p);
-    const users = loadUsers();
-    const idx = users.findIndex(u => u.id === user.id);
-    if (idx >= 0) { users[idx].avatar = emoji; saveUsers(users); }
-    setPickerOpen(false);
+  const pesoChange = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
+  const ficha      = form || {};
+  const imc        = ficha.peso && ficha.altura ? (ficha.peso/((ficha.altura/100)**2)).toFixed(1) : null;
+  const planIcon   = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
+  const latestTdee = hist[0]?.tdee ?? null;
+  const quote      = useMemo(() => MOTIVATIONAL[Math.floor(Date.now()/86400000) % MOTIVATIONAL.length], []);
+
+  const daysActive = useMemo(() => {
+    if (!profile.since) return 0;
+    return Math.max(0, Math.floor((Date.now() - new Date(profile.since).getTime()) / 86400000));
+  }, [profile.since]);
+
+  const updateProfile = patch => {
+    const next = { ...profile, ...patch };
+    setProfile(next); saveProfileData(next);
+  };
+
+  const saveName = () => { updateProfile({ name: nameDraft.trim() }); setEditingName(false); };
+
+  const doExport = () => {
+    const c = generateTransferCode();
+    if (c) { setXferCode(c); setXferErr(""); }
+    else setXferErr("No se pudo generar el código.");
+  };
+
+  const doCopy = () => {
+    if (!xferCode) return;
+    navigator.clipboard?.writeText(xferCode)
+      .then(() => { setCopied(true); setTimeout(() => setCopied(false), 2400); })
+      .catch(() => { const el = document.querySelector(".xfer-code-box"); el?.focus(); document.execCommand?.("selectAll"); });
+  };
+
+  const doImport = () => {
+    setXferErr(""); setXferOk("");
+    if (!importInput.trim()) { setXferErr("Pega tu código primero."); return; }
+    applyTransferCode(importInput,
+      () => { setXferOk("✓ Datos importados. Recarga la página para ver los cambios."); setImportInput(""); },
+      msg => setXferErr(msg)
+    );
   };
 
   const clearSection = (key, label) => {
-    if (!window.confirm(`¿Limpiar todos los datos de "${label}"? No se puede deshacer.`)) return;
+    if (!window.confirm(`¿Limpiar "${label}"? No se puede deshacer.`)) return;
     try { localStorage.removeItem(key); } catch {}
     setCleared(c => ({ ...c, [key]: true }));
   };
 
-  const NUTR_KEY_LOCAL = "tdee_nutrition_v1";
-  const QF_KEY_LOCAL   = "tdee_quick_foods_v1";
-
-  // ── Not logged in: show auth inline ─────────────────────────────────────
-  if (!user) {
-    return (
-      <div className="profile-page">
-        <div className="page-header">
-          <h1>Mi <em>Perfil</em></h1>
-          <p>Crea una cuenta o inicia sesión para guardar tu perfil — sin cuenta puedes seguir usando la app normalmente</p>
-        </div>
-        <div style={{maxWidth:440,margin:"0 auto"}}>
-          <AuthPage onLogin={onLogin}/>
-        </div>
-      </div>
-    );
-  }
+  const displayName = profile.name || "Tu nombre";
 
   return (
     <div className="profile-page">
       <div className="page-header">
         <h1>Mi <em>Perfil</em></h1>
-        <p>Tu cuenta, tus logros y la gestión de tus datos</p>
+        <p>Personaliza tu perfil, ve tus logros y transfiere tus datos a cualquier dispositivo</p>
       </div>
 
       <div className="profile-layout">
-        {/* LEFT: user card */}
+
+        {/* ── LEFT: avatar + ficha ── */}
         <div>
           <div className="profile-card">
-            <div className="profile-card-header">
-              <div className="profile-avatar" onClick={()=>setPickerOpen(v=>!v)} title="Cambiar avatar">
+            <div className="profile-card-top">
+
+              {/* Avatar */}
+              <div className="profile-avatar" onClick={() => setPickerOpen(v => !v)} title="Cambiar avatar">
                 {profile.avatar}
               </div>
+
               {pickerOpen && (
                 <div className="profile-emoji-picker">
-                  {AVATAR_EMOJIS.map(e=>(
-                    <button key={e} className={`profile-emoji-btn ${profile.avatar===e?"active":""}`} onClick={()=>updateAvatar(e)}>{e}</button>
+                  {AVATAR_EMOJIS.map(e => (
+                    <button key={e} className={`profile-emoji-btn ${profile.avatar===e?"sel":""}`}
+                      onClick={() => { updateProfile({ avatar: e }); setPickerOpen(false); }}>{e}</button>
                   ))}
                 </div>
               )}
-              <div className="profile-name"><em>{user?.username || "Usuario"}</em></div>
-              <div className="profile-username">@{user?.username?.toLowerCase() || "—"}</div>
-              <div className="profile-since">{daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando la app` : "Cuenta nueva"}</div>
+
+              {/* Name */}
+              {editingName ? (
+                <input className="profile-name-input" autoFocus value={nameDraft}
+                  onChange={e => setNameDraft(e.target.value)}
+                  onBlur={saveName}
+                  onKeyDown={e => { if (e.key==="Enter") saveName(); if (e.key==="Escape") setEditingName(false); }}
+                  placeholder="Tu nombre..." maxLength={28}/>
+              ) : (
+                <div className="profile-name-wrap" onClick={() => { setNameDraft(profile.name); setEditingName(true); }}>
+                  <div className="profile-name-display"><em>{displayName}</em></div>
+                  <div className="profile-edit-hint">✏ Pulsa para editar</div>
+                </div>
+              )}
+
+              <div className="profile-since">
+                {daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando MiCalculadora` : "Bienvenido a MiCalculadora"}
+              </div>
             </div>
 
+            {/* Ficha */}
             <div className="profile-ficha">
               {[
-                { lbl:"📧 Email",     val: user?.email ? (()=>{ const p=user.email.split("@"); return p[0].slice(0,3)+"***@"+p[1]; })() : "—" },
-                { lbl:"⚧ Sexo",      val: ficha.sexo === "mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
-                { lbl:"📅 Edad",      val: ficha.edad ? `${ficha.edad} años` : "—" },
-                { lbl:"📏 Altura",    val: ficha.altura ? `${ficha.altura} cm` : "—" },
-                { lbl:"⚖️ Peso",      val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent:true },
-                { lbl:"📊 IMC",       val: imc || "—" },
-                { lbl:"🏃 Trabajo",   val: TRABAJO_LABELS[ficha.trabajo] || "—" },
+                { lbl:"⚧ Sexo",      val: ficha.sexo==="mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
+                { lbl:"📅 Edad",     val: ficha.edad   ? `${ficha.edad} años` : "—" },
+                { lbl:"📏 Altura",   val: ficha.altura ? `${ficha.altura} cm`  : "—" },
+                { lbl:"⚖️ Peso",     val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent: true },
+                { lbl:"📊 IMC",      val: imc || "—" },
+                { lbl:"💧 Grasa",    val: ficha.grasa ? `${ficha.grasa}%` : "—" },
+                { lbl:"🚶 Pasos",    val: ficha.pasos ? ficha.pasos.toLocaleString() : "—" },
+                { lbl:"🏃 Trabajo",  val: TRABAJO_LABELS[ficha.trabajo] || "—" },
               ].map(r => (
                 <div key={r.lbl} className="ficha-row">
                   <span className="ficha-lbl">{r.lbl}</span>
@@ -2590,11 +2580,10 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
                 </div>
               ))}
             </div>
-            <button className="profile-logout-btn" onClick={onLogout}>Cerrar sesión →</button>
           </div>
         </div>
 
-        {/* RIGHT: logros + plan + datos */}
+        {/* ── RIGHT ── */}
         <div className="profile-right">
 
           {/* Objetivo activo */}
@@ -2603,13 +2592,15 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
               <div className="objetivo-icon">{plan ? planIcon : "🎯"}</div>
               <div className="objetivo-text">
                 <div className="objetivo-label">Objetivo actual</div>
-                <div className="objetivo-value"><em>{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</em></div>
+                <div className="objetivo-value">
+                  <em>{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</em>
+                </div>
                 <div className="objetivo-sub">
                   {plan ? `${plan.kcalObj?.toLocaleString()} kcal/día · P${plan.pPct}% G${plan.fPct}% C${plan.cPct}%`
-                        : "Calcula tu TDEE para personalizar"}
+                        : latestTdee ? `TDEE: ${latestTdee.toLocaleString()} kcal/día` : "Calcula tu TDEE para empezar"}
                 </div>
               </div>
-              {plan && <button className="today-banner-cta" onClick={()=>onNavigate("calculator")} style={{flexShrink:0}}>Editar →</button>}
+              {plan && <button className="today-banner-cta" onClick={() => onNavigate("calculator")} style={{flexShrink:0}}>Editar →</button>}
             </div>
           )}
 
@@ -2618,12 +2609,12 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
             <div className="profile-section-title">Tus logros</div>
             <div className="logros-grid">
               {[
-                { icon:"🔥", val:calStats.streak,              label:"Racha",           sub:"días seguidos",   color:"" },
-                { icon:"✅", val:calStats.full,                label:"Días perfectos",  sub:"3/3 hábitos",     color:"green" },
-                { icon:"📅", val:Object.keys(calendar).length, label:"Días registrados",sub:"en calendario",   color:"blue" },
-                { icon:"⚖️", val:pesoData.length,             label:"Pesajes",         sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
-                { icon:"🧠", val:adjustments.length,           label:"Ajustes",         sub:"por Mi Análisis", color:"purple" },
-                { icon:"🥗", val:quickFoods.length,            label:"Alimentos",       sub:"en biblioteca",   color:"" },
+                { icon:"🔥", val: calStats.streak,            label:"Racha",          sub:"días seguidos", color:"accent"  },
+                { icon:"✅", val: calStats.full,               label:"Días perfectos", sub:"3/3 hábitos",   color:"green"   },
+                { icon:"📅", val: Object.keys(calendar).length,label:"Días registrados",sub:"en calendario", color:"blue"   },
+                { icon:"⚖️", val: pesoData.length,            label:"Pesajes",        sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
+                { icon:"🧠", val: adjustments.length,          label:"Ajustes",        sub:"por Mi Análisis",color:"purple"  },
+                { icon:"🥗", val: quickFoods.length,           label:"Alimentos",      sub:"en biblioteca",  color:"accent"  },
               ].map((l,i) => (
                 <div key={i} className="logro-card">
                   <div className="logro-icon">{l.icon}</div>
@@ -2635,20 +2626,20 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
             </div>
           </div>
 
-          {/* Plan activo */}
+          {/* Plan de macros */}
           {plan && (
             <div className="plan-activo-card">
               <div className="plan-activo-header">
                 <span style={{fontSize:"1.2rem"}}>{planIcon}</span>
-                <div className="plan-activo-title">Plan de <em>macros</em></div>
+                <div className="plan-activo-title">Plan de <em>macros</em> activo</div>
                 <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
               </div>
               <div className="plan-activo-body">
                 {[{name:"Proteína",g:plan.protG,pct:plan.pPct,color:"#d94f2b"},{name:"Grasa",g:plan.fatG,pct:plan.fPct,color:"#e8793a"},{name:"Carbos",g:plan.carbG,pct:plan.cPct,color:"#3a6e9e"}].map(m=>(
                   <div key={m.name} className="plan-macro-row">
-                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".67rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
                     <div className="plan-macro-bar-wrap"><div className="plan-macro-bar-fill" style={{width:`${m.pct}%`,background:m.color}}/></div>
-                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",minWidth:60,textAlign:"right"}}>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".67rem",minWidth:58,textAlign:"right"}}>
                       <span style={{color:m.color,fontWeight:500}}>{m.g}g</span>
                       <span style={{color:"var(--text-dim)",marginLeft:3}}>{m.pct}%</span>
                     </span>
@@ -2658,10 +2649,62 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
             </div>
           )}
 
-          {/* Frase motivacional */}
+          {/* Cita del día */}
           <div className="profile-quote">
             <p>"{quote.quote}"</p>
             <span>{quote.tag}</span>
+          </div>
+
+          {/* ── IMPORTAR / EXPORTAR ── */}
+          <div className="transfer-card">
+            <div className="transfer-card-header">
+              <span style={{fontSize:"1.2rem"}}>📲</span>
+              <div className="transfer-card-title">Mis datos en otro <em>dispositivo</em></div>
+            </div>
+            <div className="xfer-tabs">
+              <button className={`xfer-tab ${xferTab==="export"?"active":""}`} onClick={()=>{setXferTab("export");setXferErr("");setXferOk("");}}>Exportar</button>
+              <button className={`xfer-tab ${xferTab==="import"?"active":""}`} onClick={()=>{setXferTab("import");setXferErr("");setXferOk("");}}>Importar</button>
+            </div>
+            <div className="xfer-body">
+              {xferTab === "export" && (
+                <>
+                  <div className="xfer-note">
+                    <strong>Cómo funciona:</strong> genera un código con todos tus datos (peso, calendario, nutrición, macros…).
+                    Cópialo, ve al otro dispositivo, abre Mi Perfil → Importar y pégalo. Tus datos aparecerán al instante.
+                  </div>
+                  {xferCode ? (
+                    <>
+                      <div className="xfer-code-box" tabIndex={0}>{xferCode}</div>
+                      <div className="xfer-row">
+                        <button className={`xfer-btn ${copied?"ok":""}`} onClick={doCopy}>
+                          {copied ? "✓ Copiado" : "Copiar código"}
+                        </button>
+                        <button className="xfer-btn" onClick={doExport}>Regenerar</button>
+                      </div>
+                    </>
+                  ) : (
+                    <button className="xfer-btn primary" onClick={doExport}>Generar código de exportación</button>
+                  )}
+                  {xferErr && <div className="xfer-error">{xferErr}</div>}
+                </>
+              )}
+              {xferTab === "import" && (
+                <>
+                  <div className="xfer-note">
+                    <strong>Cómo funciona:</strong> en el dispositivo de origen ve a Mi Perfil → Exportar, genera el código y cópialo.
+                    Pégalo aquí y pulsa Importar. Se restaurarán todos tus datos.
+                  </div>
+                  {xferOk && <div className="xfer-success">{xferOk}</div>}
+                  {xferErr && <div className="xfer-error">{xferErr}</div>}
+                  <div className="xfer-row">
+                    <input className="xfer-input" placeholder="Pega tu código aquí..."
+                      value={importInput} onChange={e=>{setImportInput(e.target.value);setXferErr("");setXferOk("");}}
+                      onKeyDown={e=>e.key==="Enter"&&doImport()}/>
+                    <button className="xfer-btn primary" onClick={doImport}>Importar</button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Gestión de datos */}
@@ -2669,13 +2712,13 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
             <div className="profile-section-title">Gestión de datos</div>
             <div className="datos-card">
               {[
-                { key:CAL_KEY,         icon:"📅", label:"Calendario y hábitos",   desc:`${Object.keys(calendar).length} día${Object.keys(calendar).length!==1?"s":""} registrado${Object.keys(calendar).length!==1?"s":""}` },
+                { key:CAL_KEY,         icon:"📅", label:"Calendario y hábitos",   desc:"Registros diarios" },
                 { key:PESO_KEY,        icon:"⚖️", label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
-                { key:NUTR_KEY_LOCAL,  icon:"🥗", label:"Diario de nutrición",     desc:"Alimentos del día" },
-                { key:QF_KEY_LOCAL,    icon:"📚", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
+                { key:NUTR_KEY,        icon:"🥗", label:"Diario de nutrición",     desc:"Alimentos del día" },
+                { key:QUICK_FOODS_KEY, icon:"📚", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
                 { key:HIST_KEY,        icon:"🧮", label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
                 { key:ADJUST_KEY,      icon:"🧠", label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
-              ].map(item=>(
+              ].map(item => (
                 <div key={item.key} className="datos-item">
                   <div className="datos-item-left">
                     <span className="datos-item-icon">{item.icon}</span>
@@ -2684,7 +2727,7 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
                       <span>{cleared[item.key] ? "✓ Limpiado" : item.desc}</span>
                     </div>
                   </div>
-                  <button className="datos-clear-btn" onClick={()=>clearSection(item.key,item.label)} disabled={!!cleared[item.key]}>
+                  <button className="datos-clear-btn" onClick={() => clearSection(item.key, item.label)} disabled={!!cleared[item.key]}>
                     {cleared[item.key] ? "Limpiado" : "Limpiar"}
                   </button>
                 </div>
@@ -2696,7 +2739,7 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
             <span style={{fontSize:"1rem"}}>🔒</span>
             <div>
               <div style={{fontSize:".74rem",fontWeight:500,color:"var(--text)",marginBottom:1}}>Tus datos son solo tuyos</div>
-              <div style={{fontSize:".67rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. Nada se envía a ningún servidor.</div>
+              <div style={{fontSize:".67rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. Nada se envía a servidores externos.</div>
             </div>
           </div>
 
@@ -2705,6 +2748,7 @@ function ProfilePage({ user, onLogin, onLogout, onNavigate }) {
     </div>
   );
 }
+
 
 // ─── DAY MODAL ───────────────────────────────────────────────────────────────
 function DayModal({ dateKey, calendar, onSave, onClose }) {
@@ -3961,15 +4005,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(()=>{ try{return localStorage.getItem("tdee_dark")==="1";}catch{return false;} });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [autoSaveTs, setAutoSaveTs] = useState(null);
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      const saved = localStorage.getItem("tdee_session");
-      if (!saved) return null;
-      const session = JSON.parse(saved);
-      const users = loadUsers();
-      return users.find(u => u.id === session.id) || null;
-    } catch { return null; }
-  });
+
 
   useEffect(()=>{
     document.body.classList.toggle("dark", darkMode);
@@ -3989,15 +4025,8 @@ export default function App() {
     return ()=>clearInterval(interval);
   },[]);
 
-  const handleLogin = (user) => {
-    try { localStorage.setItem("tdee_session", JSON.stringify({id: user.id})); } catch {}
-    setCurrentUser(user);
-  };
-  const handleLogout = () => {
-    try { localStorage.removeItem("tdee_session"); } catch {}
-    setCurrentUser(null);
-    setPage("calculator");
-  };
+
+
   const navigate = (p) => { setPage(p); setSidebarOpen(false); window.scrollTo(0,0); };
 
   const NAV = [
@@ -4008,13 +4037,14 @@ export default function App() {
         {id:"calendar",   icon:"📅", label:"Mi Calendario"},
         {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
         {id:"peso",       icon:"⚖️", label:"Mi Peso"},
+        {id:"analisis",   icon:"🧠", label:"Mi Análisis"},
+        {id:"profile",    icon:"👤", label:"Mi Perfil"},
       ]
     },
     {
       section: "Próximamente",
       items: [
         {id:"progress",  icon:"🏆", label:"Mi Progreso",    badge:"Soon"},
-        {id:"profile",   icon:"👤", label:"Mi Perfil",      badge:"Soon"},
       ]
     },
   ];
@@ -4060,8 +4090,6 @@ export default function App() {
               <span>{darkMode?"Modo claro":"Modo oscuro"}</span>
             </button>
             {autoSaveTs&&<div className="autosave-badge">✓ Guardado automático {autoSaveTs}</div>}
-            {currentUser && <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-muted)",textAlign:"center",padding:"2px 0"}}>👤 {currentUser.username}</div>}
-            {!currentUser && <button onClick={()=>navigate("profile")} style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--accent)",background:"var(--accent-dim)",border:"1px solid var(--accent-dim)",borderRadius:6,padding:"4px 10px",cursor:"pointer",width:"100%"}}>Iniciar sesión →</button>}
           </div>
         </nav>
 
@@ -4071,7 +4099,7 @@ export default function App() {
           {page==="nutrition"  && <NutritionPage/>}
           {page==="peso"       && <PesoPage/>}
           {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
-          {page==="profile"    && <ProfilePage user={currentUser} onLogin={handleLogin} onLogout={handleLogout} onNavigate={navigate}/>}
+          {page==="profile"    && <ProfilePage onNavigate={navigate}/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1>Mi <em>Progreso</em></h1>
