@@ -4123,7 +4123,7 @@ export default function App() {
     {
       section: "Principal",
       items: [
-        {id:"calculator", label:"Mi Calculadora"},
+        {id:"calculator", icon:"🧮", label:"Mi Calculadora"},
         {id:"calendar",   icon:"📅", label:"Mi Calendario"},
         {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
         {id:"peso",       icon:"⚖️", label:"Mi Peso"},
