@@ -1537,19 +1537,19 @@ function buildCoachMessage(analysis, currentKcal, checkinData) {
 
   switch (analysis.type) {
     case "no_data":
-      return { icon:"📊", color:"#8a6a50", bg:"rgba(138,106,80,.07)", border:"rgba(138,106,80,.2)", title:"Necesitamos más datos", message:"Para que el análisis funcione necesitas al menos 2 semanas de registros de peso y datos del calendario. El sistema compara promedios semanales para detectar tendencias reales.", delta:null, reasoning:null, canApply:false };
+      return {  color:"#8a6a50", bg:"rgba(138,106,80,.07)", border:"rgba(138,106,80,.2)", title:"Necesitamos más datos", message:"Para que el análisis funcione necesitas al menos 2 semanas de registros de peso y datos del calendario. El sistema compara promedios semanales para detectar tendencias reales.", delta:null, reasoning:null, canApply:false };
     case "low_adherence":
-      return { icon:"⚠️", color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"Primero la adherencia", message:`Tu adherencia al plan esta semana es del ${analysis.adherence}%. Antes de ajustar calorías, la prioridad es llegar a ≥75% de consistencia. Con baja adherencia los datos de peso no reflejan el efecto real de tu dieta.`, delta:null, reasoning:`Peso medio: ${fmt(analysis.avgCurr)} kg (cambio: ${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg/semana)`, canApply:false };
+      return {  color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"Primero la adherencia", message:`Tu adherencia al plan esta semana es del ${analysis.adherence}%. Antes de ajustar calorías, la prioridad es llegar a ≥75% de consistencia. Con baja adherencia los datos de peso no reflejan el efecto real de tu dieta.`, delta:null, reasoning:`Peso medio: ${fmt(analysis.avgCurr)} kg (cambio: ${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg/semana)`, canApply:false };
     case "too_fast":
-      return { icon:"⬆️", color:"#3a6e9e", bg:"rgba(58,110,158,.07)", border:"rgba(58,110,158,.25)", title:`Pérdida demasiado rápida — subimos +${analysis.delta} kcal`, message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana (${analysis.bodyWeightPct}% de tu peso corporal). Superar el 1% semanal aumenta el riesgo de perder músculo y afecta la adherencia a largo plazo.${energyNote}`, delta:+analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
+      return {  color:"#3a6e9e", bg:"rgba(58,110,158,.07)", border:"rgba(58,110,158,.25)", title:`Pérdida demasiado rápida — subimos +${analysis.delta} kcal`, message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana (${analysis.bodyWeightPct}% de tu peso corporal). Superar el 1% semanal aumenta el riesgo de perder músculo y afecta la adherencia a largo plazo.${energyNote}`, delta:+analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
     case "stall":
-      return { icon:"⬇️", color:"#d94f2b", bg:"rgba(217,79,43,.07)", border:"rgba(217,79,43,.25)", title:`Sin progreso esta semana — ajustamos ${analysis.delta} kcal`, message:`Tu peso medio no ha bajado (${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg) con una ${adh}. Esto indica que tu TDEE real es mayor de lo calculado o que tu metabolismo se ha adaptado. Reducimos el objetivo calórico.${hungerNote}`, delta:analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
+      return {  color:"#d94f2b", bg:"rgba(217,79,43,.07)", border:"rgba(217,79,43,.25)", title:`Sin progreso esta semana — ajustamos ${analysis.delta} kcal`, message:`Tu peso medio no ha bajado (${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg) con una ${adh}. Esto indica que tu TDEE real es mayor de lo calculado o que tu metabolismo se ha adaptado. Reducimos el objetivo calórico.${hungerNote}`, delta:analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
     case "stall_low_adherence":
-      return { icon:"🔄", color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"No hay progreso — pero la adherencia es baja", message:`Tu peso no ha bajado, pero con solo ${analysis.adherence}% de adherencia no es momento de reducir calorías. Primero consolida el hábito. Si mejoras la adherencia y el peso sigue estancado, entonces ajustamos.`, delta:null, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg`, canApply:false };
+      return {  color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"No hay progreso — pero la adherencia es baja", message:`Tu peso no ha bajado, pero con solo ${analysis.adherence}% de adherencia no es momento de reducir calorías. Primero consolida el hábito. Si mejoras la adherencia y el peso sigue estancado, entonces ajustamos.`, delta:null, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg`, canApply:false };
     case "on_track":
-      return { icon:"✓", color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso lento pero constante — mantener", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Es un ritmo conservador que maximiza la retención muscular. No es necesario ningún ajuste esta semana.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
+      return {  color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso lento pero constante — mantener", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Es un ritmo conservador que maximiza la retención muscular. No es necesario ningún ajuste esta semana.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
     case "ideal":
-      return { icon:"🎯", color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso óptimo — no tocar nada", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Este es el rango ideal para perder grasa preservando músculo al máximo. El plan funciona. Revisa en 2 semanas.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
+      return {  color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso óptimo — no tocar nada", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Este es el rango ideal para perder grasa preservando músculo al máximo. El plan funciona. Revisa en 2 semanas.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
     default:
       return null;
   }
@@ -1671,10 +1671,10 @@ function MealPlan({ kcal, proteinG, fatG, carbG }) {
 
 // ─── MACRO PLAN CUSTOMIZER ───────────────────────────────────────────────────
 const STRATEGIES = [
-  { id:"deficit",    icon:"🔥", name:"Déficit",       desc:"Pérdida de grasa con masa preservada",  pPct:35, fPct:25, cPct:40 },
-  { id:"recomp",     icon:"⚖️", name:"Recomposición", desc:"Perder grasa y ganar músculo a la vez", pPct:40, fPct:25, cPct:35 },
-  { id:"superavit",  icon:"💪", name:"Superávit",     desc:"Ganancia muscular con algo de grasa",   pPct:30, fPct:25, cPct:45 },
-  { id:"lean_bulk",  icon:"🎯", name:"Lean Bulk",     desc:"Superávit mínimo, máximo músculo limpio",pPct:35, fPct:25, cPct:40 },
+  { id:"deficit",     name:"Déficit",       desc:"Pérdida de grasa con masa preservada",  pPct:35, fPct:25, cPct:40 },
+  { id:"recomp",      name:"Recomposición", desc:"Perder grasa y ganar músculo a la vez", pPct:40, fPct:25, cPct:35 },
+  { id:"superavit",   name:"Superávit",     desc:"Ganancia muscular con algo de grasa",   pPct:30, fPct:25, cPct:45 },
+  { id:"lean_bulk",   name:"Lean Bulk",     desc:"Superávit mínimo, máximo músculo limpio",pPct:35, fPct:25, cPct:40 },
 ];
 
 function MacroPlanCustomizer({ kcalObj, onSave }) {
@@ -1789,13 +1789,13 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
 // ─── STREAK TOAST ────────────────────────────────────────────────────────────
 function StreakToast({ streak, onClose }) {
   const milestones = {
-    3:  { icon:"🌱", title:"¡3 días seguidos!", msg:"El hábito empieza a formarse. ¡Sigue así!" },
-    7:  { icon:"🔥", title:"¡1 semana de racha!", msg:"Una semana completa. Esto ya es un hábito real." },
-    14: { icon:"⚡", title:"¡2 semanas sin fallar!", msg:"Dos semanas de constancia. La disciplina es tuya." },
-    21: { icon:"💪", title:"¡21 días!", msg:"Dicen que tarda 21 días. Ya lo tienes." },
-    30: { icon:"🏆", title:"¡1 mes de racha!", msg:"Un mes entero. Nivel otro." },
-    60: { icon:"⭐", title:"¡60 días seguidos!", msg:"Dos meses. Estás en modo élite." },
-    100:{ icon:"👑", title:"¡100 días!", msg:"Triple dígito. Leyenda." },
+    3:  {  title:"¡3 días seguidos!", msg:"El hábito empieza a formarse. ¡Sigue así!" },
+    7:  {  title:"¡1 semana de racha!", msg:"Una semana completa. Esto ya es un hábito real." },
+    14: {  title:"¡2 semanas sin fallar!", msg:"Dos semanas de constancia. La disciplina es tuya." },
+    21: {  title:"¡21 días!", msg:"Dicen que tarda 21 días. Ya lo tienes." },
+    30: {  title:"¡1 mes de racha!", msg:"Un mes entero. Nivel otro." },
+    60: {  title:"¡60 días seguidos!", msg:"Dos meses. Estás en modo élite." },
+    100:{  title:"¡100 días!", msg:"Triple dígito. Leyenda." },
   };
   const m = milestones[streak];
   if (!m) return null;
@@ -2097,7 +2097,6 @@ function CoachCard({ coach, onApply, applied }) {
     <div className="coach-card" style={{background:coach.bg, borderColor:coach.border, color:coach.color}}>
       <div className="coach-card-top">
         <div className="coach-avatar" style={{background:coach.color+"20",border:`1.5px solid ${coach.border}`}}>
-          {coach.icon}
         </div>
         <div className="coach-meta">
           <strong style={{color:coach.color}}>{coach.title}</strong>
@@ -2305,14 +2304,14 @@ function AnalysisPage({ onNavigate }) {
 
   const chips = [];
   if (adherence !== null) {
-    chips.push({ icon:"📋", label:`${adherence}% adherencia`, color:adherence>=75?"#5a8a4a":"#c8860a" });
+    chips.push({  label:`${adherence}% adherencia`, color:adherence>=75?"#5a8a4a":"#c8860a" });
   }
   if (thisAvg && lastAvg) {
     const d = thisAvg - lastAvg;
     chips.push({ icon:d<0?"📉":d>0.1?"📈":"➡️", label:`${d>0?"+":""}${d.toFixed(1)} kg vs semana anterior`, color:d<0?"#5a8a4a":d>0.1?"#d94f2b":"#8a6a50" });
   }
   if (currentKcal) {
-    chips.push({ icon:"🎯", label:`${currentKcal.toLocaleString()} kcal objetivo actual`, color:"var(--accent)" });
+    chips.push({  label:`${currentKcal.toLocaleString()} kcal objetivo actual`, color:"var(--accent)" });
   }
 
   const hasEnoughData = analysis.type !== "no_data";
@@ -2409,10 +2408,10 @@ function AnalysisPage({ onNavigate }) {
           <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"16px 18px"}}>
             <div style={{fontFamily:"var(--font-mono)",fontSize:".55rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:12}}>Cómo funciona</div>
             {[
-              {icon:"📉",text:"Pérdida ideal: 0.5–1% del peso corporal/semana"},
-              {icon:"⬆️",text:"Demasiado rápido (>1.2%): subimos calorías"},
-              {icon:"⬇️",text:"Estancamiento con alta adherencia: bajamos calorías"},
-              {icon:"📋",text:"Baja adherencia: sin ajuste, primero el hábito"},
+              {text:"Pérdida ideal: 0.5–1% del peso corporal/semana"},
+              {text:"Demasiado rápido (>1.2%): subimos calorías"},
+              {text:"Estancamiento con alta adherencia: bajamos calorías"},
+              {text:"Baja adherencia: sin ajuste, primero el hábito"},
             ].map((item,i) => (
               <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:9}}>
                 <span style={{fontSize:".72rem",color:"var(--text-muted)",lineHeight:1.5}}>{item.text}</span>
@@ -2781,7 +2780,7 @@ function ProfilePage({ onNavigate }){
           </div>
 
           <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"13px 16px",display:"flex",alignItems:"center",gap:10}}>
-            <span style={{fontSize:"1rem"}}>🔒</span>
+            <span style={{fontSize:"1rem"}}></span>
             <div>
               <div style={{fontSize:".74rem",fontWeight:500,color:"var(--text)",marginBottom:1}}>Tus datos son solo tuyos</div>
               <div style={{fontSize:".67rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. Nada se envía a servidores externos.</div>
@@ -3322,9 +3321,8 @@ function CalculatorPage({ onNavigate }) {
                 </div>
                 <div className="wel-line wel-l3" style={{height:1,background:"var(--border)",marginBottom:18}}/>
                 <div className="wel-line wel-l3" style={{display:"flex",flexDirection:"column",gap:9,marginBottom:24}}>
-                  {[{,text:"Gasto calórico real en 4 componentes"},{icon:"🎯",text:"Macros adaptados a tu objetivo personalizado"},{icon:"📊",text:"Composición corporal e IMC contextualizado"},{icon:"🔄",text:"Comparación de escenarios e historial"},].map(item=>(
+                  {[{text:"Gasto calórico real en 4 componentes"},{text:"Macros adaptados a tu objetivo personalizado"},{text:"Composición corporal e IMC contextualizado"},{text:"Comparación de escenarios e historial"},].map(item=>(
                     <div key={item.text} style={{display:"flex",alignItems:"flex-start",gap:11,background:"var(--bg-warm)",borderRadius:"var(--r)",padding:"9px 13px",border:"1px solid var(--border)"}}>
-                      <span style={{fontSize:"1rem",lineHeight:1.4,flexShrink:0}}>{item.icon}</span>
                       <span style={{fontSize:".77rem",color:"var(--text-muted)",lineHeight:1.5}}>{item.text}</span>
                     </div>
                   ))}
