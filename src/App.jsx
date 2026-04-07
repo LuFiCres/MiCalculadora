@@ -14,9 +14,9 @@ const TIPS = {
 };
 
 const MEAL_PLANS = {
-  3: [{name:"Desayuno",emoji:"☕",pct:.30},{name:"Almuerzo",emoji:"🍽️",pct:.40},{name:"Cena",emoji:"🌙",pct:.30}],
-  4: [{name:"Desayuno",emoji:"☕",pct:.25},{name:"Almuerzo",emoji:"🍽️",pct:.35},{name:"Merienda",emoji:"🍎",pct:.15},{name:"Cena",emoji:"🌙",pct:.25}],
-  5: [{name:"Desayuno",emoji:"☕",pct:.20},{name:"Media mañana",emoji:"🍎",pct:.12},{name:"Almuerzo",emoji:"🍽️",pct:.35},{name:"Merienda",emoji:"🫐",pct:.13},{name:"Cena",emoji:"🌙",pct:.20}],
+  3: [{name:"Desayuno",pct:.30},{name:"Almuerzo",pct:.40},{name:"Cena",pct:.30}],
+  4: [{name:"Desayuno",pct:.25},{name:"Almuerzo",pct:.35},{name:"Merienda",pct:.15},{name:"Cena",pct:.25}],
+  5: [{name:"Desayuno",pct:.20},{name:"Media mañana",pct:.12},{name:"Almuerzo",pct:.35},{name:"Merienda",pct:.13},{name:"Cena",pct:.20}],
 };
 
 const FORM_KEY  = "tdee_form_v1";
@@ -32,9 +32,9 @@ const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Ago
 const WEEKDAYS  = ["L","M","X","J","V","S","D"];
 
 const CATS = [
-  {key:"training", icon:"💪", name:"Entrenamiento", desc:"¿Has entrenado hoy?",         color:"#d94f2b", bg:"rgba(217,79,43,.12)"},
-  {key:"diet",     icon:"🥗", name:"Dieta",         desc:"¿Has cumplido tu plan nutricional?", color:"#5a8a4a", bg:"rgba(90,138,74,.12)"},
-  {key:"sleep",    icon:"😴", name:"Sueño",         desc:"¿Has dormido 7-9 horas?",     color:"#3a6e9e", bg:"rgba(58,110,158,.12)"},
+  {key:"training",  name:"Entrenamiento", desc:"¿Has entrenado hoy?",         color:"#d94f2b", bg:"rgba(217,79,43,.12)"},
+  {key:"diet",      name:"Dieta",         desc:"¿Has cumplido tu plan nutricional?", color:"#5a8a4a", bg:"rgba(90,138,74,.12)"},
+  {key:"sleep",     name:"Sueño",         desc:"¿Has dormido 7-9 horas?",     color:"#3a6e9e", bg:"rgba(58,110,158,.12)"},
 ];
 
 const DEFAULT_FORM = {
@@ -120,7 +120,7 @@ const styles = `
   }
 
   .nav-item {
-    display: flex; align-items: center; gap: 11px;
+    display: flex; align-items: center; gap: 0px;
     padding: 10px 14px; border-radius: var(--r); cursor: pointer;
     border: none; background: transparent; text-align: left;
     font-family: var(--font-body); font-size: .82rem; color: var(--text-muted);
@@ -129,7 +129,6 @@ const styles = `
   .nav-item:hover { background: var(--bg-warm); color: var(--text); }
   .nav-item:active { transform: scale(0.97); }
   .nav-item.active { background: var(--accent-dim); color: var(--accent); font-weight: 500; box-shadow: inset 3px 0 0 var(--accent); }
-  .nav-item .nav-icon { font-size: 1rem; flex-shrink: 0; width: 20px; text-align: center; }
   .nav-item .nav-badge { font-family: var(--font-mono); font-size: .5rem; padding: 1px 6px; border-radius: 100px; background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-dim); margin-left: auto; }
 
   .sidebar-footer {
@@ -1659,7 +1658,7 @@ function MealPlan({ kcal, proteinG, fatG, carbG }) {
           const mk=Math.round(kcal*m.pct),mp=Math.round(proteinG*m.pct),mf=Math.round(fatG*m.pct),mc=Math.round(carbG*m.pct);
           return (
             <div className="meal-row" key={m.name}>
-              <div className="meal-top"><span className="meal-name">{m.emoji} {m.name}</span><span className="meal-kcal">{mk} kcal</span></div>
+              <div className="meal-top"><span className="meal-name"> {m.name}</span><span className="meal-kcal">{mk} kcal</span></div>
               <div className="meal-macros">P {mp}g · G {mf}g · C {mc}g</div>
             </div>
           );
@@ -1871,7 +1870,7 @@ function TodayBanner({ onNavigate }) {
   return (
     <div className="today-banner">
       <div className="today-banner-left">
-        <div className="today-banner-streak">🔥 {stats.streak}</div>
+        <div className="today-banner-streak"> {stats.streak}</div>
         <div className="today-banner-info">
           <strong>Racha actual</strong>
           <span>{stats.streak === 0 ? "Empieza hoy tu racha" : `${stats.streak} día${stats.streak!==1?"s":""} seguido${stats.streak!==1?"s":""}`}</span>
@@ -1887,7 +1886,6 @@ function TodayBanner({ onNavigate }) {
                 background: done ? cat.bg : "transparent",
                 borderColor: done ? cat.color : "var(--border)",
               }}>
-              <span style={{fontSize:".9rem"}}>{cat.icon}</span>
               {cat.name}
               {done && <span style={{fontSize:".7rem"}}>✓</span>}
             </div>
@@ -2335,7 +2333,7 @@ function AnalysisPage({ onNavigate }) {
           </p>
           <div className="analysis-empty-steps">
             {[
-              { n:"1", text:"Calcula tu TDEE en Mi Calculadora y guarda el resultado" },
+              { n:"1", text:"Calcula tu TDEE en la Calculadora y guarda el resultado" },
               { n:"2", text:"Registra tu peso al menos 2-3 veces por semana en Mi Peso" },
               { n:"3", text:"Marca tus hábitos diarios en Mi Calendario" },
               { n:"4", text:"Vuelve aquí en 1-2 semanas — el sistema detectará tendencias automáticamente" },
@@ -2417,7 +2415,6 @@ function AnalysisPage({ onNavigate }) {
               {icon:"📋",text:"Baja adherencia: sin ajuste, primero el hábito"},
             ].map((item,i) => (
               <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:9}}>
-                <span style={{fontSize:".9rem",flexShrink:0}}>{item.icon}</span>
                 <span style={{fontSize:".72rem",color:"var(--text-muted)",lineHeight:1.5}}>{item.text}</span>
               </div>
             ))}
@@ -2461,12 +2458,6 @@ const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","�
 const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
 const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
 const TRABAJO_LABELS = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
-const MOTIVATIONAL = [ { quote:"El progreso, no la perfección, es lo que importa.",          tag:"Mentalidad" },
-  { quote:"Cada registro es una promesa que te cumples a ti mismo.",     tag:"Constancia" },
-  { quote:"Los datos no mienten. El cuerpo tampoco.",                    tag:"Evidencia"  },
-  { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
-  { quote:"La racha más larga siempre empieza con el día de hoy.",      tag:"Inicio"   },
- ];
 
 function ProfilePage({ onNavigate }){
   const [profile, setProfile] = useState(() => loadProfile() || { name:"", avatar:"💪", since: new Date().toISOString().slice(0,10) });
@@ -2497,7 +2488,6 @@ function ProfilePage({ onNavigate }){
   const imc        = ficha.peso && ficha.altura ? (ficha.peso/((ficha.altura/100)**2)).toFixed(1) : null;
   const planIcon   = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
   const latestTdee = hist[0]?.tdee ?? null;
-  const quote      = useMemo(() => MOTIVATIONAL[Math.floor(Date.now()/86400000) % MOTIVATIONAL.length], []);
 
   const daysActive = useMemo(() => {
     if (!profile.since) return 0;
@@ -2624,7 +2614,7 @@ function ProfilePage({ onNavigate }){
               )}
 
               <div className="profile-since">
-                {daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando MiCalculadora` : "Bienvenido a MiCalculadora"}
+                {daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando Calculadora` : "Bienvenido a la Calculadora"}
               </div>
             </div>
 
@@ -2655,7 +2645,6 @@ function ProfilePage({ onNavigate }){
           {/* Objetivo activo */}
           {(plan || ficha.direction) && (
             <div className="objetivo-card">
-              <div className="objetivo-icon">{plan ? planIcon : "🎯"}</div>
               <div className="objetivo-text">
                 <div className="objetivo-label">Objetivo actual</div>
                 <div className="objetivo-value">
@@ -2675,15 +2664,14 @@ function ProfilePage({ onNavigate }){
             <div className="profile-section-title">Tus logros</div>
             <div className="logros-grid">
               {[
-                { icon:"🔥", val: calStats.streak,            label:"Racha",          sub:"días seguidos", color:"accent"  },
-                { icon:"✅", val: calStats.full,               label:"Días perfectos", sub:"3/3 hábitos",   color:"green"   },
-                { icon:"📅", val: Object.keys(calendar).length,label:"Días registrados",sub:"en calendario", color:"blue"   },
-                { icon:"⚖️", val: pesoData.length,            label:"Pesajes",        sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
-                { icon:"🧠", val: adjustments.length,          label:"Ajustes",        sub:"por Mi Análisis",color:"purple"  },
-                { icon:"🥗", val: quickFoods.length,           label:"Alimentos",      sub:"en biblioteca",  color:"accent"  },
+                {  val: calStats.streak,            label:"Racha",          sub:"días seguidos", color:"accent"  },
+                {  val: calStats.full,               label:"Días perfectos", sub:"3/3 hábitos",   color:"green"   },
+                {  val: Object.keys(calendar).length,label:"Días registrados",sub:"en calendario", color:"blue"   },
+                {  val: pesoData.length,            label:"Pesajes",        sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
+                {  val: adjustments.length,          label:"Ajustes",        sub:"por Mi Análisis",color:"purple"  },
+                {  val: quickFoods.length,           label:"Alimentos",      sub:"en biblioteca",  color:"accent"  },
               ].map((l,i) => (
                 <div key={i} className="logro-card">
-                  <div className="logro-icon">{l.icon}</div>
                   <div className={`logro-val ${l.color}`}>{l.val}</div>
                   <div className="logro-lbl">{l.label}</div>
                   <div className="logro-sub">{l.sub}</div>
@@ -2696,7 +2684,6 @@ function ProfilePage({ onNavigate }){
           {plan && (
             <div className="plan-activo-card">
               <div className="plan-activo-header">
-                <span style={{fontSize:"1.2rem"}}>{planIcon}</span>
                 <div className="plan-activo-title">Plan de <em>macros</em> activo</div>
                 <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
               </div>
@@ -2715,16 +2702,9 @@ function ProfilePage({ onNavigate }){
             </div>
           )}
 
-          {/* Cita del día */}
-          <div className="profile-quote">
-            <p>"{quote.quote}"</p>
-            <span>{quote.tag}</span>
-          </div>
-
           {/* ── IMPORTAR / EXPORTAR ── */}
           <div className="transfer-card">
             <div className="transfer-card-header">
-              <span style={{fontSize:"1.2rem"}}>📲</span>
               <div className="transfer-card-title">Mis datos en otro <em>dispositivo</em></div>
             </div>
             <div className="xfer-tabs">
@@ -2778,16 +2758,15 @@ function ProfilePage({ onNavigate }){
             <div className="profile-section-title">Gestión de datos</div>
             <div className="datos-card">
               {[
-                { key:CAL_KEY,         icon:"📅", label:"Calendario y hábitos",   desc:"Registros diarios" },
-                { key:PESO_KEY,        icon:"⚖️", label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
-                { key:NUTR_KEY,        icon:"🥗", label:"Diario de nutrición",     desc:"Alimentos del día" },
-                { key:QUICK_FOODS_KEY, icon:"📚", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
-                { key:HIST_KEY,        icon:"🧮", label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
-                { key:ADJUST_KEY,      icon:"🧠", label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
+                { key:CAL_KEY,          label:"Calendario y hábitos",   desc:"Registros diarios" },
+                { key:PESO_KEY,         label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
+                { key:NUTR_KEY,         label:"Diario de nutrición",     desc:"Alimentos del día" },
+                { key:QUICK_FOODS_KEY,  label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
+                { key:HIST_KEY,         label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
+                { key:ADJUST_KEY,       label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
               ].map(item => (
                 <div key={item.key} className="datos-item">
                   <div className="datos-item-left">
-                    <span className="datos-item-icon">{item.icon}</span>
                     <div className="datos-item-info">
                       <strong>{item.label}</strong>
                       <span>{cleared[item.key] ? "✓ Limpiado" : item.desc}</span>
@@ -2833,7 +2812,6 @@ function DayModal({ dateKey, calendar, onSave, onClose }) {
           <button key={cat.key} className={`cat-btn ${draft[cat.key]?"done":""}`}
             style={draft[cat.key]?{background:cat.bg,borderColor:cat.color}:{}}
             onClick={()=>toggle(cat.key)}>
-            <span className="cat-icon-big">{cat.icon}</span>
             <div className="cat-text">
               <div className="cat-name" style={{color:draft[cat.key]?cat.color:"var(--text)"}}>{cat.name}</div>
               <div className="cat-desc">{cat.desc}</div>
@@ -2937,10 +2915,10 @@ function CalendarPage() {
 
       <div className="cal-summary">
         {[
-          {val:`🔥 ${stats.streak}`,  lbl:"Racha actual",    color:"#d94f2b"},
-          {val:`✅ ${stats.full}`,    lbl:"Días perfectos",   color:"#5a8a4a"},
-          {val:`🟡 ${stats.partial}`, lbl:"Días parciales",   color:"#c8860a"},
-          {val:`📅 ${stats.full+stats.partial+stats.failed}`,lbl:"Días registrados", color:"#3a6e9e"},
+          {val:stats.streak,  lbl:"Racha actual",    color:"#d94f2b"},
+          {val:stats.full,    lbl:"Días perfectos",   color:"#5a8a4a"},
+          {val:stats.partial, lbl:"Días parciales",   color:"#c8860a"},
+          {val:stats.full+stats.partial+stats.failed,lbl:"Días registrados", color:"#3a6e9e"},
         ].map((s,i)=>(
           <div key={i} className="cal-stat">
             <div className="cal-stat-val" style={{color:s.color}}>{s.val}</div>
@@ -3117,7 +3095,7 @@ function CalculatorPage({ onNavigate }) {
     <>
       <div className="page-header">
         <h1>Mi <em>Calculadora</em></h1>
-        <p>Mifflin-St Jeor · Katch-McArdle · Factor de actividad calibrado · evidencia actualizada</p>
+        <p>Basado en la fórmula Mifflin-St Jeor · Katch-McArdle · Factor de actividad calibrado · Evidencia actualizada</p>
       </div>
 
       <TodayBanner onNavigate={onNavigate}/>
@@ -3344,7 +3322,7 @@ function CalculatorPage({ onNavigate }) {
                 </div>
                 <div className="wel-line wel-l3" style={{height:1,background:"var(--border)",marginBottom:18}}/>
                 <div className="wel-line wel-l3" style={{display:"flex",flexDirection:"column",gap:9,marginBottom:24}}>
-                  {[{icon:"⚡",text:"Gasto calórico real en 4 componentes"},{icon:"🎯",text:"Macros adaptados a tu objetivo personalizado"},{icon:"📊",text:"Composición corporal e IMC contextualizado"},{icon:"🔄",text:"Comparación de escenarios e historial"},].map(item=>(
+                  {[{,text:"Gasto calórico real en 4 componentes"},{icon:"🎯",text:"Macros adaptados a tu objetivo personalizado"},{icon:"📊",text:"Composición corporal e IMC contextualizado"},{icon:"🔄",text:"Comparación de escenarios e historial"},].map(item=>(
                     <div key={item.text} style={{display:"flex",alignItems:"flex-start",gap:11,background:"var(--bg-warm)",borderRadius:"var(--r)",padding:"9px 13px",border:"1px solid var(--border)"}}>
                       <span style={{fontSize:"1rem",lineHeight:1.4,flexShrink:0}}>{item.icon}</span>
                       <span style={{fontSize:".77rem",color:"var(--text-muted)",lineHeight:1.5}}>{item.text}</span>
@@ -3528,7 +3506,7 @@ function CalculatorPage({ onNavigate }) {
                   <p style={{fontSize:".67rem",color:"var(--text-dim)",marginTop:7,lineHeight:1.6,fontStyle:"italic"}}>Guarda para seguir la evolución de tu TDEE.</p>
                 </div>
               </div>
-              <p className="note">Estimación ±10–15%. El IMC es una referencia estadística poblacional. No sustituye consulta con dietista-nutricionista colegiado.</p>
+              <p className="note">Estimación ±10–15%. El IMC es una referencia estadística poblacional. No sustituye consulta con dietista/nutricionista colegiado.</p>
             </div>
           )}
         </div>
@@ -3559,7 +3537,7 @@ function CalculatorPage({ onNavigate }) {
 
       <div className="page-footer">
         <p>Mifflin-St Jeor (1990) · Katch-McArdle · Factor de actividad ajustado por intensidad · IoM DRI</p>
-        <p>No sustituye consulta con dietista-nutricionista colegiado</p>
+        <p>No sustituye consulta con dietista/nutricionista colegiado</p>
       </div>
     </>
   );
@@ -3570,11 +3548,11 @@ function CalculatorPage({ onNavigate }) {
 const NUTR_KEY = "tdee_nutrition_v1";
 
 const MEAL_DEFS = [
-  { id:"breakfast", name:"Desayuno",    emoji:"☕" },
-  { id:"midmorning",name:"Media mañana",emoji:"🍎" },
-  { id:"lunch",     name:"Almuerzo",    emoji:"🍽️" },
-  { id:"snack",     name:"Merienda",    emoji:"🫐" },
-  { id:"dinner",    name:"Cena",        emoji:"🌙" },
+  { id:"breakfast", name:"Desayuno",     },
+  { id:"midmorning",name:"Media mañana", },
+  { id:"lunch",     name:"Almuerzo",     },
+  { id:"snack",     name:"Merienda",     },
+  { id:"dinner",    name:"Cena",         },
 ];
 
 const QUICK_FOODS_KEY = "tdee_quick_foods_v1";
@@ -3805,7 +3783,7 @@ function NutritionPage() {
               {plan.kcalObj.toLocaleString()} kcal · P {plan.protG}g ({plan.pPct}%) · G {plan.fatG}g ({plan.fPct}%) · C {plan.carbG}g ({plan.cPct}%)
             </div>
           </div>
-          <span style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-dim)"}}>Edita en Mi Calculadora → Nutrición</span>
+          <span style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-dim)"}}>Edita en Calculadora → Nutrición</span>
         </div>
       )}
 
@@ -3920,7 +3898,6 @@ function NutritionPage() {
                 <div key={meal.id} className="nutr-meal-card">
                   <div className="nutr-meal-header" onClick={() => setOpenMeal(isOpen ? null : meal.id)}>
                     <div className="nutr-meal-title">
-                      <span className="nutr-meal-emoji">{meal.emoji}</span>
                       <span className="nutr-meal-name"><em>{meal.name}</em></span>
                       {foods.length > 0 && <span style={{fontFamily:"var(--font-mono)",fontSize:".62rem",color:"var(--text-dim)"}}>· {foods.length} alimento{foods.length>1?"s":""}</span>}
                     </div>
@@ -4047,7 +4024,6 @@ function NutritionPage() {
               const pct = Math.round((mKcal / Math.max(totals.kcal,1))*100);
               return (
                 <div key={meal.id} style={{display:"flex",alignItems:"center",gap:8,marginBottom:7}}>
-                  <span style={{fontSize:".85rem",width:20,textAlign:"center",flexShrink:0}}>{meal.emoji}</span>
                   <div style={{flex:1}}>
                     <div style={{height:4,background:"var(--surface-2)",borderRadius:2,overflow:"hidden"}}>
                       <div style={{height:"100%",width:`${pct}%`,background:"var(--accent)",borderRadius:2,transition:"width .5s"}}/>
@@ -4122,18 +4098,18 @@ export default function App() {
     {
       section: "Principal",
       items: [
-        {id:"calculator", icon:"🧮", label:"Mi Calculadora"},
-        {id:"calendar",   icon:"📅", label:"Mi Calendario"},
-        {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
-        {id:"peso",       icon:"⚖️", label:"Mi Peso"},
-        {id:"analisis",   icon:"🧠", label:"Mi Análisis"},
-        {id:"profile",    icon:"👤", label:"Mi Perfil"},
+        {id:"calculator",  label:"Calculadora"},
+        {id:"calendar",    label:"Calendario"},
+        {id:"nutrition",   label:"Nutrición"},
+        {id:"peso",        label:"Peso"},
+        {id:"analisis",    label:"Análisis"},
+        {id:"profile",     label:"Perfil"},
       ]
     },
     {
       section: "Próximamente",
       items: [
-        {id:"progress",  icon:"🏆", label:"Mi Progreso",    badge:"Soon"},
+        {id:"progress",   label:"Progreso",    badge:"Soon"},
       ]
     },
   ];
@@ -4164,7 +4140,6 @@ export default function App() {
                     className={`nav-item ${page===item.id?"active":""}`}
                     onClick={()=>item.badge?null:navigate(item.id)}
                     style={item.badge?{opacity:.55,cursor:"default"}:{}}>
-                    <span className="nav-icon">{item.icon}</span>
                     <span>{item.label}</span>
                     {item.badge&&<span className="nav-badge">{item.badge}</span>}
                   </button>
