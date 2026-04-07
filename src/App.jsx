@@ -50,9 +50,9 @@ const styles = `
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f5f0e8; --bg-warm: #ede6d6; --surface: #faf7f2; --surface-2: #ede6d6;
+    --bg: #FFEDE1; --bg-warm: #ede6d6; --surface: #faf7f2; --surface-2: #ede6d6;
     --border: rgba(180,120,60,0.15);
-    --accent: #d94f2b; --accent-2: #e8793a;
+    --accent: #E53D00; --accent-2: #E53D00;
     --accent-dim: rgba(217,79,43,0.1); --accent-glow: rgba(217,79,43,0.2);
     --text: #1e1208; --text-muted: #8a6a50; --text-dim: #c4a882;
     --green: #5a8a4a; --green-dim: rgba(90,138,74,0.1);
@@ -1096,7 +1096,7 @@ const styles = `
   .ficha-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
   .ficha-val.accent { color: var(--accent); }
   .profile-logout-btn { width: calc(100% - 36px); margin: 14px 18px; padding: 9px; border: 1.5px solid var(--border); border-radius: var(--r); background: transparent; color: var(--text-muted); font-family: var(--font-mono); font-size: .68rem; cursor: pointer; transition: var(--tr); }
-  .profile-logout-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
+  .profile-logout-btn:hover { border-color: #E53D00; color: #E53D00; background: rgba(217,79,43,.06); }
   .profile-right { display: flex; flex-direction: column; gap: 20px; }
   .profile-section-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .18em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
   .profile-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
@@ -1135,7 +1135,7 @@ const styles = `
   .datos-item-info strong { display: block; font-size: .78rem; color: var(--text); margin-bottom: 1px; }
   .datos-item-info span { font-size: .66rem; color: var(--text-muted); }
   .datos-clear-btn { padding: 4px 10px; border-radius: var(--r); font-size: .65rem; font-family: var(--font-mono); cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); transition: var(--tr); white-space: nowrap; flex-shrink: 0; }
-  .datos-clear-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
+  .datos-clear-btn:hover { border-color: #E53D00; color: #E53D00; background: rgba(217,79,43,.06); }
   .datos-clear-btn:disabled { opacity: .4; cursor: not-allowed; }
   .profile-quote { background: linear-gradient(135deg, var(--accent-dim), var(--blue-dim)); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px 20px; text-align: center; }
   .profile-quote p { font-family: var(--font-display); font-size: .95rem; font-style: italic; line-height: 1.55; color: var(--text); }
@@ -2461,15 +2461,14 @@ const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","�
 const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
 const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
 const TRABAJO_LABELS = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
-const MOTIVATIONAL = [
-  { quote:"El progreso, no la perfección, es lo que importa.",          tag:"Mentalidad" },
+const MOTIVATIONAL = [ { quote:"El progreso, no la perfección, es lo que importa.",          tag:"Mentalidad" },
   { quote:"Cada registro es una promesa que te cumples a ti mismo.",     tag:"Constancia" },
   { quote:"Los datos no mienten. El cuerpo tampoco.",                    tag:"Evidencia"  },
   { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
-  { quote:"La racha más larga siempre empieza con el día de hoy.",      tag:"Inicio"     },
-];
+  { quote:"La racha más larga siempre empieza con el día de hoy.",      tag:"Inicio"   },
+ ];
 
-function ProfilePage({ onNavigate }) {
+function ProfilePage({ onNavigate }){
   const [profile, setProfile] = useState(() => loadProfile() || { name:"", avatar:"💪", since: new Date().toISOString().slice(0,10) });
   const [pickerOpen, setPickerOpen]   = useState(false);
   const [editingName, setEditingName] = useState(false);
