@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 
 const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');`;
 
-// ─── CONSTANTS ───────────────────────────────────────────────────────────────
+//  CONSTANTS 
 const TIPS = {
   bmr: "Metabolismo Basal: calorías que tu cuerpo gasta para mantenerse vivo en reposo absoluto.",
   eat: "Exercise Activity Thermogenesis: calorías quemadas durante el ejercicio planificado.",
@@ -14,9 +14,9 @@ const TIPS = {
 };
 
 const MEAL_PLANS = {
-  3: [{name:"Desayuno",emoji:"☕",pct:.30},{name:"Almuerzo",emoji:"🍽️",pct:.40},{name:"Cena",emoji:"🌙",pct:.30}],
-  4: [{name:"Desayuno",emoji:"☕",pct:.25},{name:"Almuerzo",emoji:"🍽️",pct:.35},{name:"Merienda",emoji:"🍎",pct:.15},{name:"Cena",emoji:"🌙",pct:.25}],
-  5: [{name:"Desayuno",emoji:"☕",pct:.20},{name:"Media mañana",emoji:"🍎",pct:.12},{name:"Almuerzo",emoji:"🍽️",pct:.35},{name:"Merienda",emoji:"🫐",pct:.13},{name:"Cena",emoji:"🌙",pct:.20}],
+  3: [{name:"Desayuno",emoji:"",pct:.30},{name:"Almuerzo",emoji:"",pct:.40},{name:"Cena",emoji:"",pct:.30}],
+  4: [{name:"Desayuno",emoji:"",pct:.25},{name:"Almuerzo",emoji:"",pct:.35},{name:"Merienda",emoji:"",pct:.15},{name:"Cena",emoji:"",pct:.25}],
+  5: [{name:"Desayuno",emoji:"",pct:.20},{name:"Media mañana",emoji:"",pct:.12},{name:"Almuerzo",emoji:"",pct:.35},{name:"Merienda",emoji:"",pct:.13},{name:"Cena",emoji:"",pct:.20}],
 };
 
 const FORM_KEY  = "tdee_form_v1";
@@ -27,14 +27,15 @@ const PESO_KEY  = "tdee_peso_v1";
 const CHECKIN_KEY  = "tdee_checkins_v1";
 const ADJUST_KEY   = "tdee_adjustments_v1";
 const PROFILE_KEY  = "tdee_profile_v1";
+const PROFILE_KEY  = "tdee_profile_v1";
 
 const MONTHS    = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const WEEKDAYS  = ["L","M","X","J","V","S","D"];
 
 const CATS = [
-  {key:"training", icon:"💪", name:"Entrenamiento", desc:"¿Has entrenado hoy?",         color:"#d94f2b", bg:"rgba(217,79,43,.12)"},
-  {key:"diet",     icon:"🥗", name:"Dieta",         desc:"¿Has cumplido tu plan nutricional?", color:"#5a8a4a", bg:"rgba(90,138,74,.12)"},
-  {key:"sleep",    icon:"😴", name:"Sueño",         desc:"¿Has dormido 7-9 horas?",     color:"#3a6e9e", bg:"rgba(58,110,158,.12)"},
+  {key:"training", icon:"", name:"Entrenamiento", desc:"¿Has entrenado hoy?",         color:"#d94f2b", bg:"rgba(217,79,43,.12)"},
+  {key:"diet",     icon:"", name:"Dieta",         desc:"¿Has cumplido tu plan nutricional?", color:"#5a8a4a", bg:"rgba(90,138,74,.12)"},
+  {key:"sleep",    icon:"", name:"Sueño",         desc:"¿Has dormido 7-9 horas?",     color:"#3a6e9e", bg:"rgba(58,110,158,.12)"},
 ];
 
 const DEFAULT_FORM = {
@@ -44,7 +45,7 @@ const DEFAULT_FORM = {
   direction:"deficit", customDelta:300, pesoObj:"",
 };
 
-// ─── STYLES ──────────────────────────────────────────────────────────────────
+//  STYLES 
 const styles = `
   ${FONTS}
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -79,26 +80,23 @@ const styles = `
     --shadow-btn: 0 2px 12px rgba(30,60,160,0.28);
   }
 
-  html { overflow-x: hidden; max-width: 100%; }
   body {
     background: var(--bg); color: var(--text); font-family: var(--font-body);
     min-height: 100vh; -webkit-font-smoothing: antialiased;
     overflow-x: hidden; transition: background .3s, color .3s;
-    max-width: 100%; position: relative;
   }
   body.sidebar-open { overflow: hidden; }
 
-  /* ── APP SHELL ── */
-  .app-shell { display: flex; min-height: 100vh; overflow-x: hidden; max-width: 100%; }
+  /*  APP SHELL  */
+  .app-shell { display: flex; min-height: 100vh; max-width: 100vw; overflow-x: hidden; }
 
-  /* ── SIDEBAR ── */
+  /*  SIDEBAR  */
   .sidebar {
     width: var(--sidebar-w); flex-shrink: 0;
     background: var(--surface); border-right: 1.5px solid var(--border);
     display: flex; flex-direction: column;
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
     transition: transform .3s ease;
-    will-change: transform;
   }
 
   .sidebar-logo {
@@ -108,7 +106,6 @@ const styles = `
   .sidebar-logo h2 {
     font-family: var(--font-display); font-size: 1.15rem; line-height: 1.15;
   }
-  .sidebar-logo h2 em { font-style: italic; color: var(--accent); }
   .sidebar-logo p { font-size: .62rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px; letter-spacing: .06em; display:flex; align-items:center; gap:6px; }
   .sidebar-v-badge { background: var(--accent-dim); color: var(--accent); border-radius: 4px; padding: 1px 5px; font-size: .52rem; font-family: var(--font-mono); letter-spacing: .04em; border: 1px solid var(--accent-dim); }
 
@@ -156,14 +153,14 @@ const styles = `
     animation: savePulse 3s ease-in-out infinite;
   }
 
-  /* ── MAIN CONTENT ── */
+  /*  MAIN CONTENT  */
   .main-content {
     margin-left: var(--sidebar-w); flex: 1;
     max-width: calc(1360px - var(--sidebar-w));
     padding: 0 48px; min-height: 100vh;
   }
 
-  /* ── PAGE HEADER ── */
+  /*  PAGE HEADER  */
   .page-header {
     padding: 44px 0 36px;
     border-bottom: none; margin-bottom: 52px;
@@ -171,10 +168,9 @@ const styles = `
   }
   .page-header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1.5px; background:linear-gradient(90deg,var(--accent),var(--accent-2),transparent); border-radius:2px; }
   .page-header h1 { font-family: var(--font-display); font-size: 2.8rem; line-height: 1; letter-spacing: -.02em; }
-  .page-header h1 em { font-style: italic; color: var(--accent); }
   .page-header p { font-size: .82rem; color: var(--text-muted); margin-top: 10px; font-weight: 300; letter-spacing: .03em; }
 
-  /* ── CALCULATOR LAYOUT ── */
+  /*  CALCULATOR LAYOUT  */
   .calc-layout {
     display: grid; grid-template-columns: 1fr 440px; gap: 64px;
     align-items: start;
@@ -187,7 +183,7 @@ const styles = `
   .right-col::-webkit-scrollbar { width: 3px; }
   .right-col::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  /* ── SECTIONS ── */
+  /*  SECTIONS  */
   .section { margin-bottom: 48px; }
   .section-label {
     font-family: var(--font-mono); font-size: .62rem; letter-spacing: .18em;
@@ -196,7 +192,7 @@ const styles = `
   }
   .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* ── FORM ELEMENTS ── */
+  /*  FORM ELEMENTS  */
   .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .input-grid.cols-1 { grid-template-columns: 1fr; }
   .input-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
@@ -244,20 +240,17 @@ const styles = `
   .info-box { background: var(--accent-dim); border: 1px solid rgba(217,79,43,.2); border-radius: var(--r); padding: 11px 15px; font-size: .75rem; color: var(--text-muted); line-height: 1.6; margin-top: 4px; }
   .info-box strong { color: var(--accent); font-weight: 500; }
 
-  /* ── BUTTON / CTA ── */
+  /*  BUTTON / CTA  */
   .cta {
     width: 100%; padding: 16px; background: var(--accent); color: #faf7f2;
     border: none; border-radius: 12px; font-family: var(--font-body); font-size: .9rem;
     font-weight: 500; cursor: pointer; letter-spacing: .03em; margin-top: 8px;
     transition: var(--tr); box-shadow: var(--shadow-btn), 0 4px 0 rgba(0,0,0,.15);
-    position: relative; overflow: hidden;
   }
-  .cta::after { content:''; position:absolute; inset:0; background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.18) 50%,transparent 60%); transform:translateX(-100%); transition:transform .4s ease; }
-  .cta:hover::after { transform:translateX(100%); }
   .cta:hover { background: var(--accent-2); transform: translateY(-2px); box-shadow: var(--shadow-btn), 0 6px 0 rgba(0,0,0,.12), 0 8px 20px var(--accent-glow); }
   .cta:active { transform: translateY(2px) scale(0.985); box-shadow: 0 1px 0 rgba(0,0,0,.15); }
 
-  /* ── SLIDER ── */
+  /*  SLIDER  */
   .slider-field { display: flex; flex-direction: column; gap: 10px; }
   .slider-top { display: flex; justify-content: space-between; align-items: center; }
   .slider-top label { font-size: .73rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
@@ -270,20 +263,20 @@ const styles = `
   .slider-mark { position: absolute; bottom: 0; transform: translateX(-50%); font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); white-space: nowrap; }
   .slider-hint { font-size: .68rem; color: var(--text-dim); font-style: italic; }
 
-  /* ── TOOLTIP ── */
+  /*  TOOLTIP  */
   .tip-wrap { position: relative; display: inline-flex; align-items: center; }
   .tip-icon { width: 15px; height: 15px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); font-size: .6rem; color: var(--text-muted); cursor: help; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-mono); flex-shrink: 0; transition: var(--tr); }
   .tip-icon:hover { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
   .tip-box { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: #1a1a2e; color: #e8e8f8; font-family: var(--font-body); font-size: .72rem; line-height: 1.55; padding: 10px 14px; border-radius: 8px; width: 230px; z-index: 300; pointer-events: none; opacity: 0; transition: opacity .15s; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
   .tip-wrap:hover .tip-box { opacity: 1; }
 
-  /* ── ERROR BOX ── */
+  /*  ERROR BOX  */
   .error-box { background: rgba(217,79,43,.08); border: 1.5px solid rgba(217,79,43,.35); border-radius: var(--r); padding: 13px 15px; display: flex; gap: 11px; align-items: flex-start; }
   .error-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.3; }
   .error-title { font-size: .8rem; font-weight: 500; color: var(--accent); margin-bottom: 3px; }
   .error-msg { font-size: .73rem; color: var(--text-muted); line-height: 1.55; }
 
-  /* ── WELCOME PANEL ── */
+  /*  WELCOME PANEL  */
   .welcome-panel { border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
   @keyframes fadeSlideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
   .wel-line { animation: fadeSlideIn .4s ease both; }
@@ -291,7 +284,7 @@ const styles = `
   @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
   .wel-dot { animation: pulse 2s ease-in-out infinite; }
 
-  /* ── RESULTS PANEL ── */
+  /*  RESULTS PANEL  */
   .results-panel { border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); animation: fadeUp .4s ease; box-shadow: 0 4px 40px rgba(180,100,40,.08); }
   body.dark .results-panel { box-shadow: 0 4px 40px rgba(30,60,160,.12); }
   @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
@@ -388,7 +381,6 @@ const styles = `
   .historial-section { padding-top: 48px; padding-bottom: 60px; border-top: 1px solid var(--border); margin-top: 16px; }
   .hist-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
   .hist-title { font-family: var(--font-display); font-size: 1.4rem; }
-  .hist-title em { font-style: italic; color: var(--accent); }
   .hist-clear { font-family: var(--font-mono); font-size: .67rem; color: var(--text-muted); background: none; border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; cursor: pointer; transition: var(--tr); }
   .hist-clear:hover { color: var(--accent); border-color: var(--accent-dim); }
   .hist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 11px; }
@@ -401,17 +393,16 @@ const styles = `
   .page-footer { padding: 28px 0 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .page-footer p { font-size: .68rem; color: var(--text-dim); font-family: var(--font-mono); }
 
-  /* ── OBJETIVO ── */
+  /*  OBJETIVO  */
   .obj-dir-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); overflow: hidden; }
 
-  /* ── CALENDAR PAGE ── */
+  /*  CALENDAR PAGE  */
   .calendar-page { padding-bottom: 80px; }
   .year-nav { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
   .year-btn { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: var(--tr); box-shadow: 0 2px 0 var(--border); }
   .year-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
   .year-btn:active { transform: translateY(2px); box-shadow: none; }
   .year-label { font-family: var(--font-display); font-size: 2rem; }
-  .year-label em { font-style: italic; color: var(--accent); }
 
   .months-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 
@@ -419,7 +410,6 @@ const styles = `
   .month-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px var(--accent-glow); }
   .month-header { padding: 12px 14px 8px; border-bottom: 1px solid var(--border); }
   .month-name { font-family: var(--font-display); font-size: 1rem; }
-  .month-name em { font-style: italic; color: var(--accent); }
   .month-stats { font-family: var(--font-mono); font-size: .55rem; color: var(--text-muted); margin-top: 3px; }
 
   .mini-cal-weekdays { display: grid; grid-template-columns: repeat(7,1fr); padding: 6px 10px 2px; }
@@ -446,13 +436,12 @@ const styles = `
   .mini-dots { display: flex; gap: 1px; }
   .mini-dot { width: 4px; height: 4px; border-radius: 50%; }
 
-  /* ── DAY MODAL ── */
+  /*  DAY MODAL  */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 400; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); animation: fadeIn .15s ease; }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
   .modal-box { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 26px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: slideUp .2s ease; }
   @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
   .modal-title { font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 4px; }
-  .modal-title em { font-style: italic; color: var(--accent); }
   .modal-sub { font-size: .73rem; color: var(--text-muted); margin-bottom: 20px; font-family: var(--font-mono); }
   .cat-btn { width: 100%; display: flex; align-items: center; gap: 13px; padding: 13px 15px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--bg-warm); cursor: pointer; margin-bottom: 9px; transition: var(--tr); box-shadow: 0 2px 0 var(--border); text-align: left; font-family: var(--font-body); }
   .cat-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
@@ -471,25 +460,26 @@ const styles = `
   .modal-cancel { padding: 12px 16px; background: var(--surface); color: var(--text-muted); border: 1.5px solid var(--border); border-radius: var(--r); font-family: var(--font-body); font-size: .85rem; cursor: pointer; transition: var(--tr); }
   .modal-cancel:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* ── CAL LEGEND ── */
+  /*  CAL LEGEND  */
   .cal-legend-bar { display: flex; gap: 18px; flex-wrap: wrap; padding: 0 0 28px; }
   .leg-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: .62rem; color: var(--text-muted); }
   .leg-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
-  /* ── CAL SUMMARY ── */
+  /*  CAL SUMMARY  */
   .cal-summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 28px; }
-  .cal-stat { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 16px; text-align: center; transition: var(--tr); }
-  .cal-stat:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 16px var(--accent-glow); }
+  .cal-stat { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r); padding: 14px 16px; text-align: center; }
   .cal-stat-val { font-family: var(--font-display); font-size: 1.8rem; line-height: 1; margin-bottom: 3px; }
   .cal-stat-lbl { font-family: var(--font-mono); font-size: .58rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .08em; }
 
-  /* ── MOBILE BURGER ── */
+  /*  MOBILE BURGER  */
   .burger { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; width: 40px; height: 40px; border-radius: var(--r); border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: opacity .2s, transform .2s; }
-  body.sidebar-open .burger { opacity: 0; pointer-events: none; transform: scale(0.85); }
   .burger span { display: block; width: 18px; height: 2px; background: var(--text-muted); border-radius: 2px; transition: .2s; }
+  .burger.hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
   .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; }
+  .sidebar-close-btn { display: none; position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-muted); transition: var(--tr); z-index: 101; }
+  .sidebar-close-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
-  /* ─── RESPONSIVE — 6 breakpoints ────────────────────────
+  /*  RESPONSIVE — 6 breakpoints 
      > 1280   sidebar visible, layout completo
      1100-1280 sidebar estrecha (200px)
      < 1100   sidebar se convierte en drawer (burger)
@@ -497,7 +487,7 @@ const styles = `
      < 700    móvil amplio
      < 480    móvil estrecho
      < 360    ventana muy pequeña
-  ─────────────────────────────────────────────────────── */
+   */
 
   /* 1100-1280: sidebar más estrecha, padding reducido */
   @media (max-width: 1280px) {
@@ -515,6 +505,7 @@ const styles = `
     .sidebar.open { transform: translateX(0); box-shadow: 4px 0 40px rgba(0,0,0,.22); }
     .sidebar-overlay.open { display: block; }
     .burger { display: flex; }
+    .sidebar-close-btn { display: flex; }
     .main-content { margin-left: 0; padding: 0 32px; padding-top: 64px; max-width: 100%; }
     .calc-layout { grid-template-columns: 1fr 360px; gap: 32px; }
     .page-header { padding: 32px 0 28px; margin-bottom: 36px; }
@@ -600,7 +591,7 @@ const styles = `
     .tdee-number { font-size: 1.7rem; }
     .num-input-wrap input { font-size: .85rem; }
   }
-  /* ── NUTRITION PAGE ── */
+  /*  NUTRITION PAGE  */
   .nutrition-page { padding-bottom: 80px; }
 
   .nutr-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
@@ -614,7 +605,6 @@ const styles = `
   .nutr-summary-header { padding: 12px 16px 10px; border-bottom: 1px solid var(--border); }
   .nutr-summary-title { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
   .nutr-date-badge { font-family: var(--font-display); font-size: .95rem; }
-  .nutr-date-badge em { font-style: italic; color: var(--accent); }
 
   .nutr-donut-wrap { padding: 14px 16px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
   .nutr-donut-svg { width: 140px; height: 140px; flex-shrink: 0; }
@@ -643,7 +633,6 @@ const styles = `
   .nutr-meal-title { display: flex; align-items: center; gap: 10px; }
   .nutr-meal-emoji { font-size: 1.1rem; }
   .nutr-meal-name { font-family: var(--font-display); font-size: .95rem; }
-  .nutr-meal-name em { font-style: italic; color: var(--accent); }
   .nutr-meal-kcal { font-family: var(--font-mono); font-size: .75rem; color: var(--accent); }
 
   .nutr-food-list { padding: 8px 0; }
@@ -717,7 +706,7 @@ const styles = `
     .nutr-kcal-num { font-size: 1.3rem; }
   }
 
-  /* ── MACRO PLAN CUSTOMIZER ── */
+  /*  MACRO PLAN CUSTOMIZER  */
   .plan-strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
   .plan-strategy-btn {
     padding: 10px 8px; border-radius: var(--r); border: 1.5px solid var(--border);
@@ -757,7 +746,7 @@ const styles = `
 
   .plan-info-pill { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: .6rem; padding: 3px 9px; border-radius: 100px; border: 1px solid; }
 
-  /* ── FOOD LIBRARY ── */
+  /*  FOOD LIBRARY  */
   .food-lib-panel {
     background: var(--surface); border: 1.5px solid var(--border);
     border-radius: var(--r-lg); overflow: hidden; margin-bottom: 4px;
@@ -768,7 +757,6 @@ const styles = `
     display: flex; justify-content: space-between; align-items: center;
   }
   .food-lib-title { font-family: var(--font-display); font-size: .95rem; }
-  .food-lib-title em { font-style: italic; color: var(--accent); }
   .food-lib-close {
     background: none; border: none; color: var(--text-muted); cursor: pointer;
     font-size: 1.1rem; padding: 2px 6px; border-radius: 6px; transition: var(--tr);
@@ -845,7 +833,7 @@ const styles = `
     .food-lib-input.num-input { width: 100%; }
   }
 
-  /* ── STREAK TOAST ── */
+  /*  STREAK TOAST  */
   .streak-toast {
     position: fixed; bottom: 32px; right: 32px; z-index: 500;
     background: var(--surface); border: 1.5px solid var(--accent);
@@ -863,7 +851,7 @@ const styles = `
   .toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem; padding: 2px 4px; border-radius: 4px; transition: var(--tr); flex-shrink: 0; align-self: flex-start; }
   .toast-close:hover { color: var(--accent); background: var(--accent-dim); }
 
-  /* ── TODAY BANNER ── */
+  /*  TODAY BANNER  */
   .today-banner {
     background: var(--surface); border: 1.5px solid var(--border);
     border-radius: var(--r-lg); padding: 14px 20px;
@@ -884,7 +872,7 @@ const styles = `
   .today-banner-cta { font-family: var(--font-mono); font-size: .65rem; color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 5px 12px; cursor: pointer; white-space: nowrap; transition: var(--tr); }
   .today-banner-cta:hover { background: var(--accent); color: #faf7f2; }
 
-  /* ── MI PESO PAGE ── */
+  /*  MI PESO PAGE  */
   .peso-page { padding-bottom: 80px; }
   .peso-layout { display: grid; grid-template-columns: 1fr 300px; gap: 36px; align-items: start; }
   .peso-form { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 22px; margin-bottom: 24px; }
@@ -936,7 +924,7 @@ const styles = `
     .peso-form-input.wide, .peso-form-input.narrow { width: 100%; }
   }
 
-  /* ── ANALYSIS PAGE ── */
+  /*  ANALYSIS PAGE  */
   .analysis-page { padding-bottom: 80px; }
   .analysis-layout { display: grid; grid-template-columns: 1fr 320px; gap: 36px; align-items: start; }
 
@@ -1014,7 +1002,6 @@ const styles = `
   .analysis-empty { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 36px 28px; text-align: center; margin-bottom: 24px; }
   .analysis-empty-icon { font-size: 2.5rem; margin-bottom: 14px; opacity: .35; }
   .analysis-empty-title { font-family: var(--font-display); font-size: 1.2rem; margin-bottom: 10px; }
-  .analysis-empty-title em { font-style: italic; color: var(--accent); }
   .analysis-empty-body { font-size: .8rem; color: var(--text-muted); line-height: 1.7; max-width: 360px; margin: 0 auto 20px; }
   .analysis-empty-steps { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin: 0 auto; text-align: left; }
   .analysis-empty-step { display: flex; align-items: flex-start; gap: 12px; background: var(--bg-warm); border-radius: var(--r); padding: 10px 14px; border: 1px solid var(--border); }
@@ -1031,125 +1018,7 @@ const styles = `
     .rating-btn { font-size: .65rem; padding: 8px 2px; }
   }
 
-  /* ── AUTH PAGE ── */
-  .auth-shell {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: var(--bg); padding: 24px;
-  }
-  .auth-card {
-    background: var(--surface); border: 1.5px solid var(--border);
-    border-radius: var(--r-lg); width: 100%; max-width: 400px;
-    overflow: hidden; animation: fadeUp .35s ease;
-    box-shadow: 0 8px 40px rgba(0,0,0,.08);
-  }
-  .auth-header {
-    padding: 28px 28px 20px;
-    background: linear-gradient(135deg, var(--surface) 0%, var(--bg-warm) 100%);
-    border-bottom: 1px solid var(--border); text-align: center;
-  }
-  .auth-logo { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 4px; }
-  .auth-logo em { font-style: italic; color: var(--accent); }
-  .auth-logo-sub { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); letter-spacing: .1em; }
-  .auth-tabs { display: flex; border-bottom: 1px solid var(--border); }
-  .auth-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: .78rem; font-family: var(--font-body); color: var(--text-muted); border: none; background: transparent; border-bottom: 2px solid transparent; transition: var(--tr); }
-  .auth-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--accent-dim); }
-  .auth-body { padding: 24px 28px; }
-  .auth-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-  .auth-field label { font-size: .72rem; color: var(--text-muted); font-family: var(--font-mono); }
-  .auth-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); color: var(--text); font-family: var(--font-body); font-size: .88rem; padding: 10px 13px; outline: none; transition: border-color .2s, box-shadow .2s; width: 100%; }
-  .auth-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
-  .auth-input::placeholder { color: var(--text-dim); }
-  .auth-input.error { border-color: #d94f2b; box-shadow: 0 0 0 3px rgba(217,79,43,.12); }
-  .auth-btn { width: 100%; padding: 13px; background: var(--accent); color: #faf7f2; border: none; border-radius: var(--r); font-family: var(--font-body); font-size: .88rem; font-weight: 500; cursor: pointer; transition: var(--tr); box-shadow: var(--shadow-btn), 0 4px 0 rgba(0,0,0,.12); margin-top: 4px; }
-  .auth-btn:hover { background: var(--accent-2); transform: translateY(-2px); }
-  .auth-btn:active { transform: translateY(2px); box-shadow: none; }
-  .auth-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-  .auth-error { background: rgba(217,79,43,.08); border: 1px solid rgba(217,79,43,.3); border-radius: var(--r); padding: 9px 13px; font-size: .75rem; color: #d94f2b; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
-  .auth-success { background: rgba(90,138,74,.08); border: 1px solid rgba(90,138,74,.3); border-radius: var(--r); padding: 9px 13px; font-size: .75rem; color: #5a8a4a; margin-bottom: 14px; display: flex; align-items: center; gap: 7px; }
-  .auth-link { font-size: .72rem; color: var(--accent); cursor: pointer; background: none; border: none; text-decoration: underline; font-family: var(--font-body); padding: 0; }
-  .auth-link:hover { color: var(--accent-2); }
-  .auth-footer { text-align: center; margin-top: 14px; font-size: .72rem; color: var(--text-muted); }
-  .auth-hint { font-size: .68rem; color: var(--text-dim); line-height: 1.5; margin-top: -10px; margin-bottom: 12px; }
-  .pw-wrap { position: relative; }
-  .pw-toggle { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-dim); font-size: .8rem; padding: 2px 5px; transition: color .15s; }
-  .pw-toggle:hover { color: var(--accent); }
-
-  /* ── PROFILE PAGE ── */
-  .profile-page { padding-bottom: 80px; }
-  .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
-  .profile-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; position: sticky; top: 32px; }
-  .profile-card-header { padding: 28px 22px 20px; text-align: center; background: linear-gradient(160deg, var(--surface) 0%, var(--bg-warm) 100%); border-bottom: 1px solid var(--border); }
-  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer; transition: var(--tr); margin: 0 auto 14px; }
-  .profile-avatar:hover { transform: scale(1.06); box-shadow: 0 0 0 4px var(--accent-dim); }
-  .profile-emoji-picker { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); }
-  .profile-emoji-btn { aspect-ratio:1; border-radius: var(--r); border: 1.5px solid transparent; background: var(--surface); cursor: pointer; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; transition: var(--tr); }
-  .profile-emoji-btn:hover { border-color: var(--accent); transform: scale(1.1); }
-  .profile-emoji-btn.active { border-color: var(--accent); background: var(--accent-dim); }
-  .profile-name { font-family: var(--font-display); font-size: 1.3rem; }
-  .profile-name em { font-style: italic; color: var(--accent); }
-  .profile-username { font-family: var(--font-mono); font-size: .62rem; color: var(--text-dim); margin-top: 3px; }
-  .profile-since { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); margin-top: 5px; letter-spacing: .04em; }
-  .profile-ficha { padding: 14px 18px; }
-  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
-  .ficha-row:last-child { border-bottom: none; }
-  .ficha-lbl { font-size: .71rem; color: var(--text-muted); }
-  .ficha-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
-  .ficha-val.accent { color: var(--accent); }
-  .profile-logout-btn { width: calc(100% - 36px); margin: 14px 18px; padding: 9px; border: 1.5px solid var(--border); border-radius: var(--r); background: transparent; color: var(--text-muted); font-family: var(--font-mono); font-size: .68rem; cursor: pointer; transition: var(--tr); }
-  .profile-logout-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
-  .profile-right { display: flex; flex-direction: column; gap: 20px; }
-  .profile-section-title { font-family: var(--font-mono); font-size: .58rem; letter-spacing: .18em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-  .profile-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .logros-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
-  .logro-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 14px 12px; text-align: center; transition: var(--tr); }
-  .logro-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 6px 20px var(--accent-glow); }
-  .logro-icon { font-size: 1.5rem; margin-bottom: 5px; }
-  .logro-val { font-family: var(--font-display); font-size: 1.7rem; line-height: 1; color: var(--accent); margin-bottom: 1px; }
-  .logro-val.green { color: #5a8a4a; }
-  .logro-val.blue { color: #3a6e9e; }
-  .logro-val.yellow { color: #c8860a; }
-  .logro-val.purple { color: #7a5a9e; }
-  .logro-lbl { font-family: var(--font-mono); font-size: .55rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
-  .logro-sub { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); margin-top: 2px; }
-  .objetivo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 16px 18px; display: flex; align-items: center; gap: 14px; }
-  .objetivo-icon { font-size: 1.8rem; flex-shrink: 0; }
-  .objetivo-text { flex: 1; }
-  .objetivo-label { font-size: .72rem; color: var(--text-muted); margin-bottom: 2px; }
-  .objetivo-value { font-family: var(--font-display); font-size: 1.05rem; }
-  .objetivo-value em { font-style: italic; color: var(--accent); }
-  .objetivo-sub { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); margin-top: 2px; }
-  .plan-activo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
-  .plan-activo-header { padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
-  .plan-activo-title { font-family: var(--font-display); font-size: .95rem; }
-  .plan-activo-title em { font-style: italic; color: var(--accent); }
-  .plan-activo-badge { margin-left: auto; font-family: var(--font-mono); font-size: .57rem; padding: 2px 8px; border-radius: 100px; border: 1px solid; }
-  .plan-activo-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-  .plan-macro-row { display: flex; align-items: center; gap: 8px; }
-  .plan-macro-bar-wrap { flex: 1; height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
-  .plan-macro-bar-fill { height: 100%; border-radius: 3px; }
-  .datos-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
-  .datos-item { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
-  .datos-item:last-child { border-bottom: none; }
-  .datos-item-left { display: flex; align-items: center; gap: 10px; }
-  .datos-item-icon { font-size: .95rem; width: 18px; text-align: center; flex-shrink: 0; }
-  .datos-item-info strong { display: block; font-size: .78rem; color: var(--text); margin-bottom: 1px; }
-  .datos-item-info span { font-size: .66rem; color: var(--text-muted); }
-  .datos-clear-btn { padding: 4px 10px; border-radius: var(--r); font-size: .65rem; font-family: var(--font-mono); cursor: pointer; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); transition: var(--tr); white-space: nowrap; flex-shrink: 0; }
-  .datos-clear-btn:hover { border-color: #d94f2b; color: #d94f2b; background: rgba(217,79,43,.06); }
-  .datos-clear-btn:disabled { opacity: .4; cursor: not-allowed; }
-  .profile-quote { background: linear-gradient(135deg, var(--accent-dim), var(--blue-dim)); border: 1.5px solid var(--border); border-radius: var(--r-lg); padding: 18px 20px; text-align: center; }
-  .profile-quote p { font-family: var(--font-display); font-size: .95rem; font-style: italic; line-height: 1.55; color: var(--text); }
-  .profile-quote span { font-family: var(--font-mono); font-size: .58rem; color: var(--text-dim); display: block; margin-top: 5px; letter-spacing: .06em; }
-
-  @media (max-width: 1100px) { .profile-layout { grid-template-columns: 270px 1fr; } }
-  @media (max-width: 900px) {
-    .profile-layout { grid-template-columns: 1fr; }
-    .profile-card { position: static; }
-    .logros-grid { grid-template-columns: repeat(3,1fr); }
-  }
-  @media (max-width: 600px) { .logros-grid { grid-template-columns: repeat(2,1fr); } }
-
-  /* ── PROFILE PAGE ── */
+  /*  PROFILE PAGE  */
   .profile-page { padding-bottom: 80px; }
   .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
 
@@ -1174,13 +1043,12 @@ const styles = `
   .profile-emoji-btn.sel { border-color: var(--accent); background: var(--accent-dim); }
   .profile-name-wrap { cursor: pointer; }
   .profile-name-display { font-family: var(--font-display); font-size: 1.3rem; }
-  .profile-name-display em { font-style: italic; color: var(--accent); }
   .profile-edit-hint { font-size: .62rem; color: var(--text-dim); opacity: 0; transition: opacity .15s; margin-top: 2px; }
   .profile-name-wrap:hover .profile-edit-hint { opacity: 1; }
   .profile-name-input { font-family: var(--font-display); font-size: 1.15rem; background: var(--bg); border: 1.5px solid var(--accent); border-radius: var(--r); color: var(--text); padding: 5px 11px; outline: none; text-align: center; width: 100%; box-shadow: 0 0 0 3px var(--accent-dim); }
   .profile-since { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); letter-spacing: .05em; margin-top: 6px; }
   .profile-ficha { padding: 13px 18px; }
-  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .ficha-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
   .ficha-row:last-child { border-bottom: none; }
   .ficha-lbl { font-size: .71rem; color: var(--text-muted); }
   .ficha-val { font-family: var(--font-mono); font-size: .78rem; font-weight: 500; color: var(--text); }
@@ -1204,13 +1072,11 @@ const styles = `
   .objetivo-text { flex: 1; }
   .objetivo-label { font-size: .71rem; color: var(--text-muted); margin-bottom: 2px; }
   .objetivo-value { font-family: var(--font-display); font-size: 1.05rem; }
-  .objetivo-value em { font-style: italic; color: var(--accent); }
   .objetivo-sub { font-family: var(--font-mono); font-size: .59rem; color: var(--text-dim); margin-top: 2px; }
 
   .plan-activo-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
   .plan-activo-header { padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
   .plan-activo-title { font-family: var(--font-display); font-size: .93rem; }
-  .plan-activo-title em { font-style: italic; color: var(--accent); }
   .plan-activo-badge { margin-left: auto; font-family: var(--font-mono); font-size: .56rem; padding: 2px 8px; border-radius: 100px; border: 1px solid; }
   .plan-activo-body { padding: 13px 16px; display: flex; flex-direction: column; gap: 8px; }
   .plan-macro-row { display: flex; align-items: center; gap: 8px; }
@@ -1221,16 +1087,15 @@ const styles = `
   .profile-quote p { font-family: var(--font-display); font-size: .93rem; font-style: italic; line-height: 1.55; color: var(--text); }
   .profile-quote span { font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); display: block; margin-top: 5px; letter-spacing: .06em; }
 
-  /* Transfer / import-export */
+  /* Transfer / exportar-importar */
   .transfer-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
   .transfer-card-header { padding: 13px 18px; border-bottom: 1px solid var(--border); background: var(--bg-warm); display: flex; align-items: center; gap: 10px; }
   .transfer-card-title { font-family: var(--font-display); font-size: .93rem; }
-  .transfer-card-title em { font-style: italic; color: var(--accent); }
   .xfer-tabs { display: flex; border-bottom: 1px solid var(--border); }
   .xfer-tab { flex: 1; padding: 9px 4px; text-align: center; cursor: pointer; font-size: .65rem; font-family: var(--font-mono); color: var(--text-muted); border: none; background: transparent; border-bottom: 2px solid transparent; transition: var(--tr); letter-spacing: .06em; text-transform: uppercase; }
   .xfer-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--accent-dim); }
   .xfer-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
-  .xfer-code-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 13px; font-family: var(--font-mono); font-size: .63rem; color: var(--text-muted); word-break: break-all; line-height: 1.6; max-height: 88px; overflow-y: auto; cursor: text; user-select: all; transition: border-color .2s; }
+  .xfer-code-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 13px; font-family: var(--font-mono); font-size: .63rem; color: var(--text-muted); word-break: break-all; line-height: 1.6; max-height: 88px; overflow-y: auto; cursor: text; user-select: all; }
   .xfer-note { font-family: var(--font-mono); font-size: .6rem; color: var(--text-dim); line-height: 1.55; padding: 8px 11px; background: var(--bg-warm); border-radius: var(--r); border: 1px solid var(--border); }
   .xfer-note strong { color: var(--text-muted); }
   .xfer-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1243,6 +1108,7 @@ const styles = `
   .xfer-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim); }
   .xfer-error { background:rgba(217,79,43,.08); border:1px solid rgba(217,79,43,.3); border-radius:var(--r); padding:8px 12px; font-size:.71rem; color:#d94f2b; font-family:var(--font-mono); }
   .xfer-success { background:rgba(90,138,74,.08); border:1px solid rgba(90,138,74,.3); border-radius:var(--r); padding:8px 12px; font-size:.71rem; color:#5a8a4a; font-family:var(--font-mono); }
+
   .datos-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-lg); overflow:hidden; }
   .datos-item { display:flex; align-items:center; justify-content:space-between; padding:11px 16px; border-bottom:1px solid var(--border); gap:12px; }
   .datos-item:last-child { border-bottom:none; }
@@ -1252,6 +1118,7 @@ const styles = `
   .datos-item-info span { font-size:.66rem; color:var(--text-muted); }
   .datos-clear-btn { padding:4px 10px; border-radius:var(--r); font-size:.65rem; font-family:var(--font-mono); cursor:pointer; border:1.5px solid var(--border); background:transparent; color:var(--text-muted); transition:var(--tr); white-space:nowrap; flex-shrink:0; }
   .datos-clear-btn:hover { border-color:#d94f2b; color:#d94f2b; background:rgba(217,79,43,.06); }
+  .datos-clear-btn:disabled { opacity:.4; cursor:not-allowed; }
 
   @media (max-width:1100px) { .profile-layout { grid-template-columns:270px 1fr; } }
   @media (max-width:900px)  { .profile-layout { grid-template-columns:1fr; } .profile-card { position:static; } .logros-grid { grid-template-columns:repeat(3,1fr); } }
@@ -1259,7 +1126,7 @@ const styles = `
 
 `;
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
+//  HELPERS 
 function markPos(val, min, max) {
   const pct = (val - min) / (max - min);
   return `calc(${pct * 100}% - ${9 * (2 * pct - 1)}px)`;
@@ -1281,7 +1148,7 @@ function getCategory(direction, delta) {
     if (delta <= 350) return { label:"Moderado",            color:"#c8860a", prot:2.2 };
     if (delta <= 450) return { label:"Moderado / Agresivo", color:"#d47020", prot:2.3 };
     if (delta <= 550) return { label:"Agresivo",            color:"#d94f2b", prot:2.4 };
-    return                   { label:"Muy agresivo ⚠",     color:"#b03020", prot:2.5 };
+    return                   { label:"Muy agresivo ",     color:"#b03020", prot:2.5 };
   }
   if (delta <= 50)  return { label:"Mínimo",              color:"#5a8a4a", prot:1.6 };
   if (delta <= 150) return { label:"Ligero",              color:"#4a8a6a", prot:1.8 };
@@ -1293,11 +1160,11 @@ function getCategory(direction, delta) {
 
 function healthStatus(r) {
   const pPerKg = r.proteinG / r.peso, deficit = r.mantenimiento - r.kcalObj;
-  if (r.kcalObj < r.bmr * 0.85) return { label:"⚠ Riesgo",         color:"#d94f2b", bg:"rgba(217,79,43,.1)", msg:"Ingesta por debajo del 85% del BMR. Riesgo serio de pérdida muscular y carencias." };
-  if (deficit > 500)             return { label:"⚠ Agresivo",       color:"#c8860a", bg:"rgba(200,134,10,.1)",msg:"Déficit elevado. Asegura proteína alta y descansa una semana cada 6-8 semanas." };
-  if (pPerKg < 1.6 && deficit > 0) return { label:"⚠ Proteína baja",color:"#c8860a", bg:"rgba(200,134,10,.1)",msg:"En déficit la proteína debería ser ≥1.6 g/kg para preservar músculo." };
-  if (deficit <= 0)              return { label:"✓ Óptimo",         color:"#5a8a4a", bg:"rgba(90,138,74,.1)", msg:"Plan equilibrado. Monitorea el peso cada semana en las mismas condiciones." };
-  return                               { label:"✓ Correcto",        color:"#5a8a4a", bg:"rgba(90,138,74,.1)", msg:"Plan sostenible. Ajusta cada 2-3 semanas según evolución real." };
+  if (r.kcalObj < r.bmr * 0.85) return { label:" Riesgo",         color:"#d94f2b", bg:"rgba(217,79,43,.1)", msg:"Ingesta por debajo del 85% del BMR. Riesgo serio de pérdida muscular y carencias." };
+  if (deficit > 500)             return { label:" Agresivo",       color:"#c8860a", bg:"rgba(200,134,10,.1)",msg:"Déficit elevado. Asegura proteína alta y descansa una semana cada 6-8 semanas." };
+  if (pPerKg < 1.6 && deficit > 0) return { label:" Proteína baja",color:"#c8860a", bg:"rgba(200,134,10,.1)",msg:"En déficit la proteína debería ser ≥1.6 g/kg para preservar músculo." };
+  if (deficit <= 0)              return { label:" Óptimo",         color:"#5a8a4a", bg:"rgba(90,138,74,.1)", msg:"Plan equilibrado. Monitorea el peso cada semana en las mismas condiciones." };
+  return                               { label:" Correcto",        color:"#5a8a4a", bg:"rgba(90,138,74,.1)", msg:"Plan sostenible. Ajusta cada 2-3 semanas según evolución real." };
 }
 
 function recompViability(bf, sexo, dias, met) {
@@ -1390,7 +1257,14 @@ function savePlan(plan) {
 
 
 
-// ─── AUTH & PROFILE HELPERS ──────────────────────────────────────────────────
+//  PROFILE HELPERS 
+function loadProfile() {
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch { return null; }
+}
+function saveProfileData(data) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(data)); } catch {}
+}
+
 function loadPeso() {
   try { return JSON.parse(localStorage.getItem(PESO_KEY) || "[]"); }
   catch { return []; }
@@ -1538,19 +1412,19 @@ function buildCoachMessage(analysis, currentKcal, checkinData) {
 
   switch (analysis.type) {
     case "no_data":
-      return { icon:"📊", color:"#8a6a50", bg:"rgba(138,106,80,.07)", border:"rgba(138,106,80,.2)", title:"Necesitamos más datos", message:"Para que el análisis funcione necesitas al menos 2 semanas de registros de peso y datos del calendario. El sistema compara promedios semanales para detectar tendencias reales.", delta:null, reasoning:null, canApply:false };
+      return { icon:"", color:"#8a6a50", bg:"rgba(138,106,80,.07)", border:"rgba(138,106,80,.2)", title:"Necesitamos más datos", message:"Para que el análisis funcione necesitas al menos 2 semanas de registros de peso y datos del calendario. El sistema compara promedios semanales para detectar tendencias reales.", delta:null, reasoning:null, canApply:false };
     case "low_adherence":
-      return { icon:"⚠️", color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"Primero la adherencia", message:`Tu adherencia al plan esta semana es del ${analysis.adherence}%. Antes de ajustar calorías, la prioridad es llegar a ≥75% de consistencia. Con baja adherencia los datos de peso no reflejan el efecto real de tu dieta.`, delta:null, reasoning:`Peso medio: ${fmt(analysis.avgCurr)} kg (cambio: ${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg/semana)`, canApply:false };
+      return { icon:"", color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"Primero la adherencia", message:`Tu adherencia al plan esta semana es del ${analysis.adherence}%. Antes de ajustar calorías, la prioridad es llegar a ≥75% de consistencia. Con baja adherencia los datos de peso no reflejan el efecto real de tu dieta.`, delta:null, reasoning:`Peso medio: ${fmt(analysis.avgCurr)} kg (cambio: ${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg/semana)`, canApply:false };
     case "too_fast":
-      return { icon:"⬆️", color:"#3a6e9e", bg:"rgba(58,110,158,.07)", border:"rgba(58,110,158,.25)", title:`Pérdida demasiado rápida — subimos +${analysis.delta} kcal`, message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana (${analysis.bodyWeightPct}% de tu peso corporal). Superar el 1% semanal aumenta el riesgo de perder músculo y afecta la adherencia a largo plazo.${energyNote}`, delta:+analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
+      return { icon:"", color:"#3a6e9e", bg:"rgba(58,110,158,.07)", border:"rgba(58,110,158,.25)", title:`Pérdida demasiado rápida — subimos +${analysis.delta} kcal`, message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana (${analysis.bodyWeightPct}% de tu peso corporal). Superar el 1% semanal aumenta el riesgo de perder músculo y afecta la adherencia a largo plazo.${energyNote}`, delta:+analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
     case "stall":
-      return { icon:"⬇️", color:"#d94f2b", bg:"rgba(217,79,43,.07)", border:"rgba(217,79,43,.25)", title:`Sin progreso esta semana — ajustamos ${analysis.delta} kcal`, message:`Tu peso medio no ha bajado (${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg) con una ${adh}. Esto indica que tu TDEE real es mayor de lo calculado o que tu metabolismo se ha adaptado. Reducimos el objetivo calórico.${hungerNote}`, delta:analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
+      return { icon:"", color:"#d94f2b", bg:"rgba(217,79,43,.07)", border:"rgba(217,79,43,.25)", title:`Sin progreso esta semana — ajustamos ${analysis.delta} kcal`, message:`Tu peso medio no ha bajado (${analysis.weightChange > 0 ? "+" : ""}${fmt(analysis.weightChange)} kg) con una ${adh}. Esto indica que tu TDEE real es mayor de lo calculado o que tu metabolismo se ha adaptado. Reducimos el objetivo calórico.${hungerNote}`, delta:analysis.delta, newKcal:analysis.newKcal, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:true };
     case "stall_low_adherence":
-      return { icon:"🔄", color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"No hay progreso — pero la adherencia es baja", message:`Tu peso no ha bajado, pero con solo ${analysis.adherence}% de adherencia no es momento de reducir calorías. Primero consolida el hábito. Si mejoras la adherencia y el peso sigue estancado, entonces ajustamos.`, delta:null, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg`, canApply:false };
+      return { icon:"", color:"#c8860a", bg:"rgba(200,134,10,.07)", border:"rgba(200,134,10,.25)", title:"No hay progreso — pero la adherencia es baja", message:`Tu peso no ha bajado, pero con solo ${analysis.adherence}% de adherencia no es momento de reducir calorías. Primero consolida el hábito. Si mejoras la adherencia y el peso sigue estancado, entonces ajustamos.`, delta:null, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg`, canApply:false };
     case "on_track":
-      return { icon:"✓", color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso lento pero constante — mantener", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Es un ritmo conservador que maximiza la retención muscular. No es necesario ningún ajuste esta semana.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
+      return { icon:"", color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso lento pero constante — mantener", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Es un ritmo conservador que maximiza la retención muscular. No es necesario ningún ajuste esta semana.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
     case "ideal":
-      return { icon:"🎯", color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso óptimo — no tocar nada", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Este es el rango ideal para perder grasa preservando músculo al máximo. El plan funciona. Revisa en 2 semanas.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
+      return { icon:"", color:"#5a8a4a", bg:"rgba(90,138,74,.07)", border:"rgba(90,138,74,.25)", title:"Progreso óptimo — no tocar nada", message:`Estás perdiendo ${Math.abs(fmt(analysis.weightChange))} kg/semana. Este es el rango ideal para perder grasa preservando músculo al máximo. El plan funciona. Revisa en 2 semanas.`, delta:0, reasoning:`Peso anterior: ${fmt(analysis.avgPrev)} kg → actual: ${fmt(analysis.avgCurr)} kg | ${adh}`, canApply:false };
     default:
       return null;
   }
@@ -1599,7 +1473,7 @@ function getCalStats(calendar, year) {
   return { full, partial, failed, streak };
 }
 
-// ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
+//  SUB-COMPONENTS 
 function Tip({ text }) {
   return (
     <span className="tip-wrap">
@@ -1670,12 +1544,12 @@ function MealPlan({ kcal, proteinG, fatG, carbG }) {
 }
 
 
-// ─── MACRO PLAN CUSTOMIZER ───────────────────────────────────────────────────
+//  MACRO PLAN CUSTOMIZER 
 const STRATEGIES = [
-  { id:"deficit",    icon:"🔥", name:"Déficit",       desc:"Pérdida de grasa con masa preservada",  pPct:35, fPct:25, cPct:40 },
-  { id:"recomp",     icon:"⚖️", name:"Recomposición", desc:"Perder grasa y ganar músculo a la vez", pPct:40, fPct:25, cPct:35 },
-  { id:"superavit",  icon:"💪", name:"Superávit",     desc:"Ganancia muscular con algo de grasa",   pPct:30, fPct:25, cPct:45 },
-  { id:"lean_bulk",  icon:"🎯", name:"Lean Bulk",     desc:"Superávit mínimo, máximo músculo limpio",pPct:35, fPct:25, cPct:40 },
+  { id:"deficit",    icon:"", name:"Déficit",       desc:"Pérdida de grasa con masa preservada",  pPct:35, fPct:25, cPct:40 },
+  { id:"recomp",     icon:"", name:"Recomposición", desc:"Perder grasa y ganar músculo a la vez", pPct:40, fPct:25, cPct:35 },
+  { id:"superavit",  icon:"", name:"Superávit",     desc:"Ganancia muscular con algo de grasa",   pPct:30, fPct:25, cPct:45 },
+  { id:"lean_bulk",  icon:"", name:"Lean Bulk",     desc:"Superávit mínimo, máximo músculo limpio",pPct:35, fPct:25, cPct:40 },
 ];
 
 function MacroPlanCustomizer({ kcalObj, onSave }) {
@@ -1776,27 +1650,27 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
         </div>
       </div>
 
-      {!ok && <div className="plan-total-warn">⚠ Proteína + Grasa no puede superar 100%</div>}
-      {ok  && <div className="plan-total-ok">✓ Distribución válida — total 100%</div>}
+      {!ok && <div className="plan-total-warn"> Proteína + Grasa no puede superar 100%</div>}
+      {ok  && <div className="plan-total-ok"> Distribución válida — total 100%</div>}
 
       <button className={`plan-save-btn ${planSaved?"saved":""}`} onClick={handleSave} disabled={!ok}>
-        {planSaved ? "✓ Plan guardado en Mi Nutrición" : "Guardar plan de macros"}
+        {planSaved ? " Plan guardado en Mi Nutrición" : "Guardar plan de macros"}
       </button>
     </div>
   );
 }
 
 
-// ─── STREAK TOAST ────────────────────────────────────────────────────────────
+//  STREAK TOAST 
 function StreakToast({ streak, onClose }) {
   const milestones = {
-    3:  { icon:"🌱", title:"¡3 días seguidos!", msg:"El hábito empieza a formarse. ¡Sigue así!" },
-    7:  { icon:"🔥", title:"¡1 semana de racha!", msg:"Una semana completa. Esto ya es un hábito real." },
-    14: { icon:"⚡", title:"¡2 semanas sin fallar!", msg:"Dos semanas de constancia. La disciplina es tuya." },
-    21: { icon:"💪", title:"¡21 días!", msg:"Dicen que tarda 21 días. Ya lo tienes." },
-    30: { icon:"🏆", title:"¡1 mes de racha!", msg:"Un mes entero. Nivel otro." },
-    60: { icon:"⭐", title:"¡60 días seguidos!", msg:"Dos meses. Estás en modo élite." },
-    100:{ icon:"👑", title:"¡100 días!", msg:"Triple dígito. Leyenda." },
+    3:  { icon:"", title:"¡3 días seguidos!", msg:"El hábito empieza a formarse. ¡Sigue así!" },
+    7:  { icon:"", title:"¡1 semana de racha!", msg:"Una semana completa. Esto ya es un hábito real." },
+    14: { icon:"", title:"¡2 semanas sin fallar!", msg:"Dos semanas de constancia. La disciplina es tuya." },
+    21: { icon:"", title:"¡21 días!", msg:"Dicen que tarda 21 días. Ya lo tienes." },
+    30: { icon:"", title:"¡1 mes de racha!", msg:"Un mes entero. Nivel otro." },
+    60: { icon:"", title:"¡60 días seguidos!", msg:"Dos meses. Estás en modo élite." },
+    100:{ icon:"", title:"¡100 días!", msg:"Triple dígito. Leyenda." },
   };
   const m = milestones[streak];
   if (!m) return null;
@@ -1818,7 +1692,7 @@ function StreakToast({ streak, onClose }) {
   );
 }
 
-// ─── WEIGHT SPARKLINE ────────────────────────────────────────────────────────
+//  WEIGHT SPARKLINE 
 function WeightSparkline({ entries }) {
   if (entries.length < 2) {
     return (
@@ -1849,19 +1723,17 @@ function WeightSparkline({ entries }) {
       {pts.map((p, i) => (
         <circle key={i} cx={p.x} cy={p.y} r="3" fill="var(--accent)" stroke="var(--surface)" strokeWidth="1.5"/>
       ))}
-      <text x={pts[0].x} y={pts[0].y - 7} textAnchor="middle"
-        style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:"var(--text-muted)"}}>
+      <text x={pts[0].x} y={pts[0].y - 7} textAnchor="middle" style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:"var(--text-muted)"}}>
         {vals[0].toFixed(1)}
       </text>
-      <text x={pts[pts.length-1].x} y={pts[pts.length-1].y - 7} textAnchor="middle"
-        style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:trendColor,fontWeight:600}}>
+      <text x={pts[pts.length-1].x} y={pts[pts.length-1].y - 7} textAnchor="middle" style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:trendColor,fontWeight:600}}>
         {vals[vals.length-1].toFixed(1)}
       </text>
     </svg>
   );
 }
 
-// ─── TODAY BANNER ─────────────────────────────────────────────────────────────
+//  TODAY BANNER 
 function TodayBanner({ onNavigate }) {
   const calendar = useMemo(() => loadCalendar(), []);
   const today    = todayKey();
@@ -1871,7 +1743,7 @@ function TodayBanner({ onNavigate }) {
   return (
     <div className="today-banner">
       <div className="today-banner-left">
-        <div className="today-banner-streak">🔥 {stats.streak}</div>
+        <div className="today-banner-streak"> {stats.streak}</div>
         <div className="today-banner-info">
           <strong>Racha actual</strong>
           <span>{stats.streak === 0 ? "Empieza hoy tu racha" : `${stats.streak} día${stats.streak!==1?"s":""} seguido${stats.streak!==1?"s":""}`}</span>
@@ -1889,7 +1761,7 @@ function TodayBanner({ onNavigate }) {
               }}>
               <span style={{fontSize:".9rem"}}>{cat.icon}</span>
               {cat.name}
-              {done && <span style={{fontSize:".7rem"}}>✓</span>}
+              {done && <span style={{fontSize:".7rem"}}></span>}
             </div>
           );
         })}
@@ -1901,13 +1773,12 @@ function TodayBanner({ onNavigate }) {
   );
 }
 
-// ─── MI PESO PAGE ─────────────────────────────────────────────────────────────
+//  MI PESO PAGE 
 function PesoPage() {
   const [entries, setEntries] = useState(loadPeso);
   const [draftWeight, setDraftWeight] = useState("");
   const [draftDate,   setDraftDate]   = useState(() => new Date().toISOString().slice(0,10));
   const [draftNote,   setDraftNote]   = useState("");
-  const [addedOk,     setAddedOk]     = useState(false);
 
   const addEntry = () => {
     const w = parseFloat(draftWeight);
@@ -1917,7 +1788,6 @@ function PesoPage() {
     setEntries(updated);
     savePeso(updated);
     setDraftWeight(""); setDraftNote("");
-    setAddedOk(true); setTimeout(() => setAddedOk(false), 1800);
   };
 
   const removeEntry = (id) => {
@@ -1944,7 +1814,7 @@ function PesoPage() {
   return (
     <div className="peso-page">
       <div className="page-header">
-        <h1>Mi <em>Peso</em></h1>
+        <h1>Mi Peso</h1>
         <p>Registra tu peso periódicamente y visualiza tu progreso real a lo largo del tiempo</p>
       </div>
       <div className="peso-layout">
@@ -1966,11 +1836,10 @@ function PesoPage() {
               </div>
               <div className="peso-form-field" style={{flex:1,minWidth:120}}>
                 <label>Nota (opcional)</label>
-                <input className="peso-form-input wide" placeholder="Ej: En ayunas, después de entreno..."
-                  value={draftNote} onChange={e=>setDraftNote(e.target.value)}
+                <input className="peso-form-input wide" placeholder="Ej: En ayunas, después de entreno..." value={draftNote} onChange={e=>setDraftNote(e.target.value)}
                   onKeyDown={e=>e.key==="Enter"&&addEntry()}/>
               </div>
-              <button className="peso-add-btn" onClick={addEntry} style={addedOk?{background:"var(--green)"}:{}}>{addedOk?"✓ Guardado":"+ Añadir"}</button>
+              <button className="peso-add-btn" onClick={addEntry}>+ Añadir</button>
             </div>
           </div>
           <div className="peso-log">
@@ -2031,7 +1900,7 @@ function PesoPage() {
           )}
           {entries.length === 0 && (
             <div className="peso-stat-card" style={{textAlign:"center",padding:"24px 16px"}}>
-              <div style={{fontSize:"2rem",marginBottom:8,opacity:.3}}>⚖️</div>
+              <div style={{fontSize:"2rem",marginBottom:8,opacity:.3}}></div>
               <p style={{fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.6}}>Cuando tengas registros verás aquí tu progreso y tendencia semanal.</p>
             </div>
           )}
@@ -2042,7 +1911,7 @@ function PesoPage() {
 }
 
 
-// ─── ANALYSIS COMPONENTS ─────────────────────────────────────────────────────
+//  ANALYSIS COMPONENTS 
 function WeightTrend2W({ pesoEntries }) {
   const now = new Date();
   const cutoff = new Date(now); cutoff.setDate(now.getDate() - 14);
@@ -2081,12 +1950,10 @@ function WeightTrend2W({ pesoEntries }) {
       {pts.map((p,i) => (
         <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="var(--accent)" stroke="var(--surface)" strokeWidth="1.5"/>
       ))}
-      <text x={pts[0].x} y={pts[0].y-6} textAnchor="middle"
-        style={{fontFamily:"var(--font-mono)",fontSize:"8px",fill:"var(--text-muted)"}}>
+      <text x={pts[0].x} y={pts[0].y-6} textAnchor="middle" style={{fontFamily:"var(--font-mono)",fontSize:"8px",fill:"var(--text-muted)"}}>
         {vals[0].toFixed(1)}
       </text>
-      <text x={pts[pts.length-1].x} y={pts[pts.length-1].y-6} textAnchor="middle"
-        style={{fontFamily:"var(--font-mono)",fontSize:"8px",fill:trendColor,fontWeight:600}}>
+      <text x={pts[pts.length-1].x} y={pts[pts.length-1].y-6} textAnchor="middle" style={{fontFamily:"var(--font-mono)",fontSize:"8px",fill:trendColor,fontWeight:600}}>
         {vals[vals.length-1].toFixed(1)}
       </text>
     </svg>
@@ -2109,7 +1976,7 @@ function CoachCard({ coach, onApply, applied }) {
       <p className="coach-message" style={{color:"var(--text)"}}>{coach.message}</p>
       {coach.delta !== null && coach.delta !== 0 && (
         <div className="coach-delta-pill" style={{color:coach.color,borderColor:coach.border,background:coach.color+"14"}}>
-          <span style={{fontSize:"1rem"}}>{coach.delta > 0 ? "⬆" : "⬇"}</span>
+          <span style={{fontSize:"1rem"}}>{coach.delta > 0 ? "" : ""}</span>
           {coach.delta > 0 ? `+${coach.delta}` : coach.delta} kcal/día
           {coach.newKcal && <span style={{opacity:.7,fontWeight:400}}>→ {coach.newKcal.toLocaleString()} kcal</span>}
         </div>
@@ -2126,7 +1993,7 @@ function CoachCard({ coach, onApply, applied }) {
       )}
       {coach.canApply && applied && (
         <div style={{marginTop:16,fontFamily:"var(--font-mono)",fontSize:".72rem",color:"#5a8a4a",background:"rgba(90,138,74,.1)",padding:"8px 14px",borderRadius:"var(--r)",border:"1px solid rgba(90,138,74,.2)"}}>
-          ✓ Ajuste aplicado y guardado en historial
+           Ajuste aplicado y guardado en historial
         </div>
       )}
     </div>
@@ -2154,7 +2021,7 @@ function WeeklyCheckinForm({ onSubmit, existingCheckin }) {
     <div className="checkin-card">
       <div className="checkin-title">
         Check-in semanal (opcional)
-        {saved && <span className="checkin-already">✓ Completado</span>}
+        {saved && <span className="checkin-already"> Completado</span>}
       </div>
       {[
         {key:"hunger", label:"¿Cuánta hambre tienes durante el día?",  state:hunger, set:setHunger},
@@ -2182,12 +2049,11 @@ function WeeklyCheckinForm({ onSubmit, existingCheckin }) {
       <div className="checkin-row">
         <div className="checkin-row-label">Notas de la semana (opcional)</div>
         <textarea className="checkin-notes" rows={2}
-          placeholder="¿Algo relevante esta semana? Viaje, estrés, lesión..."
-          value={notes} onChange={e=>{setNotes(e.target.value);setSaved(false);}}/>
+          placeholder="¿Algo relevante esta semana? Viaje, estrés, lesión..." value={notes} onChange={e=>{setNotes(e.target.value);setSaved(false);}}/>
       </div>
       <button className="checkin-submit" onClick={submit}
         disabled={hunger===null && energy===null && !notes.trim()}>
-        {saved ? "✓ Check-in guardado" : "Guardar check-in"}
+        {saved ? " Check-in guardado" : "Guardar check-in"}
       </button>
     </div>
   );
@@ -2307,14 +2173,14 @@ function AnalysisPage({ onNavigate }) {
 
   const chips = [];
   if (adherence !== null) {
-    chips.push({ icon:"📋", label:`${adherence}% adherencia`, color:adherence>=75?"#5a8a4a":"#c8860a" });
+    chips.push({ icon:"", label:`${adherence}% adherencia`, color:adherence>=75?"#5a8a4a":"#c8860a" });
   }
   if (thisAvg && lastAvg) {
     const d = thisAvg - lastAvg;
-    chips.push({ icon:d<0?"📉":d>0.1?"📈":"➡️", label:`${d>0?"+":""}${d.toFixed(1)} kg vs semana anterior`, color:d<0?"#5a8a4a":d>0.1?"#d94f2b":"#8a6a50" });
+    chips.push({ icon:d<0?"":d>0.1?"":"", label:`${d>0?"+":""}${d.toFixed(1)} kg vs semana anterior`, color:d<0?"#5a8a4a":d>0.1?"#d94f2b":"#8a6a50" });
   }
   if (currentKcal) {
-    chips.push({ icon:"🎯", label:`${currentKcal.toLocaleString()} kcal objetivo actual`, color:"var(--accent)" });
+    chips.push({ icon:"", label:`${currentKcal.toLocaleString()} kcal objetivo actual`, color:"var(--accent)" });
   }
 
   const hasEnoughData = analysis.type !== "no_data";
@@ -2322,14 +2188,14 @@ function AnalysisPage({ onNavigate }) {
   return (
     <div className="analysis-page">
       <div className="page-header">
-        <h1>Mi <em>Análisis</em></h1>
+        <h1>Mi Análisis</h1>
         <p>Sistema inteligente de ajuste calórico basado en tu progreso real semana a semana</p>
       </div>
 
       {!hasEnoughData && (
         <div className="analysis-empty">
-          <div className="analysis-empty-icon">🧠</div>
-          <div className="analysis-empty-title">El sistema está listo para <em>analizar</em></div>
+          <div className="analysis-empty-icon"></div>
+          <div className="analysis-empty-title">El sistema está listo para analizar</div>
           <p className="analysis-empty-body">
             Para generar tu primer análisis necesito datos de al menos 2 semanas. Empieza por completar estos pasos:
           </p>
@@ -2352,8 +2218,7 @@ function AnalysisPage({ onNavigate }) {
       {chips.length > 0 && (
         <div className="insight-chips">
           {chips.map((chip,i) => (
-            <div key={i} className="insight-chip"
-              style={{color:chip.color,background:chip.color+"12",borderColor:chip.color+"30"}}>
+            <div key={i} className="insight-chip" style={{color:chip.color,background:chip.color+"12",borderColor:chip.color+"30"}}>
               <span>{chip.icon}</span> {chip.label}
             </div>
           ))}
@@ -2392,8 +2257,7 @@ function AnalysisPage({ onNavigate }) {
           {adherence !== null && (
             <div className="analysis-stat-card">
               <div className="analysis-stat-lbl">Adherencia al plan</div>
-              <div className="analysis-stat-val"
-                style={{color:adherence>=75?"#5a8a4a":adherence>=50?"#c8860a":"#d94f2b"}}>
+              <div className="analysis-stat-val" style={{color:adherence>=75?"#5a8a4a":adherence>=50?"#c8860a":"#d94f2b"}}>
                 {adherence}%
               </div>
               <div className="analysis-stat-sub">hábitos cumplidos esta semana</div>
@@ -2411,10 +2275,10 @@ function AnalysisPage({ onNavigate }) {
           <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"16px 18px"}}>
             <div style={{fontFamily:"var(--font-mono)",fontSize:".55rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:12}}>Cómo funciona</div>
             {[
-              {icon:"📉",text:"Pérdida ideal: 0.5–1% del peso corporal/semana"},
-              {icon:"⬆️",text:"Demasiado rápido (>1.2%): subimos calorías"},
-              {icon:"⬇️",text:"Estancamiento con alta adherencia: bajamos calorías"},
-              {icon:"📋",text:"Baja adherencia: sin ajuste, primero el hábito"},
+              {icon:"",text:"Pérdida ideal: 0.5–1% del peso corporal/semana"},
+              {icon:"",text:"Demasiado rápido (>1.2%): subimos calorías"},
+              {icon:"",text:"Estancamiento con alta adherencia: bajamos calorías"},
+              {icon:"",text:"Baja adherencia: sin ajuste, primero el hábito"},
             ].map((item,i) => (
               <div key={i} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:9}}>
                 <span style={{fontSize:".9rem",flexShrink:0}}>{item.icon}</span>
@@ -2429,15 +2293,20 @@ function AnalysisPage({ onNavigate }) {
 }
 
 
-// ─── AUTH PAGE ────────────────────────────────────────────────────────────────
-// ─── PROFILE + TRANSFER HELPERS ──────────────────────────────────────────────
-function loadProfile() { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null"); } catch { return null; } }
-function saveProfileData(d) { try { localStorage.setItem(PROFILE_KEY, JSON.stringify(d)); } catch {} }
+//  PROFILE + TRANSFER HELPERS 
+const AVATAR_EMOJIS = ["","","","","","","","","","","","","","","","","","","",""];
+const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
+const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
+const TRABAJO_LABELS = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
+const MOTIVATIONAL = [
+  { quote:"El progreso, no la perfección, es lo que importa.",          tag:"Mentalidad" },
+  { quote:"Cada registro es una promesa que te cumples a ti mismo.",     tag:"Constancia" },
+  { quote:"Los datos no mienten. El cuerpo tampoco.",                    tag:"Evidencia" },
+  { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
+  { quote:"La racha más larga siempre empieza con el día de hoy.",      tag:"Inicio" },
+];
 
-const TRANSFER_KEYS = [
-  "tdee_form_v1","tdee_hist","tdee_macro_plan_v1","tdee_calendar_v1",
-  "tdee_peso_v1","tdee_checkins_v1","tdee_adjustments_v1","tdee_profile_v1",
-  "tdee_nutrition_v1","tdee_quick_foods_v1","tdee_dark",
+const TRANSFER_KEYS = [ "tdee_form_v1","tdee_hist","tdee_macro_plan_v1","tdee_calendar_v1", "tdee_peso_v1","tdee_checkins_v1","tdee_adjustments_v1","tdee_profile_v1", "tdee_nutrition_v1","tdee_quick_foods_v1","tdee_dark",
 ];
 
 function generateTransferCode() {
@@ -2456,34 +2325,23 @@ function applyTransferCode(raw, onOk, onErr) {
   } catch { onErr("No se pudo leer el código. Cópialo completo sin espacios."); }
 }
 
-// ─── PROFILE PAGE ─────────────────────────────────────────────────────────────
-const AVATAR_EMOJIS = ["💪","🔥","⚡","🏆","🎯","🦁","🐺","🦊","🌟","⭐","🚀","🎽","🥊","🏋️","🧠","❤️","💚","🌊","🦅","🐉"];
-const STRATEGY_LABELS = { deficit:"Pérdida de grasa", recomp:"Recomposición", superavit:"Superávit", lean_bulk:"Lean Bulk" };
-const DIRECTION_LABELS = { deficit:"Déficit", mantenimiento:"Mantenimiento", superavit:"Superávit" };
-const TRABAJO_LABELS = { sedentario:"Sedentario", ligero:"Ligero", moderado:"Moderado", activo:"Activo", muy_activo:"Muy activo" };
-const MOTIVATIONAL = [
-  { quote:"El progreso, no la perfección, es lo que importa.",          tag:"Mentalidad" },
-  { quote:"Cada registro es una promesa que te cumples a ti mismo.",     tag:"Constancia" },
-  { quote:"Los datos no mienten. El cuerpo tampoco.",                    tag:"Evidencia"  },
-  { quote:"Un déficit sostenible vale más que uno agresivo que abandonas.", tag:"Estrategia" },
-  { quote:"La racha más larga siempre empieza con el día de hoy.",      tag:"Inicio"     },
-];
-
 function ProfilePage({ onNavigate }) {
-  const [profile, setProfile] = useState(() => loadProfile() || { name:"", avatar:"💪", since: new Date().toISOString().slice(0,10) });
+  const [profile, setProfile] = useState(() => {
+    const saved = loadProfile();
+    return saved || { name:"", avatar:"", since: new Date().toISOString().slice(0,10) };
+  });
   const [pickerOpen, setPickerOpen]   = useState(false);
   const [editingName, setEditingName] = useState(false);
-  const [nameDraft, setNameDraft]     = useState(profile.name);
+  const [nameDraft, setNameDraft]     = useState(profile.name || "");
   const fileInputRef = useRef(null);
-  const [xferTab, setXferTab]         = useState("export"); // export | import
-  const [xferCode, setXferCode]       = useState("");
+  const [xferTab, setXferTab]   = useState("export");
+  const [xferCode, setXferCode] = useState("");
   const [importInput, setImportInput] = useState("");
-  const [copied, setCopied]           = useState(false);
-  const [xferErr, setXferErr]         = useState("");
-  const [xferOk, setXferOk]           = useState("");
-  const [cleared, setCleared]         = useState({});
+  const [copied, setCopied]     = useState(false);
+  const [xferErr, setXferErr]   = useState("");
+  const [xferOk, setXferOk]     = useState("");
+  const [cleared, setCleared]   = useState({});
 
-  // Live data from all modules
   const form        = useMemo(() => { try { return JSON.parse(localStorage.getItem(FORM_KEY)||"null"); } catch { return null; } }, []);
   const hist        = useMemo(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); } catch { return []; } }, []);
   const plan        = useMemo(() => loadPlan(), []);
@@ -2496,10 +2354,9 @@ function ProfilePage({ onNavigate }) {
   const pesoChange = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
   const ficha      = form || {};
   const imc        = ficha.peso && ficha.altura ? (ficha.peso/((ficha.altura/100)**2)).toFixed(1) : null;
-  const planIcon   = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
+  const planIcon   = { deficit:"", recomp:"", superavit:"", lean_bulk:"" }[plan?.strategy] || "";
   const latestTdee = hist[0]?.tdee ?? null;
   const quote      = useMemo(() => MOTIVATIONAL[Math.floor(Date.now()/86400000) % MOTIVATIONAL.length], []);
-
   const daysActive = useMemo(() => {
     if (!profile.since) return 0;
     return Math.max(0, Math.floor((Date.now() - new Date(profile.since).getTime()) / 86400000));
@@ -2516,15 +2373,10 @@ function ProfilePage({ onNavigate }) {
     if (!file.type.startsWith("image/")) return;
     if (file.size > 2 * 1024 * 1024) { alert("La imagen no debe superar 2 MB."); return; }
     const reader = new FileReader();
-    reader.onload = ev => {
-      updateProfile({ photoUrl: ev.target.result });
-      setPickerOpen(false);
-    };
+    reader.onload = ev => { updateProfile({ photoUrl: ev.target.result }); setPickerOpen(false); };
     reader.readAsDataURL(file);
     e.target.value = "";
   };
-
-  const clearPhoto = () => { updateProfile({ photoUrl: null }); };
 
   const saveName = () => { updateProfile({ name: nameDraft.trim() }); setEditingName(false); };
 
@@ -2545,7 +2397,7 @@ function ProfilePage({ onNavigate }) {
     setXferErr(""); setXferOk("");
     if (!importInput.trim()) { setXferErr("Pega tu código primero."); return; }
     applyTransferCode(importInput,
-      () => { setXferOk("✓ Datos importados. Recarga la página para ver los cambios."); setImportInput(""); },
+      () => { setXferOk(" Datos importados. Recarga la página para ver los cambios."); setImportInput(""); },
       msg => setXferErr(msg)
     );
   };
@@ -2557,17 +2409,18 @@ function ProfilePage({ onNavigate }) {
   };
 
   const displayName = profile.name || "Tu nombre";
+  const NUTR_KEY_LOCAL = "tdee_nutrition_v1";
+  const QF_KEY_LOCAL   = "tdee_quick_foods_v1";
 
   return (
     <div className="profile-page" onClick={() => setPickerOpen(false)}>
       <div className="page-header">
-        <h1>Mi <em>Perfil</em></h1>
-        <p>Personaliza tu perfil, ve tus logros y transfiere tus datos a cualquier dispositivo</p>
+        <h1>Mi Perfil</h1>
+        <p>Personaliza tu perfil, ve tus logros y transfiere tus datos a otro dispositivo</p>
       </div>
 
       <div className="profile-layout">
-
-        {/* ── LEFT: avatar + ficha ── */}
+        {/*  LEFT: avatar card  */}
         <div>
           <div className="profile-card">
             <div className="profile-card-top">
@@ -2575,17 +2428,13 @@ function ProfilePage({ onNavigate }) {
               {/* Avatar */}
               <div className="profile-avatar-wrap" onClick={e => { e.stopPropagation(); setPickerOpen(v => !v); }}>
                 <div className="profile-avatar">
-                  {profile.photoUrl
-                    ? <img src={profile.photoUrl} alt="avatar"/>
-                    : profile.avatar}
+                  {profile.photoUrl ? <img src={profile.photoUrl} alt="avatar"/> : profile.avatar}
                 </div>
-                <div className="profile-avatar-overlay"><span>📷</span></div>
-                <div className="profile-avatar-badge">✏</div>
+                <div className="profile-avatar-overlay"><span></span></div>
+                <div className="profile-avatar-badge"></div>
               </div>
 
-              {/* Hidden file input */}
-              <input ref={fileInputRef} type="file" accept="image/*"
-                style={{display:"none"}} onChange={handlePhotoUpload}/>
+              <input ref={fileInputRef} type="file" accept="image/*" style={{display:"none"}} onChange={handlePhotoUpload}/>
 
               {pickerOpen && (
                 <div className="profile-emoji-picker" onClick={e => e.stopPropagation()}>
@@ -2596,21 +2445,15 @@ function ProfilePage({ onNavigate }) {
                     ))}
                   </div>
                   <div className="profile-photo-row">
-                    <button className="profile-photo-btn"
-                      onClick={e => { e.stopPropagation(); fileInputRef.current?.click(); }}>
-                      📷 Subir foto
-                    </button>
+                    <button className="profile-photo-btn" onClick={e => { e.stopPropagation(); fileInputRef.current?.click(); }}> Subir foto</button>
                     {profile.photoUrl && (
-                      <button className="profile-photo-btn danger"
-                        onClick={e => { e.stopPropagation(); clearPhoto(); setPickerOpen(false); }}>
-                        🗑 Quitar foto
-                      </button>
+                      <button className="profile-photo-btn danger" onClick={e => { e.stopPropagation(); updateProfile({ photoUrl: null }); setPickerOpen(false); }}> Quitar</button>
                     )}
                   </div>
                 </div>
               )}
 
-              {/* Name */}
+              {/* Nombre editable */}
               {editingName ? (
                 <input className="profile-name-input" autoFocus value={nameDraft}
                   onChange={e => setNameDraft(e.target.value)}
@@ -2618,28 +2461,28 @@ function ProfilePage({ onNavigate }) {
                   onKeyDown={e => { if (e.key==="Enter") saveName(); if (e.key==="Escape") setEditingName(false); }}
                   placeholder="Tu nombre..." maxLength={28}/>
               ) : (
-                <div className="profile-name-wrap" onClick={() => { setNameDraft(profile.name); setEditingName(true); }}>
-                  <div className="profile-name-display"><em>{displayName}</em></div>
-                  <div className="profile-edit-hint">✏ Pulsa para editar</div>
+                <div className="profile-name-wrap" onClick={() => { setNameDraft(profile.name||""); setEditingName(true); }}>
+                  <div className="profile-name-display">{displayName}</div>
+                  <div className="profile-edit-hint"> Pulsa para editar</div>
                 </div>
               )}
 
               <div className="profile-since">
-                {daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando MiCalculadora` : "Bienvenido a MiCalculadora"}
+                {daysActive > 0 ? `${daysActive} día${daysActive!==1?"s":""} usando MiCalculadora` : "Bienvenido/a a MiCalculadora"}
               </div>
             </div>
 
-            {/* Ficha */}
+            {/* Ficha biométrica */}
             <div className="profile-ficha">
               {[
-                { lbl:"⚧ Sexo",      val: ficha.sexo==="mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
-                { lbl:"📅 Edad",     val: ficha.edad   ? `${ficha.edad} años` : "—" },
-                { lbl:"📏 Altura",   val: ficha.altura ? `${ficha.altura} cm`  : "—" },
-                { lbl:"⚖️ Peso",     val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent: true },
-                { lbl:"📊 IMC",      val: imc || "—" },
-                { lbl:"💧 Grasa",    val: ficha.grasa ? `${ficha.grasa}%` : "—" },
-                { lbl:"🚶 Pasos",    val: ficha.pasos ? ficha.pasos.toLocaleString() : "—" },
-                { lbl:"🏃 Trabajo",  val: TRABAJO_LABELS[ficha.trabajo] || "—" },
+                { lbl:" Sexo",     val: ficha.sexo==="mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
+                { lbl:" Edad",    val: ficha.edad    ? `${ficha.edad} años`  : "—" },
+                { lbl:" Altura",  val: ficha.altura  ? `${ficha.altura} cm`  : "—" },
+                { lbl:" Peso",    val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent:true },
+                { lbl:" IMC",     val: imc || "—" },
+                { lbl:" Grasa",   val: ficha.grasa   ? `${ficha.grasa}%`     : "—" },
+                { lbl:" Pasos",   val: ficha.pasos   ? ficha.pasos.toLocaleString() : "—" },
+                { lbl:" Trabajo", val: TRABAJO_LABELS[ficha.trabajo] || "—" },
               ].map(r => (
                 <div key={r.lbl} className="ficha-row">
                   <span className="ficha-lbl">{r.lbl}</span>
@@ -2650,18 +2493,16 @@ function ProfilePage({ onNavigate }) {
           </div>
         </div>
 
-        {/* ── RIGHT ── */}
+        {/*  RIGHT  */}
         <div className="profile-right">
 
           {/* Objetivo activo */}
           {(plan || ficha.direction) && (
             <div className="objetivo-card">
-              <div className="objetivo-icon">{plan ? planIcon : "🎯"}</div>
+              <div className="objetivo-icon">{plan ? planIcon : ""}</div>
               <div className="objetivo-text">
                 <div className="objetivo-label">Objetivo actual</div>
-                <div className="objetivo-value">
-                  <em>{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</em>
-                </div>
+                <div className="objetivo-value">{plan ? STRATEGY_LABELS[plan.strategy] : DIRECTION_LABELS[ficha.direction] || "—"}</div>
                 <div className="objetivo-sub">
                   {plan ? `${plan.kcalObj?.toLocaleString()} kcal/día · P${plan.pPct}% G${plan.fPct}% C${plan.cPct}%`
                         : latestTdee ? `TDEE: ${latestTdee.toLocaleString()} kcal/día` : "Calcula tu TDEE para empezar"}
@@ -2676,12 +2517,12 @@ function ProfilePage({ onNavigate }) {
             <div className="profile-section-title">Tus logros</div>
             <div className="logros-grid">
               {[
-                { icon:"🔥", val: calStats.streak,            label:"Racha",          sub:"días seguidos", color:"accent"  },
-                { icon:"✅", val: calStats.full,               label:"Días perfectos", sub:"3/3 hábitos",   color:"green"   },
-                { icon:"📅", val: Object.keys(calendar).length,label:"Días registrados",sub:"en calendario", color:"blue"   },
-                { icon:"⚖️", val: pesoData.length,            label:"Pesajes",        sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
-                { icon:"🧠", val: adjustments.length,          label:"Ajustes",        sub:"por Mi Análisis",color:"purple"  },
-                { icon:"🥗", val: quickFoods.length,           label:"Alimentos",      sub:"en biblioteca",  color:"accent"  },
+                { icon:"", val: calStats.streak,             label:"Racha",           sub:"días seguidos",   color:"" },
+                { icon:"", val: calStats.full,                label:"Días perfectos",  sub:"3/3 hábitos",     color:"green" },
+                { icon:"", val: Object.keys(calendar).length, label:"Días registrados",sub:"en calendario",   color:"blue" },
+                { icon:"", val: pesoData.length,             label:"Pesajes",         sub: pesoChange!==null ? `${pesoChange>0?"+":""}${pesoChange.toFixed(1)} kg total` : "registros", color:"yellow" },
+                { icon:"", val: adjustments.length,           label:"Ajustes",         sub:"por Mi Análisis", color:"purple" },
+                { icon:"", val: quickFoods.length,            label:"Alimentos",       sub:"en biblioteca",   color:"" },
               ].map((l,i) => (
                 <div key={i} className="logro-card">
                   <div className="logro-icon">{l.icon}</div>
@@ -2693,20 +2534,20 @@ function ProfilePage({ onNavigate }) {
             </div>
           </div>
 
-          {/* Plan de macros */}
+          {/* Plan de macros activo */}
           {plan && (
             <div className="plan-activo-card">
               <div className="plan-activo-header">
                 <span style={{fontSize:"1.2rem"}}>{planIcon}</span>
-                <div className="plan-activo-title">Plan de <em>macros</em> activo</div>
-                <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
+                <div className="plan-activo-title">Plan de macros activo</div>
+                <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}> Activo</div>
               </div>
               <div className="plan-activo-body">
                 {[{name:"Proteína",g:plan.protG,pct:plan.pPct,color:"#d94f2b"},{name:"Grasa",g:plan.fatG,pct:plan.fPct,color:"#e8793a"},{name:"Carbos",g:plan.carbG,pct:plan.cPct,color:"#3a6e9e"}].map(m=>(
                   <div key={m.name} className="plan-macro-row">
-                    <span style={{fontFamily:"var(--font-mono)",fontSize:".67rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
                     <div className="plan-macro-bar-wrap"><div className="plan-macro-bar-fill" style={{width:`${m.pct}%`,background:m.color}}/></div>
-                    <span style={{fontFamily:"var(--font-mono)",fontSize:".67rem",minWidth:58,textAlign:"right"}}>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",minWidth:60,textAlign:"right"}}>
                       <span style={{color:m.color,fontWeight:500}}>{m.g}g</span>
                       <span style={{color:"var(--text-dim)",marginLeft:3}}>{m.pct}%</span>
                     </span>
@@ -2716,17 +2557,17 @@ function ProfilePage({ onNavigate }) {
             </div>
           )}
 
-          {/* Cita del día */}
+          {/* Frase del día */}
           <div className="profile-quote">
             <p>"{quote.quote}"</p>
             <span>{quote.tag}</span>
           </div>
 
-          {/* ── IMPORTAR / EXPORTAR ── */}
+          {/* Exportar / Importar */}
           <div className="transfer-card">
             <div className="transfer-card-header">
-              <span style={{fontSize:"1.2rem"}}>📲</span>
-              <div className="transfer-card-title">Mis datos en otro <em>dispositivo</em></div>
+              <span style={{fontSize:"1.2rem"}}></span>
+              <div className="transfer-card-title">Mis datos en otro dispositivo</div>
             </div>
             <div className="xfer-tabs">
               <button className={`xfer-tab ${xferTab==="export"?"active":""}`} onClick={()=>{setXferTab("export");setXferErr("");setXferOk("");}}>Exportar</button>
@@ -2735,17 +2576,12 @@ function ProfilePage({ onNavigate }) {
             <div className="xfer-body">
               {xferTab === "export" && (
                 <>
-                  <div className="xfer-note">
-                    <strong>Cómo funciona:</strong> genera un código con todos tus datos (peso, calendario, nutrición, macros…).
-                    Cópialo, ve al otro dispositivo, abre Mi Perfil → Importar y pégalo. Tus datos aparecerán al instante.
-                  </div>
+                  <div className="xfer-note"><strong>Cómo funciona:</strong> genera un código con todos tus datos. Cópialo, ve al otro dispositivo y pégalo en Importar.</div>
                   {xferCode ? (
                     <>
                       <div className="xfer-code-box" tabIndex={0}>{xferCode}</div>
                       <div className="xfer-row">
-                        <button className={`xfer-btn ${copied?"ok":""}`} onClick={doCopy}>
-                          {copied ? "✓ Copiado" : "Copiar código"}
-                        </button>
+                        <button className={`xfer-btn ${copied?"ok":""}`} onClick={doCopy}>{copied ? " Copiado" : "Copiar código"}</button>
                         <button className="xfer-btn" onClick={doExport}>Regenerar</button>
                       </div>
                     </>
@@ -2757,15 +2593,11 @@ function ProfilePage({ onNavigate }) {
               )}
               {xferTab === "import" && (
                 <>
-                  <div className="xfer-note">
-                    <strong>Cómo funciona:</strong> en el dispositivo de origen ve a Mi Perfil → Exportar, genera el código y cópialo.
-                    Pégalo aquí y pulsa Importar. Se restaurarán todos tus datos.
-                  </div>
+                  <div className="xfer-note"><strong>Cómo funciona:</strong> en el dispositivo de origen genera el código en Exportar, cópialo y pégalo aquí.</div>
                   {xferOk && <div className="xfer-success">{xferOk}</div>}
                   {xferErr && <div className="xfer-error">{xferErr}</div>}
                   <div className="xfer-row">
-                    <input className="xfer-input" placeholder="Pega tu código aquí..."
-                      value={importInput} onChange={e=>{setImportInput(e.target.value);setXferErr("");setXferOk("");}}
+                    <input className="xfer-input" placeholder="Pega tu código aquí..." value={importInput} onChange={e=>{setImportInput(e.target.value);setXferErr("");setXferOk("");}}
                       onKeyDown={e=>e.key==="Enter"&&doImport()}/>
                     <button className="xfer-btn primary" onClick={doImport}>Importar</button>
                   </div>
@@ -2779,19 +2611,19 @@ function ProfilePage({ onNavigate }) {
             <div className="profile-section-title">Gestión de datos</div>
             <div className="datos-card">
               {[
-                { key:CAL_KEY,         icon:"📅", label:"Calendario y hábitos",   desc:"Registros diarios" },
-                { key:PESO_KEY,        icon:"⚖️", label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
-                { key:NUTR_KEY,        icon:"🥗", label:"Diario de nutrición",     desc:"Alimentos del día" },
-                { key:QUICK_FOODS_KEY, icon:"📚", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
-                { key:HIST_KEY,        icon:"🧮", label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
-                { key:ADJUST_KEY,      icon:"🧠", label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
+                { key:CAL_KEY,       icon:"", label:"Calendario y hábitos",   desc:`${Object.keys(calendar).length} día${Object.keys(calendar).length!==1?"s":""} registrado${Object.keys(calendar).length!==1?"s":""}` },
+                { key:PESO_KEY,      icon:"", label:"Registros de peso",       desc:`${pesoData.length} pesaje${pesoData.length!==1?"s":""}` },
+                { key:NUTR_KEY_LOCAL,icon:"", label:"Diario de nutrición",     desc:"Alimentos del día" },
+                { key:QF_KEY_LOCAL,  icon:"", label:"Biblioteca de alimentos", desc:`${quickFoods.length} alimento${quickFoods.length!==1?"s":""}` },
+                { key:HIST_KEY,      icon:"", label:"Historial de cálculos",   desc:`${hist.length} cálculo${hist.length!==1?"s":""}` },
+                { key:ADJUST_KEY,    icon:"", label:"Historial de ajustes",    desc:`${adjustments.length} ajuste${adjustments.length!==1?"s":""}` },
               ].map(item => (
                 <div key={item.key} className="datos-item">
                   <div className="datos-item-left">
                     <span className="datos-item-icon">{item.icon}</span>
                     <div className="datos-item-info">
                       <strong>{item.label}</strong>
-                      <span>{cleared[item.key] ? "✓ Limpiado" : item.desc}</span>
+                      <span>{cleared[item.key] ? " Limpiado" : item.desc}</span>
                     </div>
                   </div>
                   <button className="datos-clear-btn" onClick={() => clearSection(item.key, item.label)} disabled={!!cleared[item.key]}>
@@ -2803,7 +2635,7 @@ function ProfilePage({ onNavigate }) {
           </div>
 
           <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"13px 16px",display:"flex",alignItems:"center",gap:10}}>
-            <span style={{fontSize:"1rem"}}>🔒</span>
+            <span style={{fontSize:"1rem"}}></span>
             <div>
               <div style={{fontSize:".74rem",fontWeight:500,color:"var(--text)",marginBottom:1}}>Tus datos son solo tuyos</div>
               <div style={{fontSize:".67rem",color:"var(--text-muted)"}}>Todo se guarda en tu navegador. Nada se envía a servidores externos.</div>
@@ -2816,8 +2648,7 @@ function ProfilePage({ onNavigate }) {
   );
 }
 
-
-// ─── DAY MODAL ───────────────────────────────────────────────────────────────
+//  DAY MODAL 
 function DayModal({ dateKey, calendar, onSave, onClose }) {
   const existing = calendar[dateKey] || {};
   const [draft, setDraft] = useState({training:false,diet:false,sleep:false,note:"",...existing});
@@ -2828,7 +2659,7 @@ function DayModal({ dateKey, calendar, onSave, onClose }) {
   return (
     <div className="modal-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
       <div className="modal-box">
-        <div className="modal-title">¿Cómo fue el <em>día</em>?</div>
+        <div className="modal-title">¿Cómo fue el día?</div>
         <div className="modal-sub">{label.charAt(0).toUpperCase()+label.slice(1)}</div>
         {CATS.map(cat=>(
           <button key={cat.key} className={`cat-btn ${draft[cat.key]?"done":""}`}
@@ -2840,7 +2671,7 @@ function DayModal({ dateKey, calendar, onSave, onClose }) {
               <div className="cat-desc">{cat.desc}</div>
             </div>
             <div className="cat-check" style={draft[cat.key]?{background:cat.color,borderColor:cat.color}:{}}>
-              {draft[cat.key] && <span style={{color:"#fff",fontSize:".85rem"}}>✓</span>}
+              {draft[cat.key] && <span style={{color:"#fff",fontSize:".85rem"}}></span>}
             </div>
           </button>
         ))}
@@ -2848,8 +2679,7 @@ function DayModal({ dateKey, calendar, onSave, onClose }) {
           <span style={{fontSize:".72rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Hábitos cumplidos:</span>
           <span style={{fontFamily:"var(--font-display)",fontSize:"1.4rem",color:done===3?"#5a8a4a":done>0?"#c8860a":"var(--text-muted)"}}>{done}/3</span>
         </div>
-        <textarea className="modal-notes" rows={2} placeholder="Nota del día (opcional)..."
-          value={draft.note||""} onChange={e=>setDraft(d=>({...d,note:e.target.value}))}/>
+        <textarea className="modal-notes" rows={2} placeholder="Nota del día (opcional)..." value={draft.note||""} onChange={e=>setDraft(d=>({...d,note:e.target.value}))}/>
         <div className="modal-actions">
           <button className="modal-cancel" onClick={onClose}>Cancelar</button>
           <button className="modal-save" onClick={()=>onSave(dateKey,draft)}>Guardar día</button>
@@ -2859,7 +2689,7 @@ function DayModal({ dateKey, calendar, onSave, onClose }) {
   );
 }
 
-// ─── MINI MONTH ──────────────────────────────────────────────────────────────
+//  MINI MONTH 
 function MiniMonth({ year, month, calendar, onDayClick }) {
   const today = todayKey();
   const now = new Date();
@@ -2870,7 +2700,7 @@ function MiniMonth({ year, month, calendar, onDayClick }) {
   return (
     <div className="month-card">
       <div className="month-header">
-        <div className="month-name"><em>{MONTHS[month]}</em></div>
+        <div className="month-name">{MONTHS[month]}</div>
         <div className="month-stats">{tracked > 0 ? `${full} días perfectos · ${tracked} registrados` : "Sin registros aún"}</div>
       </div>
       <div className="mini-cal-weekdays">{WEEKDAYS.map(w=><div key={w} className="mini-wd">{w}</div>)}</div>
@@ -2905,7 +2735,7 @@ function MiniMonth({ year, month, calendar, onDayClick }) {
   );
 }
 
-// ─── CALENDAR PAGE ───────────────────────────────────────────────────────────
+//  CALENDAR PAGE 
 function CalendarPage() {
   const [calendar, setCalendar] = useState(loadCalendar);
   const [viewYear, setViewYear] = useState(()=>new Date().getFullYear());
@@ -2932,16 +2762,16 @@ function CalendarPage() {
   return (
     <div className="calendar-page">
       <div className="page-header">
-        <h1>Mi <em>Calendario</em></h1>
+        <h1>Mi Calendario</h1>
         <p>Registra tus hábitos diarios — entrenamiento, dieta y sueño — y sigue tu racha</p>
       </div>
 
       <div className="cal-summary">
         {[
-          {val:`🔥 ${stats.streak}`,  lbl:"Racha actual",    color:"#d94f2b"},
-          {val:`✅ ${stats.full}`,    lbl:"Días perfectos",   color:"#5a8a4a"},
-          {val:`🟡 ${stats.partial}`, lbl:"Días parciales",   color:"#c8860a"},
-          {val:`📅 ${stats.full+stats.partial+stats.failed}`,lbl:"Días registrados", color:"#3a6e9e"},
+          {val:` ${stats.streak}`,  lbl:"Racha actual",    color:"#d94f2b"},
+          {val:` ${stats.full}`,    lbl:"Días perfectos",   color:"#5a8a4a"},
+          {val:` ${stats.partial}`, lbl:"Días parciales",   color:"#c8860a"},
+          {val:` ${stats.full+stats.partial+stats.failed}`,lbl:"Días registrados", color:"#3a6e9e"},
         ].map((s,i)=>(
           <div key={i} className="cal-stat">
             <div className="cal-stat-val" style={{color:s.color}}>{s.val}</div>
@@ -2959,13 +2789,13 @@ function CalendarPage() {
         ].map(l=><div key={l.label} className="leg-item"><div className="leg-swatch" style={{background:l.color}}/>{l.label}</div>)}
         <div className="leg-item">
           {CATS.map(c=><div key={c.key} className="leg-swatch" style={{background:c.color,marginRight:2}}/>)}
-          <span style={{marginLeft:4}}>💪 🥗 😴</span>
+          <span style={{marginLeft:4}}>  </span>
         </div>
       </div>
 
       <div className="year-nav">
         <button className="year-btn" onClick={()=>setViewYear(y=>y-1)}>‹</button>
-        <div className="year-label"><em>{viewYear}</em></div>
+        <div className="year-label">{viewYear}</div>
         <button className="year-btn" onClick={()=>setViewYear(y=>Math.min(y+1, now.getFullYear()))} style={{opacity:viewYear>=now.getFullYear()?.4:1}}>›</button>
       </div>
 
@@ -2983,7 +2813,7 @@ function CalendarPage() {
   );
 }
 
-// ─── CALCULATOR PAGE ─────────────────────────────────────────────────────────
+//  CALCULATOR PAGE 
 function CalculatorPage({ onNavigate }) {
   const saved0 = loadForm();
   const [sexo,setSexo]=useState(saved0.sexo);
@@ -3085,29 +2915,24 @@ function CalculatorPage({ onNavigate }) {
 
   const objLabel=resultado?resultado.direction==="mantenimiento"?"Mantenimiento":`${resultado.direction==="deficit"?"Déficit":"Superávit"} ${resultado.customDelta} kcal · ${getCategory(resultado.direction,resultado.customDelta).label}`:"";
 
-  // ── numField con botones +/- personalizados ──────────────────────────────
+  //  numField con botones +/- personalizados 
   const numField = (label, val, set, min, max, unit) => (
     <div className="field" key={label}>
       <label>{label}</label>
       <div className="num-input-wrap">
         <button
-          className="spin-btn"
-          type="button"
-          tabIndex={-1}
+          className="spin-btn" type="button" tabIndex={-1}
           onClick={() => set(v => Math.max(min, Number(v) - 1))}
         >−</button>
         <input
-          type="number"
-          value={val}
+          type="number" value={val}
           min={min}
           max={max}
           onChange={e => { const v = parseFloat(e.target.value); if (!isNaN(v)) set(v); }}
         />
         <span className="num-input-unit">{unit}</span>
         <button
-          className="spin-btn"
-          type="button"
-          tabIndex={-1}
+          className="spin-btn" type="button" tabIndex={-1}
           onClick={() => set(v => Math.min(max, Number(v) + 1))}
         >+</button>
       </div>
@@ -3117,7 +2942,7 @@ function CalculatorPage({ onNavigate }) {
   return (
     <>
       <div className="page-header">
-        <h1>Mi <em>Calculadora</em></h1>
+        <h1>Mi Calculadora</h1>
         <p>Mifflin-St Jeor · Katch-McArdle · Factor de actividad calibrado · evidencia actualizada</p>
       </div>
 
@@ -3217,8 +3042,7 @@ function CalculatorPage({ onNavigate }) {
           <div className="section">
             <div className="section-label">04 · Actividad diaria (NEAT) <Tip text={TIPS.neat}/></div>
             <div style={{display:"flex",flexDirection:"column",gap:24}}>
-              <Slider label="Pasos diarios promedio" value={pasos} onChange={setPasos} min={1000} max={30000} step={500} unit="pasos"
-                marks={[1000,5000,10000,15000,20000,25000,30000].map(d=>({val:d,label:(d/1000)+"k"}))}
+              <Slider label="Pasos diarios promedio" value={pasos} onChange={setPasos} min={1000} max={30000} step={500} unit="pasos" marks={[1000,5000,10000,15000,20000,25000,30000].map(d=>({val:d,label:(d/1000)+"k"}))}
                 hint="Sin contar el entrenamiento"/>
               <div className="field">
                 <label>Tipo de trabajo</label>
@@ -3253,8 +3077,7 @@ function CalculatorPage({ onNavigate }) {
                 <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"15px"}}>
                   <div style={{display:"flex",gap:6,marginBottom:13,flexWrap:"wrap"}}>
                     <span style={{fontSize:".67rem",color:"var(--text-muted)",alignSelf:"center",marginRight:2}}>Presets:</span>
-                    {(direction==="deficit"
-                      ?[{v:100,l:"Mínimo"},{v:200,l:"Ligero"},{v:300,l:"Moderado"},{v:400,l:"Mod/Agr."},{v:500,l:"Agresivo"},{v:600,l:"Muy agr."}]
+                    {(direction==="deficit" ?[{v:100,l:"Mínimo"},{v:200,l:"Ligero"},{v:300,l:"Moderado"},{v:400,l:"Mod/Agr."},{v:500,l:"Agresivo"},{v:600,l:"Muy agr."}]
                       :[{v:100,l:"Mínimo"},{v:150,l:"Ligero"},{v:250,l:"Moderado"},{v:350,l:"Mod/Agr."},{v:500,l:"Agresivo"}]
                     ).map(p=>(
                       <button key={p.v} onClick={()=>setCustomDelta(p.v)} style={{padding:"3px 9px",borderRadius:6,fontSize:".64rem",fontFamily:"var(--font-mono)",cursor:"pointer",border:"1.5px solid",transition:"var(--tr)",boxShadow:customDelta===p.v?"none":"0 2px 0 var(--border)",background:customDelta===p.v?"var(--accent-dim)":"transparent",color:customDelta===p.v?"var(--accent)":"var(--text-muted)",borderColor:customDelta===p.v?"var(--accent-dim)":"var(--border)"}}>
@@ -3263,8 +3086,7 @@ function CalculatorPage({ onNavigate }) {
                     ))}
                   </div>
                   <Slider label={direction==="deficit"?"Déficit calórico":"Superávit calórico"} value={customDelta} onChange={setCustomDelta}
-                    min={50} max={700} step={25} unit="kcal"
-                    marks={[{val:50,label:"50"},{val:200,label:"200"},{val:300,label:"300"},{val:500,label:"500"},{val:700,label:"700"}]}/>
+                    min={50} max={700} step={25} unit="kcal" marks={[{val:50,label:"50"},{val:200,label:"200"},{val:300,label:"300"},{val:500,label:"500"},{val:700,label:"700"}]}/>
                   <div style={{display:"flex",alignItems:"center",gap:9,marginTop:13,paddingTop:11,borderTop:"1px solid var(--border)"}}>
                     <span style={{fontSize:".7rem",color:"var(--text-muted)"}}>Categoría:</span>
                     <span style={{fontFamily:"var(--font-mono)",fontSize:".7rem",fontWeight:500,padding:"2px 11px",borderRadius:100,color:currentCat.color,background:currentCat.color+"18",border:`1px solid ${currentCat.color}44`}}>{currentCat.label}</span>
@@ -3290,7 +3112,7 @@ function CalculatorPage({ onNavigate }) {
             <div style={{display:"flex",flexDirection:"column",gap:9,marginTop:14}}>
               {calcErrors.map((e,i)=>(
                 <div key={i} className="error-box">
-                  <span className="error-icon">⚠️</span>
+                  <span className="error-icon"></span>
                   <div><div className="error-title">{e.title}</div><div className="error-msg">{e.msg}</div></div>
                 </div>
               ))}
@@ -3341,11 +3163,11 @@ function CalculatorPage({ onNavigate }) {
                   Calculadora de gasto calórico
                 </div>
                 <div className="wel-line wel-l2" style={{fontFamily:"var(--font-display)",fontSize:"1.85rem",lineHeight:1.15,color:"var(--text)",marginBottom:18,letterSpacing:"-.02em"}}>
-                  Descubre exactamente<br/><em style={{color:"var(--accent)"}}>lo que necesita</em><br/>tu cuerpo
+                  Descubre exactamente<br/><em style={{color:"var(--accent)"}}>lo que necesita<br/>tu cuerpo
                 </div>
                 <div className="wel-line wel-l3" style={{height:1,background:"var(--border)",marginBottom:18}}/>
                 <div className="wel-line wel-l3" style={{display:"flex",flexDirection:"column",gap:9,marginBottom:24}}>
-                  {[{icon:"⚡",text:"Gasto calórico real en 4 componentes"},{icon:"🎯",text:"Macros adaptados a tu objetivo personalizado"},{icon:"📊",text:"Composición corporal e IMC contextualizado"},{icon:"🔄",text:"Comparación de escenarios e historial"},].map(item=>(
+                  {[{icon:"",text:"Gasto calórico real en 4 componentes"},{icon:"",text:"Macros adaptados a tu objetivo personalizado"},{icon:"",text:"Composición corporal e IMC contextualizado"},{icon:"",text:"Comparación de escenarios e historial"},].map(item=>(
                     <div key={item.text} style={{display:"flex",alignItems:"flex-start",gap:11,background:"var(--bg-warm)",borderRadius:"var(--r)",padding:"9px 13px",border:"1px solid var(--border)"}}>
                       <span style={{fontSize:"1rem",lineHeight:1.4,flexShrink:0}}>{item.icon}</span>
                       <span style={{fontSize:".77rem",color:"var(--text-muted)",lineHeight:1.5}}>{item.text}</span>
@@ -3433,17 +3255,17 @@ function CalculatorPage({ onNavigate }) {
               </div>
               {/* TAB 1 */}
               <div className={`tab-content ${tab===1?"active":""}`}>
-                {/* ── Active macros display (from plan or default) ── */}
+                {/*  Active macros display (from plan or default)  */}
                 <div className="psec">
                   <div className="psec-title" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                     <span>Macros activos · {objLabel}</span>
-                    {macroPlan&&<span className="plan-info-pill" style={{color:"#5a8a4a",background:"rgba(90,138,74,.1)",borderColor:"rgba(90,138,74,.3)"}}>✓ Plan personalizado</span>}
+                    {macroPlan&&<span className="plan-info-pill" style={{color:"#5a8a4a",background:"rgba(90,138,74,.1)",borderColor:"rgba(90,138,74,.3)"}}> Plan personalizado</span>}
                   </div>
                   {(()=>{
                     const pG = macroPlan ? macroPlan.protG : resultado.proteinG;
                     const fG = macroPlan ? macroPlan.fatG   : resultado.fatG;
                     const cG = macroPlan ? macroPlan.carbG  : resultado.carbG;
-                    if(cG<0) return <div className="error-box"><span className="error-icon">⚠️</span><div><div className="error-title">Distribución imposible</div><div className="error-msg">Reduce el déficit o la proteína.</div></div></div>;
+                    if(cG<0) return <div className="error-box"><span className="error-icon"></span><div><div className="error-title">Distribución imposible</div><div className="error-msg">Reduce el déficit o la proteína.</div></div></div>;
                     return (
                       <div className="macros-grid">
                         {[{name:"Proteína",val:pG,color:"#d94f2b",kcal:pG*4},{name:"Grasa",val:fG,color:"#e8793a",kcal:fG*9},{name:"Carbohidrato",val:cG,color:"#3a6e9e",kcal:cG*4}]
@@ -3458,21 +3280,21 @@ function CalculatorPage({ onNavigate }) {
                     );
                   })()}
                 </div>
-                {/* ── Meal distribution ── */}
+                {/*  Meal distribution  */}
                 {(()=>{
                   const pG = macroPlan ? macroPlan.protG : resultado.proteinG;
                   const fG = macroPlan ? macroPlan.fatG   : resultado.fatG;
                   const cG = macroPlan ? macroPlan.carbG  : resultado.carbG;
                   return cG>=0 ? <div className="psec"><div className="psec-title">Distribución por comidas</div><MealPlan kcal={resultado.kcalObj} proteinG={pG} fatG={fG} carbG={cG}/></div> : null;
                 })()}
-                {/* ── Other targets ── */}
+                {/*  Other targets  */}
                 <div className="psec">
                   <div className="psec-title">Otros objetivos</div>
-                  <div className="xrow"><span className="xrow-lbl">💧 Agua</span><span className="xrow-val" style={{color:"#3a6e9e"}}>{resultado.agua} L</span></div>
-                  <div className="xrow"><span className="xrow-lbl">🌾 Fibra mínima</span><span className="xrow-val" style={{color:"#5a8a4a"}}>{resultado.fibra} g</span></div>
-                  <div className="xrow"><span className="xrow-lbl">🎯 Objetivo calórico</span><span className="xrow-val" style={{color:"var(--accent)"}}>{resultado.kcalObj.toLocaleString()} kcal</span></div>
+                  <div className="xrow"><span className="xrow-lbl"> Agua</span><span className="xrow-val" style={{color:"#3a6e9e"}}>{resultado.agua} L</span></div>
+                  <div className="xrow"><span className="xrow-lbl"> Fibra mínima</span><span className="xrow-val" style={{color:"#5a8a4a"}}>{resultado.fibra} g</span></div>
+                  <div className="xrow"><span className="xrow-lbl"> Objetivo calórico</span><span className="xrow-val" style={{color:"var(--accent)"}}>{resultado.kcalObj.toLocaleString()} kcal</span></div>
                 </div>
-                {/* ── Macro plan customizer ── */}
+                {/*  Macro plan customizer  */}
                 <div className="psec">
                   <div className="psec-title" style={{marginBottom:14}}>Personalizar plan de macros</div>
                   <MacroPlanCustomizer kcalObj={resultado.kcalObj} onSave={plan=>setMacroPlan(plan)}/>
@@ -3485,12 +3307,12 @@ function CalculatorPage({ onNavigate }) {
                     <div className="psec"><div className="psec-title">Composición corporal</div><DonutChart fatKg={+(resultado.peso*Number(grasa)/100).toFixed(1)} leanKg={+(resultado.peso*(1-Number(grasa)/100)).toFixed(1)}/></div>
                     <div className="psec">
                       <div className="psec-title">Viabilidad recomposición</div>
-                      {recomp&&<div className="recomp-card" style={{color:recomp.viable?"#5a8a4a":"#8a6a50",background:recomp.viable?"rgba(90,138,74,.08)":"var(--bg-warm)",borderColor:recomp.viable?"rgba(90,138,74,.3)":"var(--border)"}}><strong>{recomp.viable?"✓ Recomp viable":"⊘ No óptima"}</strong>{recomp.msg}</div>}
+                      {recomp&&<div className="recomp-card" style={{color:recomp.viable?"#5a8a4a":"#8a6a50",background:recomp.viable?"rgba(90,138,74,.08)":"var(--bg-warm)",borderColor:recomp.viable?"rgba(90,138,74,.3)":"var(--border)"}}><strong>{recomp.viable?" Recomp viable":"⊘ No óptima"}</strong>{recomp.msg}</div>}
                     </div>
                   </>
                 ):(
                   <div className="psec" style={{textAlign:"center",padding:"28px"}}>
-                    <div style={{fontSize:"2rem",marginBottom:10,opacity:.3}}>📊</div>
+                    <div style={{fontSize:"2rem",marginBottom:10,opacity:.3}}></div>
                     <p style={{fontSize:".82rem",color:"var(--text-muted)",lineHeight:1.7}}>Introduce tu % de grasa para ver la composición corporal.</p>
                   </div>
                 )}
@@ -3499,7 +3321,7 @@ function CalculatorPage({ onNavigate }) {
                   <div className="proy-card">
                     {[{l:"Valor",v:resultado.imc,c:imcInfo(resultado.imc).color},{l:"Clasificación",v:imcInfo(resultado.imc).label,c:"var(--text)"},{l:"Rango habitual",v:"18.5 – 24.9",c:"var(--text-muted)"}].map(r=><div className="proy-row" key={r.l}><span className="proy-lbl">{r.l}</span><span className="proy-val" style={{color:r.c}}>{r.v}</span></div>)}
                   </div>
-                  <p style={{fontSize:".7rem",color:"var(--text-muted)",lineHeight:1.6,marginTop:9,background:"var(--bg-warm)",padding:"9px 13px",borderRadius:"var(--r)",border:"1px solid var(--border)"}}>💡 {imcInfo(resultado.imc).note}</p>
+                  <p style={{fontSize:".7rem",color:"var(--text-muted)",lineHeight:1.6,marginTop:9,background:"var(--bg-warm)",padding:"9px 13px",borderRadius:"var(--r)",border:"1px solid var(--border)"}}> {imcInfo(resultado.imc).note}</p>
                 </div>
               </div>
               {/* TAB 3 */}
@@ -3525,7 +3347,7 @@ function CalculatorPage({ onNavigate }) {
                 )}
                 <div className="psec">
                   <div className="psec-title">Guardar cálculo</div>
-                  <button className={`save-btn ${savedOk?"saved":""}`} onClick={guardar}>{savedOk?"✓ Guardado":"Guardar este cálculo"}</button>
+                  <button className={`save-btn ${savedOk?"saved":""}`} onClick={guardar}>{savedOk?" Guardado":"Guardar este cálculo"}</button>
                   <p style={{fontSize:".67rem",color:"var(--text-dim)",marginTop:7,lineHeight:1.6,fontStyle:"italic"}}>Guarda para seguir la evolución de tu TDEE.</p>
                 </div>
               </div>
@@ -3538,7 +3360,7 @@ function CalculatorPage({ onNavigate }) {
       {/* Historial */}
       <div className="historial-section">
         <div className="hist-header">
-          <h2 className="hist-title">Historial de <em>cálculos</em></h2>
+          <h2 className="hist-title">Historial de cálculos</h2>
           {historial.length>0&&<button className="hist-clear" onClick={limpiarHistorial}>Limpiar</button>}
         </div>
         {historial.length===0?(
@@ -3567,15 +3389,15 @@ function CalculatorPage({ onNavigate }) {
 }
 
 
-// ─── NUTRITION PAGE ──────────────────────────────────────────────────────────
+//  NUTRITION PAGE 
 const NUTR_KEY = "tdee_nutrition_v1";
 
 const MEAL_DEFS = [
-  { id:"breakfast", name:"Desayuno",    emoji:"☕" },
-  { id:"midmorning",name:"Media mañana",emoji:"🍎" },
-  { id:"lunch",     name:"Almuerzo",    emoji:"🍽️" },
-  { id:"snack",     name:"Merienda",    emoji:"🫐" },
-  { id:"dinner",    name:"Cena",        emoji:"🌙" },
+  { id:"breakfast", name:"Desayuno",    emoji:"" },
+  { id:"midmorning",name:"Media mañana",emoji:"" },
+  { id:"lunch",     name:"Almuerzo",    emoji:"" },
+  { id:"snack",     name:"Merienda",    emoji:"" },
+  { id:"dinner",    name:"Cena",        emoji:"" },
 ];
 
 const QUICK_FOODS_KEY = "tdee_quick_foods_v1";
@@ -3640,9 +3462,7 @@ function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={sw}/>
       {/* Segments */}
       {arcs.map((arc, i) => (
-        <circle key={i} className="nutr-ring"
-          cx={cx} cy={cy} r={r} fill="none"
-          stroke={arc.color} strokeWidth={sw}
+        <circle key={i} className="nutr-ring" cx={cx} cy={cy} r={r} fill="none" stroke={arc.color} strokeWidth={sw}
           strokeDasharray={`${arc.dash} ${circ}`}
           strokeDashoffset={-arc.offset}
           transform={`rotate(-90 ${cx} ${cy})`}
@@ -3790,14 +3610,14 @@ function NutritionPage() {
   return (
     <div className="nutrition-page">
       <div className="page-header">
-        <h1>Mi <em>Nutrición</em></h1>
+        <h1>Mi Nutrición</h1>
         <p>Diario de comidas · registro diario de calorías y macronutrientes</p>
       </div>
 
-      {/* ── Plan banner ── */}
+      {/*  Plan banner  */}
       {plan && (
         <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"12px 18px",marginBottom:20,display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
-          <span style={{fontSize:"1.1rem"}}>{{"deficit":"🔥","recomp":"⚖️","superavit":"💪","lean_bulk":"🎯"}[plan.strategy]||"🎯"}</span>
+          <span style={{fontSize:"1.1rem"}}>{{"deficit":"","recomp":"","superavit":"","lean_bulk":""}[plan.strategy]||""}</span>
           <div style={{flex:1}}>
             <div style={{fontSize:".72rem",fontWeight:500,color:"var(--text)",marginBottom:2}}>
               Plan activo: <span style={{color:"var(--accent)"}}>{{"deficit":"Déficit","recomp":"Recomposición","superavit":"Superávit","lean_bulk":"Lean Bulk"}[plan.strategy]||plan.strategy}</span>
@@ -3812,9 +3632,9 @@ function NutritionPage() {
 
       <div className="nutr-layout">
 
-        {/* ── LEFT: meals ── */}
+        {/*  LEFT: meals  */}
         <div>
-          {/* ── Food library ── */}
+          {/*  Food library  */}
           <div className="nutr-quick">
             <div className="nutr-quick-header">
               <div className="nutr-quick-title">Mis alimentos frecuentes</div>
@@ -3828,7 +3648,7 @@ function NutritionPage() {
             {libOpen && (
               <div className="food-lib-panel">
                 <div className="food-lib-header">
-                  <div className="food-lib-title">Nuevo <em>alimento</em></div>
+                  <div className="food-lib-title">Nuevo alimento</div>
                   <button className="food-lib-close" onClick={() => setLibOpen(false)}>×</button>
                 </div>
                 <div className="food-lib-form">
@@ -3859,8 +3679,7 @@ function NutritionPage() {
                     ].map(field => (
                       <div key={field.key} className="food-lib-field">
                         <label>{field.label}</label>
-                        <input className="food-lib-input num-input" type="number" min="0" step="0.1" placeholder="0"
-                          value={libDraft[field.key]} onChange={e=>updateLib(field.key,e.target.value)}/>
+                        <input className="food-lib-input num-input" type="number" min="0" step="0.1" placeholder="0" value={libDraft[field.key]} onChange={e=>updateLib(field.key,e.target.value)}/>
                       </div>
                     ))}
                   </div>
@@ -3873,8 +3692,7 @@ function NutritionPage() {
                     ].map(field => (
                       <div key={field.key} className="food-lib-field">
                         <label>{field.label}</label>
-                        <input className="food-lib-input num-input" type="number" min="0" step="0.1" placeholder="0"
-                          value={libDraft[field.key]} onChange={e=>updateLib(field.key,e.target.value)}/>
+                        <input className="food-lib-input num-input" type="number" min="0" step="0.1" placeholder="0" value={libDraft[field.key]} onChange={e=>updateLib(field.key,e.target.value)}/>
                       </div>
                     ))}
                     <div className="food-lib-field" style={{alignSelf:"flex-end"}}>
@@ -3922,12 +3740,12 @@ function NutritionPage() {
                   <div className="nutr-meal-header" onClick={() => setOpenMeal(isOpen ? null : meal.id)}>
                     <div className="nutr-meal-title">
                       <span className="nutr-meal-emoji">{meal.emoji}</span>
-                      <span className="nutr-meal-name"><em>{meal.name}</em></span>
+                      <span className="nutr-meal-name">{meal.name}</span>
                       {foods.length > 0 && <span style={{fontFamily:"var(--font-mono)",fontSize:".62rem",color:"var(--text-dim)"}}>· {foods.length} alimento{foods.length>1?"s":""}</span>}
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:10}}>
                       <span className="nutr-meal-kcal">{mKcal > 0 ? `${Math.round(mKcal)} kcal` : ""}</span>
-                      <span style={{fontFamily:"var(--font-mono)",fontSize:".8rem",color:"var(--text-dim)",transition:"transform .2s",display:"inline-block",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}>▾</span>
+                      <span style={{fontFamily:"var(--font-mono)",fontSize:".8rem",color:"var(--text-dim)",transition:"transform .2s",display:"inline-block",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}></span>
                     </div>
                   </div>
 
@@ -3986,11 +3804,11 @@ function NutritionPage() {
           </div>
         </div>
 
-        {/* ── RIGHT: summary donut ── */}
+        {/*  RIGHT: summary donut  */}
         <div className="nutr-summary-card">
           <div className="nutr-summary-header">
             <div className="nutr-summary-title">Resumen del día</div>
-            <div className="nutr-date-badge"><em>{todayFormatted.charAt(0).toUpperCase()+todayFormatted.slice(1)}</em></div>
+            <div className="nutr-date-badge">{todayFormatted.charAt(0).toUpperCase()+todayFormatted.slice(1)}</div>
           </div>
 
           <div className="nutr-donut-wrap">
@@ -4032,7 +3850,7 @@ function NutritionPage() {
                     Restan {Math.round(goalKcal - totals.kcal)} kcal
                   </span>
                 : <span style={{fontFamily:"var(--font-mono)",fontSize:".68rem",color:"var(--accent)",background:"var(--accent-dim)",padding:"3px 10px",borderRadius:100}}>
-                    Objetivo alcanzado ✓
+                    Objetivo alcanzado 
                   </span>
               }
             </div>
@@ -4066,7 +3884,7 @@ function NutritionPage() {
   );
 }
 
-// ─── SIDEBAR USER ─────────────────────────────────────────────────────────────
+//  SIDEBAR USER 
 function SidebarUser({ onNavigate }) {
   const prof = useMemo(() => { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null"); } catch { return null; } }, []);
   if (!prof?.name) return null;
@@ -4080,7 +3898,7 @@ function SidebarUser({ onNavigate }) {
         fontSize:"1rem",flexShrink:0,overflow:"hidden"}}>
         {prof.photoUrl
           ? <img src={prof.photoUrl} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
-          : (prof.avatar || "💪")}
+          : (prof.avatar || "")}
       </div>
       <span style={{fontFamily:"var(--font-mono)",fontSize:".65rem",overflow:"hidden",
         textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{prof.name}</span>
@@ -4088,14 +3906,12 @@ function SidebarUser({ onNavigate }) {
   );
 }
 
-
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
+//  MAIN APP 
 export default function App() {
   const [page, setPage] = useState("calculator");
   const [darkMode, setDarkMode] = useState(()=>{ try{return localStorage.getItem("tdee_dark")==="1";}catch{return false;} });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [autoSaveTs, setAutoSaveTs] = useState(null);
-
 
   useEffect(()=>{
     document.body.classList.toggle("dark", darkMode);
@@ -4108,6 +3924,13 @@ export default function App() {
   }, [sidebarOpen]);
 
   useEffect(()=>{
+    // Bloquear dezoom / scroll horizontal en móvil
+    let meta = document.querySelector('meta[name="viewport"]');
+    if (!meta) { meta = document.createElement('meta'); meta.name = 'viewport'; document.head.appendChild(meta); }
+    meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+  }, []);
+
+  useEffect(()=>{
     const interval = setInterval(()=>{
       setAutoSaveTs(new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"}));
     }, 30000);
@@ -4115,26 +3938,24 @@ export default function App() {
     return ()=>clearInterval(interval);
   },[]);
 
-
-
   const navigate = (p) => { setPage(p); setSidebarOpen(false); window.scrollTo(0,0); };
 
   const NAV = [
     {
       section: "Principal",
       items: [
-        {id:"calculator", icon:"🧮", label:"Mi Calculadora"},
-        {id:"calendar",   icon:"📅", label:"Mi Calendario"},
-        {id:"nutrition",  icon:"🥗", label:"Mi Nutrición"},
-        {id:"peso",       icon:"⚖️", label:"Mi Peso"},
-        {id:"analisis",   icon:"🧠", label:"Mi Análisis"},
-        {id:"profile",    icon:"👤", label:"Mi Perfil"},
+        {id:"calculator", icon:"", label:"Mi Calculadora"},
+        {id:"calendar",   icon:"", label:"Mi Calendario"},
+        {id:"nutrition",  icon:"", label:"Mi Nutrición"},
+        {id:"peso",       icon:"", label:"Mi Peso"},
+        {id:"analisis",   icon:"", label:"Mi Análisis"},
+        {id:"profile",    icon:"", label:"Mi Perfil"},
       ]
     },
     {
       section: "Próximamente",
       items: [
-        {id:"progress",  icon:"🏆", label:"Mi Progreso",    badge:"Soon"},
+        {id:"progress",  icon:"", label:"Mi Progreso", badge:"Soon"},
       ]
     },
   ];
@@ -4144,15 +3965,16 @@ export default function App() {
       <style>{styles}</style>
       <div className="app-shell">
 
-        <button className="burger" onClick={()=>setSidebarOpen(v=>!v)}>
+        <button className={`burger${sidebarOpen?" hidden":""}`} onClick={()=>setSidebarOpen(v=>!v)}>
           <span/><span/><span/>
         </button>
 
         <div className={`sidebar-overlay ${sidebarOpen?"open":""}`} onClick={()=>setSidebarOpen(false)}/>
 
         <nav className={`sidebar ${sidebarOpen?"open":""}`}>
+          <button className="sidebar-close-btn" onClick={()=>setSidebarOpen(false)}>×</button>
           <div className="sidebar-logo">
-            <h2>Gasto <em>calórico</em></h2>
+            <h2>Gasto calórico</h2>
             <p>TDEE CALCULATOR <span className="sidebar-v-badge">v5.0</span></p>
           </div>
 
@@ -4177,24 +3999,24 @@ export default function App() {
           <div className="sidebar-footer">
             <SidebarUser onNavigate={navigate}/>
             <button className="dark-toggle" onClick={()=>setDarkMode(d=>!d)}>
-              <span>{darkMode?"☀️":"🌙"}</span>
+              <span>{darkMode?"":""}</span>
               <span>{darkMode?"Modo claro":"Modo oscuro"}</span>
             </button>
-            {autoSaveTs&&<div className="autosave-badge">✓ Guardado automático {autoSaveTs}</div>}
+            {autoSaveTs&&<div className="autosave-badge"> Guardado {autoSaveTs}</div>}
           </div>
         </nav>
 
         <div className="main-content">
           {page==="calculator" && <CalculatorPage onNavigate={navigate}/>}
-          {page==="calendar"   && <CalendarPage/>}
-          {page==="nutrition"  && <NutritionPage/>}
-          {page==="peso"       && <PesoPage/>}
-          {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
-          {page==="profile"    && <ProfilePage onNavigate={navigate}/>}
-          {page==="progress"   && (
+          {page==="calendar" && <CalendarPage/>}
+          {page==="nutrition" && <NutritionPage/>}
+          {page==="peso" && <PesoPage/>}
+          {page==="analisis" && <AnalysisPage onNavigate={navigate}/>}
+          {page==="profile" && <ProfilePage onNavigate={navigate}/>}
+          {page==="progress" && (
             <div className="page-header" style={{borderBottom:"none"}}>
-              <h1>Mi <em>Progreso</em></h1>
-              <p style={{marginTop:20,padding:"18px 22px",background:"var(--accent-dim)",borderRadius:"var(--r)",border:"1px solid rgba(217,79,43,.2)",fontSize:".85rem",color:"var(--text-muted)"}}>🚀 Esta sección está en desarrollo. Pronto podrás ver tus niveles, rachas y estadísticas de progreso.</p>
+              <h1>Mi Progreso</h1>
+              <p style={{marginTop:20,padding:"18px 22px",background:"var(--accent-dim)",borderRadius:"var(--r)",border:"1px solid rgba(217,79,43,.2)",fontSize:".85rem",color:"var(--text-muted)"}}> Esta sección está en desarrollo. Pronto podrás ver tus niveles, rachas y estadísticas de progreso.</p>
             </div>
           )}
         </div>
