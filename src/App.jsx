@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');`;
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');`;
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const TIPS = {
@@ -59,9 +59,9 @@ const styles = `
     --blue: #0FA3B1; --blue-dim: rgba(15,163,177,0.1);
     --yellow: #c8860a;
     --purple: #7a5a9e;
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'IBM Plex Sans', sans-serif;
-    --font-mono: 'IBM Plex Mono', monospace;
+    --font-display: 'Roboto', sans-serif;
+    --font-body: 'Roboto', sans-serif;
+    --font-mono: 'Roboto', monospace;
     --r: 10px; --r-lg: 16px;
     --shadow-btn: 0 2px 8px rgba(180,80,20,0.18);
     --tr: all 0.12s cubic-bezier(0.34,1.2,0.64,1);
