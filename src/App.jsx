@@ -1648,13 +1648,13 @@ function DonutChart({ leanKg, fatKg }) {
     <div className="donut-wrap">
       <svg width="140" height="140" viewBox="0 0 140 140">
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={sw}/>
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#e8793a" strokeWidth={sw} strokeDasharray={`${fatDash} ${circ}`} transform={`rotate(-90 ${cx} ${cy})`} style={{transition:"stroke-dasharray .6s"}}/>
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#d94f2b" strokeWidth={sw} strokeDasharray={`${leanDash} ${circ}`} transform={`rotate(${-90+fatDeg} ${cx} ${cy})`} style={{transition:"stroke-dasharray .6s"}}/>
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#EBCA36" strokeWidth={sw} strokeDasharray={`${fatDash} ${circ}`} transform={`rotate(-90 ${cx} ${cy})`} style={{transition:"stroke-dasharray .6s"}}/>
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#362DAE" strokeWidth={sw} strokeDasharray={`${leanDash} ${circ}`} transform={`rotate(${-90+fatDeg} ${cx} ${cy})`} style={{transition:"stroke-dasharray .6s"}}/>
         <text x={cx} y={cy-5} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9" fill="var(--text-muted)">TOTAL</text>
         <text x={cx} y={cy+11} textAnchor="middle" fontFamily="var(--font-display)" fontSize="15" fill="var(--text)">{total.toFixed(1)}kg</text>
       </svg>
       <div className="donut-legend">
-        {[{label:"Masa magra",val:`${leanKg.toFixed(1)} kg`,color:"#d94f2b"},{label:"Masa grasa",val:`${fatKg.toFixed(1)} kg`,color:"#e8793a"},{label:"% Grasa",val:`${((fatKg/total)*100).toFixed(1)}%`,color:"var(--text-muted)"}].map(item=>(
+        {[{label:"Masa magra",val:`${leanKg.toFixed(1)} kg`,color:"#362DAE"},{label:"Masa grasa",val:`${fatKg.toFixed(1)} kg`,color:"#EBCA36"},{label:"% Grasa",val:`${((fatKg/total)*100).toFixed(1)}%`,color:"var(--text-muted)"}].map(item=>(
           <div className="dleg" key={item.label}><div className="dleg-dot" style={{background:item.color}}/><span>{item.label}</span><span className="dleg-val" style={{color:item.color}}>{item.val}</span></div>
         ))}
       </div>
@@ -1737,12 +1737,12 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
 
       {/* Visual bar */}
       <div className="plan-total-bar">
-        <div className="plan-total-seg" style={{flex:pPct,background:"#d94f2b"}}/>
-        <div className="plan-total-seg" style={{flex:fPct,background:"#e8793a"}}/>
-        <div className="plan-total-seg" style={{flex:cPct,background:"#3a6e9e"}}/>
+        <div className="plan-total-seg" style={{flex:pPct,background:"#362DAE"}}/>
+        <div className="plan-total-seg" style={{flex:fPct,background:"#EBCA36"}}/>
+        <div className="plan-total-seg" style={{flex:cPct,background:"#CD2222"}}/>
       </div>
       <div style={{display:"flex",gap:10,justifyContent:"center",marginBottom:14,flexWrap:"wrap"}}>
-        {[{label:"Proteína",pct:pPct,g:protG,color:"#d94f2b"},{label:"Grasa",pct:fPct,g:fatG,color:"#e8793a"},{label:"Carbos",pct:cPct,g:carbG,color:"#3a6e9e"}].map(m=>(
+        {[{label:"Proteína",pct:pPct,g:protG,color:"#362DAE"},{label:"Grasa",pct:fPct,g:fatG,color:"#EBCA36"},{label:"Carbos",pct:cPct,g:carbG,color:"#CD2222"}].map(m=>(
           <span key={m.label} className="plan-info-pill" style={{color:m.color,background:m.color+"14",borderColor:m.color+"44"}}>
             {m.label} {m.pct}% · {m.g}g
           </span>
@@ -1752,8 +1752,9 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
       {/* Sliders */}
       <div style={{fontFamily:"var(--font-mono)",fontSize:".56rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:12}}>Ajuste fino</div>
       {[
-        {label:"Proteína", val:pPct, set:setPPct, color:"#d94f2b", g:protG, kcalPerG:4},
-        {label:"Grasa",    val:fPct, set:setFPct, color:"#e8793a", g:fatG,  kcalPerG:9},
+        {label:"Proteína",     val:pPct, onChange:(v)=>setPPct(Math.min(v, 100-fPct-5)),   color:"#362DAE", g:protG, kcalPerG:4},
+        {label:"Grasas",        val:fPct, onChange:(v)=>setFPct(Math.min(v, 100-pPct-5)),   color:"#EBCA36", g:fatG,  kcalPerG:9},
+        {label:"Carbohidratos",val:cPct, onChange:(v)=>setFPct(Math.max(0, 100-pPct-v)),   color:"#CD2222", g:carbG, kcalPerG:4},
       ].map(m => {
         const pct = (m.val - 10) / (70 - 10);
         const grad = `linear-gradient(to right, ${m.color} ${pct*100}%, var(--surface-2) ${pct*100}%)`;
@@ -1769,25 +1770,11 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
                 <span className="plan-macro-grams">{m.g}g · {Math.round(m.g*m.kcalPerG)} kcal</span>
               </div>
             </div>
-            <input type="range" min={10} max={70} step={1} value={m.val} style={{background:grad}}
-              onChange={e => m.set(Number(e.target.value))}/>
+           <input type="range" min={10} max={70} step={1} value={m.val} style={{background:grad}}
+              onChange={e => m.onChange(Number(e.target.value))}/>
           </div>
         );
       })}
-
-      {/* Carbs derived */}
-      <div className="plan-macro-slider" style={{opacity:.7}}>
-        <div className="plan-macro-top">
-          <div className="plan-macro-lbl">
-            <div className="plan-macro-dot" style={{background:"#3a6e9e"}}/>
-            Carbohidratos <span style={{fontSize:".58rem",color:"var(--text-dim)"}}>(calculado)</span>
-          </div>
-          <div style={{display:"flex",gap:8,alignItems:"baseline"}}>
-            <span className="plan-macro-val" style={{color:"#3a6e9e"}}>{cPct}%</span>
-            <span className="plan-macro-grams">{carbG}g · {Math.round(carbG*4)} kcal</span>
-          </div>
-        </div>
-      </div>
 
       {!ok && <div className="plan-total-warn">⚠ Proteína + Grasa no puede superar 100%</div>}
       {ok  && <div className="plan-total-ok">✓ Distribución válida — total 100%</div>}
@@ -2709,7 +2696,7 @@ function ProfilePage({ onNavigate }){
                 <div className="plan-activo-badge" style={{color:"#5a8a4a",background:"rgba(90,138,74,.08)",borderColor:"rgba(90,138,74,.25)"}}>✓ Activo</div>
               </div>
               <div className="plan-activo-body">
-                {[{name:"Proteína",g:plan.protG,pct:plan.pPct,color:"#d94f2b"},{name:"Grasa",g:plan.fatG,pct:plan.fPct,color:"#e8793a"},{name:"Carbos",g:plan.carbG,pct:plan.cPct,color:"#3a6e9e"}].map(m=>(
+                {[{name:"Grasa",g:plan.fatG,pct:plan.fPct,color:"#EBCA36"},{name:"Carbos",g:plan.carbG,pct:plan.cPct,color:"#CD2222"}].map(m=>(
                   <div key={m.name} className="plan-macro-row">
                     <span style={{fontFamily:"var(--font-mono)",fontSize:".67rem",color:"var(--text-muted)",width:62}}>{m.name}</span>
                     <div className="plan-macro-bar-wrap"><div className="plan-macro-bar-fill" style={{width:`${m.pct}%`,background:m.color}}/></div>
@@ -3443,7 +3430,7 @@ function CalculatorPage({ onNavigate }) {
                     if(cG<0) return <div className="error-box"><span className="error-icon">⚠️</span><div><div className="error-title">Distribución imposible</div><div className="error-msg">Reduce el déficit o la proteína.</div></div></div>;
                     return (
                       <div className="macros-grid">
-                        {[{name:"Proteína",val:pG,color:"#d94f2b",kcal:pG*4},{name:"Grasa",val:fG,color:"#e8793a",kcal:fG*9},{name:"Carbohidrato",val:cG,color:"#3a6e9e",kcal:cG*4}]
+                        {[{name:"Proteínas",val:pG,color:"#362DAE",kcal:pG*4},{name:"Grasas",val:fG,color:"#EBCA36",kcal:fG*9},{name:"Carbohidratos",val:cG,color:"#CD2222",kcal:cG*4}]
                           .map(m=>(
                             <div className="macro-card" key={m.name}>
                               <div className="macro-val" style={{color:m.color}}>{m.val}g</div>
@@ -3585,9 +3572,9 @@ function saveQuickFoods(list) {
 }
 
 const MACRO_COLORS = {
-  p: "#d94f2b",
-  f: "#e8793a",
-  c: "#3a6e9e",
+  c: "#CD2222",
+  p: "#362DAE",
+  f: "#EBCA36",
   rest: "var(--surface-2)",
 };
 
@@ -3996,9 +3983,9 @@ function NutritionPage() {
 
             <div className="nutr-macro-bars">
               {[
-                { label:"Proteína",   key:"p", val:totals.p, goal:goalP,  color:MACRO_COLORS.p, unit:"g" },
-                { label:"Grasa",      key:"f", val:totals.f, goal:goalF,  color:MACRO_COLORS.f, unit:"g" },
-                { label:"Carbohidrato",key:"c",val:totals.c, goal:goalC,  color:MACRO_COLORS.c, unit:"g" },
+                { label:"Proteínas",   key:"p", val:totals.p, goal:goalP,  color:MACRO_COLORS.p, unit:"g" },
+                { label:"Grasas",      key:"f", val:totals.f, goal:goalF,  color:MACRO_COLORS.f, unit:"g" },
+                { label:"Carbohidratos",key:"c",val:totals.c, goal:goalC,  color:MACRO_COLORS.c, unit:"g" },
               ].map(m => {
                 const pct = Math.min((m.val / Math.max(m.goal,1)) * 100, 100);
                 return (
