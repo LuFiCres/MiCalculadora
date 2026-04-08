@@ -1837,7 +1837,7 @@ function WeightSparkline({ entries }) {
     return (
       <div style={{height:100,display:"flex",alignItems:"center",justifyContent:"center"}}>
         <p style={{fontSize:".75rem",color:"var(--text-dim)",fontStyle:"italic",textAlign:"center"}}>
-          Añade al menos 2 registros para ver la gráfica
+          Añade al menos 2 registros<br/>para ver la gráfica
         </p>
       </div>
     );
@@ -3631,29 +3631,32 @@ function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
 
   const pctLabel = Math.round(usedFrac * 100);
 
-  return (
-    <svg className="nutr-donut-svg" viewBox="0 0 180 180">
-      {/* Track */}
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={sw}/>
-      {/* Segments */}
-      {arcs.map((arc, i) => (
-        <circle key={i} className="nutr-ring"
-          cx={cx} cy={cy} r={r} fill="none"
-          stroke={arc.color} strokeWidth={sw}
-          strokeDasharray={`${arc.dash} ${circ}`}
-          strokeDashoffset={-arc.offset}
-          transform={`rotate(-90 ${cx} ${cy})`}
-        />
-      ))}
-      {/* Center text */}
-      <text x={cx} y={cy-14} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10" fill="var(--text-muted)">CONSUMIDO</text>
-      <text x={cx} y={cy+8} textAnchor="middle" fontFamily="var(--font-display)" fontSize="26" fill="var(--accent)">{total > 0 ? total.toLocaleString() : "0"}</text>
-      <text x={cx} y={cy+24} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9" fill="var(--text-muted)">kcal</text>
-      <text x={cx} y={cy+42} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="11" fill={pctLabel >= 100 ? "#d94f2b" : "#5a8a4a"} fontWeight="500">{pctLabel}% del objetivo</text>
-    </svg>
-  );
-}
-
+ return (
+     <>
+       <svg className="nutr-donut-svg" viewBox="0 0 180 180">
+         {/* Track */}
+         <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--surface-2)" strokeWidth={sw}/>
+         {/* Segments */}
+         {arcs.map((arc, i) => (
+           <circle key={i} className="nutr-ring"
+             cx={cx} cy={cy} r={r} fill="none"
+             stroke={arc.color} strokeWidth={sw}
+             strokeDasharray={`${arc.dash} ${circ}`}
+             strokeDashoffset={-arc.offset}
+             transform={`rotate(-90 ${cx} ${cy})`}
+           />
+         ))}
+         {/* Center text */}
+         <text x={cx} y={cy-14} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10" fill="var(--text-muted)">CONSUMIDO</text>
+         <text x={cx} y={cy+8} textAnchor="middle" fontFamily="var(--font-display)" fontSize="26" fill="var(--accent)">{total > 0 ? total.toLocaleString() : "0"}</text>
+         <text x={cx} y={cy+24} textAnchor="middle" fontFamily="var(--font-mono)" fontSize="9" fill="var(--text-muted)">kcal</text>
+       </svg>
+       <div style={{fontFamily:"var(--font-mono)",fontSize:".78rem",fontWeight:600,color:pctLabel>=100?"#d94f2b":"#5a8a4a",textAlign:"center",marginTop:6}}>
+         {pctLabel}% del objetivo
+       </div>
+     </>
+   );
+ }
 function NutritionPage() {
   const today = todayStr();
   const [allData, setAllData] = useState(loadNutrition);
