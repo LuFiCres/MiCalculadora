@@ -1793,7 +1793,7 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
       {ok  && <div className="plan-total-ok">✓ Distribución válida — total 100%</div>}
 
       <button className={`plan-save-btn ${planSaved?"saved":""}`} onClick={handleSave} disabled={!ok}>
-        {planSaved ? "✓ Plan guardado en Mi Nutrición" : "Guardar plan de macros"}
+        {planSaved ? "✓ Plan guardado en Nutrición" : "Guardar plan de macros"}
       </button>
     </div>
   );
@@ -1956,7 +1956,7 @@ function PesoPage() {
   return (
     <div className="peso-page">
       <div className="page-header">
-        <h1>Mi <em>Peso</em></h1>
+        <em>Peso</em>
         <p>Registra tu peso periódicamente y visualiza tu progreso real a lo largo del tiempo</p>
       </div>
       <div className="peso-layout">
@@ -2174,7 +2174,6 @@ function WeeklyCheckinForm({ onSubmit, existingCheckin }) {
         <div key={item.key} className="checkin-row">
           <div className="checkin-row-label">
             {item.label}
-            {item.state && <span>{labels[item.key][item.state]}</span>}
           </div>
           <div className="rating-btns">
             {[1,2,3,4,5].map(v => (
@@ -2184,9 +2183,19 @@ function WeeklyCheckinForm({ onSubmit, existingCheckin }) {
               </button>
             ))}
           </div>
-          <div className="rating-labels">
-            <span>{labels[item.key][1]}</span>
-            <span>{labels[item.key][5]}</span>
+           <div style={{display:"flex",justifyContent:"space-between",marginTop:6,gap:4}}>
+            {[1,2,3,4,5].map(v => (
+              <span key={v} style={{
+                flex:1, textAlign:"center",
+                fontSize:".72rem",
+                fontFamily:"var(--font-mono)",
+                color: item.state===v ? "var(--accent)" : "var(--text-muted)",
+                fontWeight: item.state===v ? "600" : "400",
+                transition:"color .15s"
+              }}>
+                {labels[item.key][v]}
+              </span>
+            ))}
           </div>
         </div>
       ))}
@@ -2333,7 +2342,7 @@ function AnalysisPage({ onNavigate }) {
   return (
     <div className="analysis-page">
       <div className="page-header">
-        <h1>Mi <em>Análisis</em></h1>
+        <em>Análisis</em>
         <p>Sistema inteligente de ajuste calórico basado en tu progreso real semana a semana</p>
       </div>
 
@@ -2562,7 +2571,7 @@ function ProfilePage({ onNavigate }){
   return (
     <div className="profile-page" onClick={() => setPickerOpen(false)}>
       <div className="page-header">
-        <h1>Mi <em>Perfil</em></h1>
+        <em>Perfil</em>
         <p>Personaliza tu perfil, ve tus logros y transfiere tus datos a cualquier dispositivo</p>
       </div>
 
@@ -2728,7 +2737,7 @@ function ProfilePage({ onNavigate }){
                 <>
                   <div className="xfer-note">
                     <strong>Cómo funciona:</strong> genera un código con todos tus datos (peso, calendario, nutrición, macros…).
-                    Cópialo, ve al otro dispositivo, abre Mi Perfil → Importar y pégalo. Tus datos aparecerán al instante.
+                    Cópialo, ve al otro dispositivo, abre Perfil → Importar y pégalo. Tus datos aparecerán al instante.
                   </div>
                   {xferCode ? (
                     <>
@@ -2749,7 +2758,7 @@ function ProfilePage({ onNavigate }){
               {xferTab === "import" && (
                 <>
                   <div className="xfer-note">
-                    <strong>Cómo funciona:</strong> en el dispositivo de origen ve a Mi Perfil → Exportar, genera el código y cópialo.
+                    <strong>Cómo funciona:</strong> en el dispositivo de origen ve a Perfil → Exportar, genera el código y cópialo.
                     Pégalo aquí y pulsa Importar. Se restaurarán todos tus datos.
                   </div>
                   {xferOk && <div className="xfer-success">{xferOk}</div>}
@@ -2921,7 +2930,7 @@ function CalendarPage() {
   return (
     <div className="calendar-page">
       <div className="page-header">
-        <h1>Mi <em>Calendario</em></h1>
+         <em>Calendario</em>
         <p>Registra tus hábitos diarios — entrenamiento, dieta y sueño — y sigue tu racha</p>
       </div>
 
@@ -3106,7 +3115,7 @@ function CalculatorPage({ onNavigate }) {
   return (
     <>
       <div className="page-header">
-        <h1>Mi <em>Calculadora</em></h1>
+        <em>Calculadora</em>
         <p>Basado en la fórmula Mifflin-St Jeor · Katch-McArdle · Factor de actividad calibrado · Evidencia actualizada</p>
       </div>
 
@@ -3778,7 +3787,7 @@ function NutritionPage() {
   return (
     <div className="nutrition-page">
       <div className="page-header">
-        <h1>Mi <em>Nutrición</em></h1>
+        <em>Nutrición</em>
         <p>Diario de comidas · registro diario de calorías y macronutrientes</p>
       </div>
 
@@ -4177,7 +4186,7 @@ export default function App() {
           {page==="profile"    && <ProfilePage onNavigate={navigate}/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
-              <h1>Mi <em>Progreso</em></h1>
+              <em>Progreso</em>
               <p style={{marginTop:20,padding:"18px 22px",background:"var(--accent-dim)",borderRadius:"var(--r)",border:"1px solid rgba(217,79,43,.2)",fontSize:".85rem",color:"var(--text-muted)"}}>🚀 Esta sección está en desarrollo. Pronto podrás ver tus niveles, rachas y estadísticas de progreso.</p>
             </div>
           )}
