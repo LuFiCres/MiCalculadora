@@ -50,7 +50,7 @@ const styles = `
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #FFEDE1; --bg-warm: #ede6d6; --surface: #faf7f2; --surface-2: #ede6d6;
+    --bg: #FFEDE1; --bg-warm: #ede6d6; --surface: #F8F2EE; --surface-2: #ede6d6;
     --border: rgba(180,120,60,0.15);
     --accent: #E53D00; --accent-2: #E53D00;
     --accent-dim: rgba(217,79,43,0.1); --accent-glow: rgba(217,79,43,0.2);
