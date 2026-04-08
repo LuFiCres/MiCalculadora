@@ -2499,7 +2499,6 @@ function ProfilePage({ onNavigate }){
   const pesoChange = pesoData.length >= 2 ? pesoData[pesoData.length-1].weight - pesoData[0].weight : null;
   const ficha      = form || {};
   const imc        = ficha.peso && ficha.altura ? (ficha.peso/((ficha.altura/100)**2)).toFixed(1) : null;
-  const planIcon   = { deficit:"🔥", recomp:"⚖️", superavit:"💪", lean_bulk:"🎯" }[plan?.strategy] || "🎯";
   const latestTdee = hist[0]?.tdee ?? null;
 
   const daysActive = useMemo(() => {
@@ -3786,7 +3785,6 @@ function NutritionPage() {
       {/* ── Plan banner ── */}
       {plan && (
         <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"12px 18px",marginBottom:20,display:"flex",alignItems:"center",gap:14,flexWrap:"wrap"}}>
-          <span style={{fontSize:"1.1rem"}}>{{"deficit":"🔥","recomp":"⚖️","superavit":"💪","lean_bulk":"🎯"}[plan.strategy]||"🎯"}</span>
           <div style={{flex:1}}>
             <div style={{fontSize:".72rem",fontWeight:500,color:"var(--text)",marginBottom:2}}>
               Plan activo: <span style={{color:"var(--accent)"}}>{{"deficit":"Déficit","recomp":"Recomposición","superavit":"Superávit","lean_bulk":"Lean Bulk"}[plan.strategy]||plan.strategy}</span>
