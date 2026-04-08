@@ -56,7 +56,7 @@ const styles = `
     --accent-dim: rgba(217,79,43,0.1); --accent-glow: rgba(217,79,43,0.2);
     --text: #1e1208; --text-muted: #8a6a50; --text-dim: #c4a882;
     --green: #5a8a4a; --green-dim: rgba(90,138,74,0.1);
-    --blue: #3a6e9e; --blue-dim: rgba(58,110,158,0.1);
+    --blue: #0FA3B1; --blue-dim: rgba(15,163,177,0.1);
     --yellow: #c8860a;
     --purple: #7a5a9e;
     --font-display: 'Playfair Display', serif;
@@ -71,11 +71,11 @@ const styles = `
   body.dark {
     --bg: #0d0d14; --bg-warm: #13131e; --surface: #17172a; --surface-2: #1e1e30;
     --border: rgba(60,110,210,0.2);
-    --accent: #4a8fd4; --accent-2: #5fa8f0;
+    --accent: #0FA3B1; --accent-2: #0FA3B1;
     --accent-dim: rgba(74,143,212,0.13); --accent-glow: rgba(74,143,212,0.28);
     --text: #e8e8f8; --text-muted: #7878a8; --text-dim: #44446a;
     --green: #3a8a6a; --green-dim: rgba(58,138,106,0.12);
-    --blue: #4a8fd4; --blue-dim: rgba(74,143,212,0.12);
+    --blue: #0FA3B1; --blue-dim: rgba(15,163,177,0.12);
     --shadow-btn: 0 2px 12px rgba(30,60,160,0.28);
   }
 
@@ -266,7 +266,7 @@ const styles = `
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 10px var(--accent-glow); transition: transform .12s; border: 3px solid var(--surface); }
   input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
   input[type=range]::-webkit-slider-thumb:active { transform: scale(1.1); }
-  .slider-mark { position: absolute; bottom: 0; transform: translateX(-50%); font-family: var(--font-mono); font-size: .57rem; color: var(--text-dim); white-space: nowrap; }
+ .slider-mark { position: absolute; bottom: 0; transform: translateX(-50%); font-family: var(--font-mono); font-size: .57rem; color: var(--text); white-space: nowrap; }
   .slider-hint { font-size: .68rem; color: var(--text-dim); font-style: italic; }
 
   /* ── TOOLTIP ── */
@@ -298,7 +298,7 @@ const styles = `
   .results-header-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
   .res-label { font-size: .65rem; color: var(--text-muted); font-family: var(--font-mono); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
   .tdee-main { display: flex; align-items: baseline; gap: 8px; }
-  .tdee-number { font-family: var(--font-display); font-size: 3.4rem; color: var(--accent); line-height: 1; }
+  .tdee-number { font-family: var(--font-mono); font-size: 3.4rem; color: var(--accent); line-height: 1; }
   .tdee-unit { font-family: var(--font-mono); font-size: .75rem; color: var(--text-muted); }
   .health-pill { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 100px; font-size: .66rem; font-family: var(--font-mono); border: 1px solid transparent; white-space: nowrap; }
   .imc-row { display: flex; align-items: center; gap: 10px; margin-top: 11px; padding-top: 11px; border-top: 1px solid var(--border); }
@@ -870,7 +870,7 @@ const styles = `
     gap: 18px; flex-wrap: wrap;
   }
   .today-banner-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 200px; }
-  .today-banner-streak { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; color: #d94f2b; flex-shrink: 0; }
+  .today-banner-streak { font-mono: var(--font-mono); font-size: 2.8rem; line-height: 1; color: #E53D00; flex-shrink: 0; }
   .today-banner-info strong { display: block; font-size: .82rem; color: var(--text); margin-bottom: 1px; }
   .today-banner-info span { font-size: .72rem; color: var(--text-muted); font-family: var(--font-mono); }
   .today-banner-cats { display: flex; gap: 7px; flex-wrap: wrap; }
@@ -1255,6 +1255,20 @@ const styles = `
   @media (max-width:1100px) { .profile-layout { grid-template-columns:270px 1fr; } }
   @media (max-width:900px)  { .profile-layout { grid-template-columns:1fr; } .profile-card { position:static; } .logros-grid { grid-template-columns:repeat(3,1fr); } }
   @media (max-width:600px)  { .logros-grid { grid-template-columns:repeat(2,1fr); } }
+
+  em {
+    font-style: normal !important;
+    color: inherit !important;
+    font-family: inherit !important;
+  }
+
+  .tdee-number, .hist-tdee, .cal-stat-val, .peso-stat-val,
+  .logro-val, .analysis-stat-val, .ccard-tdee, .nutr-kcal-num,
+  .today-banner-streak, .proy-val, .brow-val, .target-kcal,
+  .macro-val, .imc-val, .meal-kcal, .xrow-val, .ficha-val,
+  .adj-entry-kcal {
+    font-family: var(--font-mono);
+  }
 
 `;
 
