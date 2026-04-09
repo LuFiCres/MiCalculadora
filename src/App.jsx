@@ -69,11 +69,11 @@ const styles = `
   }
 
   body.dark {
-    --bg: #0d0d14; --bg-warm: #13131e; --surface: #17172a; --surface-2: #1e1e30;
+    --bg: #060E28; --bg-warm: #09143C; --surface: #091540; --surface-2: #1e1e30;
     --border: rgba(60,110,210,0.2);
     --accent: #0FA3B1; --accent-2: #0FA3B1;
     --accent-dim: rgba(74,143,212,0.13); --accent-glow: rgba(74,143,212,0.28);
-    --text: #e8e8f8; --text-muted: #7878a8; --text-dim: #44446a;
+    --text: #FFFBFE; --text-muted: #7878a8; --text-dim: #44446a;
     --green: #3a8a6a; --green-dim: rgba(58,138,106,0.12);
     --blue: #0FA3B1; --blue-dim: rgba(15,163,177,0.12);
     --shadow-btn: 0 2px 12px rgba(30,60,160,0.28);
