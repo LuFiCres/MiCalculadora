@@ -637,7 +637,7 @@ const styles = `
   .nutr-meals { display: flex; flex-direction: column; gap: 20px; }
 
   .nutr-meal-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; transition: var(--tr); }
-  .nutr-meal-header { padding: 13px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; background: var(--bg-warm); }
+  .nutr-meal-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; background: var(--bg-warm); }
   .nutr-meal-header:hover { background: var(--surface-2); }
   .nutr-meal-title { display: flex; align-items: center; gap: 10px; }
   .nutr-meal-emoji { font-size: 1.1rem; }
@@ -3912,7 +3912,7 @@ function NutritionPage() {
                     </div>
                     <div style={{display:"flex",alignItems:"center",gap:10}}>
                       <span className="nutr-meal-kcal">{mKcal > 0 ? `${Math.round(mKcal)} kcal` : ""}</span>
-                      <span style={{fontFamily:"var(--font-mono)",fontSize:".8rem",color:"var(--text-dim)",transition:"transform .2s",display:"inline-block",transform:isOpen?"rotate(180deg)":"rotate(0deg)"}}>▾</span>
+                      <span style={{fontSize:"1.5rem",color:"var(--accent)",transition:"transform .2s",display:"inline-block",transform:isOpen?"rotate(90deg)":"rotate(0deg)"}}>›</span>
                     </div>
                   </div>
 
