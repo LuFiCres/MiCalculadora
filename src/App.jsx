@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
-const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');`;
+const FONTS = `@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&family=Roboto+Slab:wght@400;700&display=swap');`;
 
 // ─── CONSTANTS ───────────────────────────────────────────────────────────────
 const TIPS = {
@@ -59,7 +59,7 @@ const styles = `
     --blue: #0FA3B1; --blue-dim: rgba(15,163,177,0.1);
     --yellow: #c8860a;
     --purple: #7a5a9e;
-    --font-display: 'Roboto', sans-serif;
+    --font-display: 'Roboto', serif;
     --font-body: 'Roboto', sans-serif;
     --font-mono: 'Roboto', monospace;
     --r: 10px; --r-lg: 16px;
@@ -106,7 +106,7 @@ const styles = `
     border-bottom: 1px solid var(--border);
   }
   .sidebar-logo h2 {
-    font-family: var(--font-display); font-size: 1.15rem; line-height: 1.15;
+    font-family: var(--font-display); font-size: 1.5rem; line-height: 1.15;
   }
   .sidebar-logo h2 em { font-style: italic; color: var(--accent); }
   .sidebar-logo p { font-size: .62rem; color: var(--text-dim); font-family: var(--font-mono); margin-top: 4px; letter-spacing: .06em; display:flex; align-items:center; gap:6px; }
@@ -123,7 +123,7 @@ const styles = `
     display: flex; align-items: center; gap: 0px;
     padding: 10px 14px; border-radius: var(--r); cursor: pointer;
     border: none; background: transparent; text-align: left;
-    font-family: var(--font-body); font-size: .82rem; color: var(--text-muted);
+    font-family: var(--font-body); font-size: 1.2rem; color: var(--text-muted);
     transition: var(--tr); width: 100%;
   }
   .nav-item:hover { background: var(--bg-warm); color: var(--text); }
@@ -169,7 +169,7 @@ const styles = `
     position: relative;
   }
   .page-header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:1.5px; background:linear-gradient(90deg,var(--accent),var(--accent-2),transparent); border-radius:2px; }
-  .page-header h1 { font-family: var(--font-display); font-size: 2.8rem; line-height: 1; letter-spacing: -.02em; }
+  .page-header h1 { font-family: var(--font-display); font-size: 3.4rem; line-height: 1; letter-spacing: -.02em; }
   .page-header h1 em { font-style: italic; color: var(--accent); }
   .page-header p { font-size: .82rem; color: var(--text-muted); margin-top: 10px; font-weight: 300; letter-spacing: .03em; }
 
@@ -1943,7 +1943,7 @@ function PesoPage() {
   return (
     <div className="peso-page">
       <div className="page-header">
-        <em>Peso</em>
+        <h1><em>Peso</em></h1>
         <p>Registra tu peso periódicamente y visualiza tu progreso real a lo largo del tiempo</p>
       </div>
       <div className="peso-layout">
@@ -2329,7 +2329,7 @@ function AnalysisPage({ onNavigate }) {
   return (
     <div className="analysis-page">
       <div className="page-header">
-        <em>Análisis</em>
+        <h1><em>Análisis</em></h1>
         <p>Sistema inteligente de ajuste calórico basado en tu progreso real semana a semana</p>
       </div>
 
@@ -2558,7 +2558,7 @@ function ProfilePage({ onNavigate }){
   return (
     <div className="profile-page" onClick={() => setPickerOpen(false)}>
       <div className="page-header">
-        <em>Perfil</em>
+        <h1><em>Perfil</em></h1>
         <p>Personaliza tu perfil, ve tus logros y transfiere tus datos a cualquier dispositivo</p>
       </div>
 
@@ -2917,7 +2917,7 @@ function CalendarPage() {
   return (
     <div className="calendar-page">
       <div className="page-header">
-         <em>Calendario</em>
+         <h1><em>Calendario</em></h1>
         <p>Registra tus hábitos diarios — entrenamiento, dieta y sueño — y sigue tu racha</p>
       </div>
 
@@ -3102,7 +3102,7 @@ function CalculatorPage({ onNavigate }) {
   return (
     <>
       <div className="page-header">
-        <em>Calculadora</em>
+        <h1><em>Calculadora</em></h1>
         <p>Basado en la fórmula Mifflin-St Jeor · Katch-McArdle · Factor de actividad calibrado · Evidencia actualizada</p>
       </div>
 
@@ -3777,7 +3777,7 @@ function NutritionPage() {
   return (
     <div className="nutrition-page">
       <div className="page-header">
-        <em>Nutrición</em>
+        <h1><em>Nutrición</em></h1>
         <p>Diario de comidas · registro diario de calorías y macronutrientes</p>
       </div>
 
@@ -4176,7 +4176,7 @@ export default function App() {
           {page==="profile"    && <ProfilePage onNavigate={navigate}/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
-              <em>Progreso</em>
+              <h1><em>Progreso</em></h1>
               <p style={{marginTop:20,padding:"18px 22px",background:"var(--accent-dim)",borderRadius:"var(--r)",border:"1px solid rgba(217,79,43,.2)",fontSize:".85rem",color:"var(--text-muted)"}}>🚀 Esta sección está en desarrollo. Pronto podrás ver tus niveles, rachas y estadísticas de progreso.</p>
             </div>
           )}
