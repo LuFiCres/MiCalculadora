@@ -2030,7 +2030,7 @@ function PesoPage() {
           )}
           {entries.length === 0 && (
             <div className="peso-stat-card" style={{textAlign:"center",padding:"24px 16px"}}>
-              <div style={{fontSize:"2rem",marginBottom:8,opacity:.3}}>⚖️</div>
+              <div style={{fontSize:"2rem",marginBottom:50,opacity:.3}}></div>
               <p style={{fontSize:".78rem",color:"var(--text-muted)",lineHeight:1.6}}>Cuando tengas registros verás aquí tu progreso y tendencia semanal.</p>
             </div>
           )}
@@ -2335,7 +2335,7 @@ function AnalysisPage({ onNavigate }) {
 
       {!hasEnoughData && (
         <div className="analysis-empty">
-          <div className="analysis-empty-icon">🧠</div>
+          <div className="analysis-empty-icon"></div>
           <div className="analysis-empty-title">El sistema está listo para <em>analizar</em></div>
           <p className="analysis-empty-body">
             Para generar tu primer análisis necesito datos de al menos 2 semanas. Empieza por completar estos pasos:
@@ -2629,14 +2629,14 @@ function ProfilePage({ onNavigate }){
             {/* Ficha */}
             <div className="profile-ficha">
               {[
-                { lbl:"⚧ Sexo",      val: ficha.sexo==="mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
-                { lbl:"📅 Edad",     val: ficha.edad   ? `${ficha.edad} años` : "—" },
-                { lbl:"📏 Altura",   val: ficha.altura ? `${ficha.altura} cm`  : "—" },
-                { lbl:"⚖️ Peso",     val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent: true },
-                { lbl:"📊 IMC",      val: imc || "—" },
-                { lbl:"💧 Grasa",    val: ficha.grasa ? `${ficha.grasa}%` : "—" },
-                { lbl:"🚶 Pasos",    val: ficha.pasos ? ficha.pasos.toLocaleString() : "—" },
-                { lbl:"🏃 Trabajo",  val: TRABAJO_LABELS[ficha.trabajo] || "—" },
+                { lbl:"Sexo",      val: ficha.sexo==="mujer" ? "Mujer" : ficha.sexo ? "Hombre" : "—" },
+                { lbl:"Edad",     val: ficha.edad   ? `${ficha.edad} años` : "—" },
+                { lbl:"Altura",   val: ficha.altura ? `${ficha.altura} cm`  : "—" },
+                { lbl:"Peso",     val: pesoData.length ? `${pesoData[pesoData.length-1].weight.toFixed(1)} kg` : ficha.peso ? `${ficha.peso} kg` : "—", accent: true },
+                { lbl:"IMC",      val: imc || "—" },
+                { lbl:"Grasa",    val: ficha.grasa ? `${ficha.grasa}%` : "—" },
+                { lbl:"Pasos",    val: ficha.pasos ? ficha.pasos.toLocaleString() : "—" },
+                { lbl:"Trabajo",  val: TRABAJO_LABELS[ficha.trabajo] || "—" },
               ].map(r => (
                 <div key={r.lbl} className="ficha-row">
                   <span className="ficha-lbl">{r.lbl}</span>
@@ -2937,14 +2937,14 @@ function CalendarPage() {
 
       <div className="cal-legend-bar">
         {[
-          {color:"rgba(90,138,74,.4)",   label:"Día perfecto (3/3)"},
-          {color:"rgba(200,134,10,.35)", label:"Día parcial (1-2/3)"},
-          {color:"rgba(217,79,43,.2)",   label:"Registrado sin cumplir"},
+          {color:"rgb(64, 255, 0)",   label:"Día perfecto (3/3)"},
+          {color:"rgb(255, 166, 0)", label:"Día parcial (1-2/3)"},
+          {color:"rgb(255, 51, 0)",   label:"Registrado sin cumplir"},
           {color:"var(--accent)",        label:"Hoy"},
         ].map(l=><div key={l.label} className="leg-item"><div className="leg-swatch" style={{background:l.color}}/>{l.label}</div>)}
         <div className="leg-item">
           {CATS.map(c=><div key={c.key} className="leg-swatch" style={{background:c.color,marginRight:2}}/>)}
-          <span style={{marginLeft:4}}>💪 🥗 😴</span>
+          <span style={{marginLeft:4}}></span>
         </div>
       </div>
 
@@ -3452,9 +3452,9 @@ function CalculatorPage({ onNavigate }) {
                 {/* ── Other targets ── */}
                 <div className="psec">
                   <div className="psec-title">Otros objetivos</div>
-                  <div className="xrow"><span className="xrow-lbl">💧 Agua</span><span className="xrow-val" style={{color:"#3a6e9e"}}>{resultado.agua} L</span></div>
-                  <div className="xrow"><span className="xrow-lbl">🌾 Fibra mínima</span><span className="xrow-val" style={{color:"#5a8a4a"}}>{resultado.fibra} g</span></div>
-                  <div className="xrow"><span className="xrow-lbl">🎯 Objetivo calórico</span><span className="xrow-val" style={{color:"var(--accent)"}}>{resultado.kcalObj.toLocaleString()} kcal</span></div>
+                  <div className="xrow"><span className="xrow-lbl"> Agua</span><span className="xrow-val" style={{color:"#3a6e9e"}}>{resultado.agua} L</span></div>
+                  <div className="xrow"><span className="xrow-lbl"> Fibra mínima</span><span className="xrow-val" style={{color:"#5a8a4a"}}>{resultado.fibra} g</span></div>
+                  <div className="xrow"><span className="xrow-lbl"> Objetivo calórico</span><span className="xrow-val" style={{color:"var(--accent)"}}>{resultado.kcalObj.toLocaleString()} kcal</span></div>
                 </div>
                 {/* ── Macro plan customizer ── */}
                 <div className="psec">
@@ -3474,7 +3474,7 @@ function CalculatorPage({ onNavigate }) {
                   </>
                 ):(
                   <div className="psec" style={{textAlign:"center",padding:"28px"}}>
-                    <div style={{fontSize:"2rem",marginBottom:10,opacity:.3}}>📊</div>
+                    <div style={{fontSize:"2rem",marginBottom:10,opacity:.3}}></div>
                     <p style={{fontSize:".82rem",color:"var(--text-muted)",lineHeight:1.7}}>Introduce tu % de grasa para ver la composición corporal.</p>
                   </div>
                 )}
@@ -3483,7 +3483,7 @@ function CalculatorPage({ onNavigate }) {
                   <div className="proy-card">
                     {[{l:"Valor",v:resultado.imc,c:imcInfo(resultado.imc).color},{l:"Clasificación",v:imcInfo(resultado.imc).label,c:"var(--text)"},{l:"Rango habitual",v:"18.5 – 24.9",c:"var(--text-muted)"}].map(r=><div className="proy-row" key={r.l}><span className="proy-lbl">{r.l}</span><span className="proy-val" style={{color:r.c}}>{r.v}</span></div>)}
                   </div>
-                  <p style={{fontSize:".7rem",color:"var(--text-muted)",lineHeight:1.6,marginTop:9,background:"var(--bg-warm)",padding:"9px 13px",borderRadius:"var(--r)",border:"1px solid var(--border)"}}>💡 {imcInfo(resultado.imc).note}</p>
+                  <p style={{fontSize:".7rem",color:"var(--text-muted)",lineHeight:1.6,marginTop:9,background:"var(--bg-warm)",padding:"9px 13px",borderRadius:"var(--r)",border:"1px solid var(--border)"}}> {imcInfo(resultado.imc).note}</p>
                 </div>
               </div>
               {/* TAB 3 */}
