@@ -4116,25 +4116,36 @@ export default function App() {
 
   const navigate = (p) => { setPage(p); setSidebarOpen(false); window.scrollTo(0,0); };
 
-  const NAV = [
-    {
-      section: "Principal",
-      items: [
-        {id:"calculator",  label:"Calculadora"},
-        {id:"calendar",    label:"Calendario"},
-        {id:"nutrition",   label:"Nutrición"},
-        {id:"peso",        label:"Peso"},
-        {id:"analisis",    label:"Análisis"},
-        {id:"profile",     label:"Perfil"},
-      ]
-    },
-    {
-      section: "Próximamente",
-      items: [
-        {id:"progress",   label:"Progreso",    badge:"Soon"},
-      ]
-    },
-  ];
+const NAV = [
+  {
+    section: "General",
+    items: [
+      { id:"calculator", label:"Calculadora" },
+      { id:"calendar",   label:"Calendario" },
+    ]
+  },
+  {
+    section: "Alimentación",
+    items: [
+      { id:"nutrition",  label:"Nutrición" },
+      { id:"analisis",   label:"Análisis" },
+      { id:"peso",       label:"Peso" },
+    ]
+  },
+  {
+    section: "Entrenamiento",
+    items: [
+      { id:"entrenos",   label:"Entrenos" },
+    ]
+  },
+  {
+    section: "Otros",
+    items: [
+      { id:"profile",    label:"Perfil" },
+      { id:"progress",   label:"Progreso", badge:"Soon" },
+    ]
+  },
+];
 
   return (
     <>
@@ -4187,6 +4198,7 @@ export default function App() {
           {page==="peso"       && <PesoPage/>}
           {page==="analisis"   && <AnalysisPage onNavigate={navigate}/>}
           {page==="profile"    && <ProfilePage onNavigate={navigate}/>}
+          {page==="entrenos"   && <EntrenosPage/>}
           {page==="progress"   && (
             <div className="page-header" style={{borderBottom:"none"}}>
               <h1><em>Progreso</em></h1>
