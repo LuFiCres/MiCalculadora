@@ -1770,7 +1770,20 @@ function MacroPlanCustomizer({ kcalObj, onSave }) {
                 <span className="plan-macro-grams">{m.g}g · {Math.round(m.g*m.kcalPerG)} kcal</span>
               </div>
             </div>
-           <input type="range" min={10} max={70} step={1} value={m.val} style={{background:grad}}
+            <style>{`
+              .mslider-${m.label.replace(/[^a-zA-Z]/g,'')}::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 18px; height: 18px; border-radius: 50%;
+                background: ${m.color} !important;
+                cursor: pointer;
+                box-shadow: 0 0 10px ${m.color}44;
+                transition: transform .12s;
+                border: 3px solid var(--surface);
+              }
+            `}</style>
+           <input type="range" min={10} max={70} step={1} value={m.val}
+              className={`mslider-${m.label.replace(/[^a-zA-Z]/g,'')}`}
+              style={{background:grad}}
               onChange={e => m.onChange(Number(e.target.value))}/>
           </div>
         );
