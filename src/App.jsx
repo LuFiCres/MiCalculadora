@@ -1269,7 +1269,40 @@ const styles = `
   .adj-entry-kcal {
     font-family: var(--font-mono);
   }
+/* ── ENTRENOS PAGE ── */
+.entrenos-page { padding-bottom: 80px; }
 
+.sport-type-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 28px;
+}
+.sport-type-btn {
+  padding: 14px 10px; border-radius: var(--r); border: 1.5px solid var(--border);
+  background: var(--surface); color: var(--text-muted); font-family: var(--font-body);
+  font-size: .82rem; cursor: pointer; transition: var(--tr);
+  box-shadow: 0 2px 0 var(--border); text-align: center;
+}
+.sport-type-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); transform: translateY(-1px); }
+.sport-type-btn:active { transform: translateY(1px); box-shadow: none; }
+
+.entrenos-session-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 16px 18px; transition: var(--tr);
+}
+.entrenos-session-card:hover { border-color: var(--accent); }
+
+.set-grid-header, .set-grid-row {
+  display: grid; grid-template-columns: 24px 1fr 1fr 1fr 24px;
+  gap: 6px; align-items: center;
+}
+.set-input {
+  background: var(--bg); border: 1.5px solid var(--border); border-radius: 6px;
+  color: var(--text); font-family: var(--font-mono); font-size: .8rem;
+  padding: 5px 8px; outline: none; width: 100%;
+  transition: border-color .2s;
+}
+.set-input:focus { border-color: var(--accent); }
+
+@media (max-width: 700px) { .sport-type-grid { grid-template-columns: repeat(2,1fr); } }
 `;
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -4062,7 +4095,649 @@ function NutritionPage() {
     </div>
   );
 }
+// ─── ENTRENOS PAGE ───────────────────────────────────────────────────────────
+const ENTRENOS_KEY = "tdee_entrenos_v1";
 
+const SPORT_TYPES = [
+  { id:"gimnasio",   name:"Gimnasio",   fields:"gym"     },
+  { id:"correr",     name:"Correr",     fields:"running" },
+  { id:"ciclismo",   name:"Ciclismo",   fields:"cycling" },
+  { id:"natacion",   name:"Natación",   fields:"swim"    },
+  { id:"cardio",     name:"Cardio",     fields:"generic" },
+  { id:"futbol",     name:"Fútbol",     fields:"generic" },
+  { id:"baloncesto", name:"Baloncesto", fields:"generic" },
+  { id:"tenis",      name:"Tenis",      fields:"generic" },
+  { id:"padel",      name:"Pádel",      fields:"generic" },
+  { id:"boxeo",      name:"Boxeo",      fields:"generic" },
+  { id:"yoga",       name:"Yoga",       fields:"generic" },
+  { id:"otro",       name:"Otro",       fields:"generic" },
+];
+
+const MUSCLE_GROUPS = [
+  "Pecho","Espalda","Hombros","Bíceps","Tríceps",
+  "Piernas","Glúteos","Abdomen","Pantorrillas","Antebrazo","Full body",
+];
+
+function loadEntrenos() {
+  try { return JSON.parse(localStorage.getItem(ENTRENOS_KEY) || "{}"); } catch { return {}; }
+}
+function saveEntrenos(data) {
+  try { localStorage.setItem(ENTRENOS_KEY, JSON.stringify(data)); } catch {}
+}
+
+// Calcula ritmo min/km
+function calcPace(distKm, durMin) {
+  if (!distKm || !durMin || distKm <= 0) return null;
+  const p = durMin / distKm;
+  const min = Math.floor(p);
+  const sec = Math.round((p - min) * 60);
+  return `${min}:${String(sec).padStart(2,"0")}`;
+}
+
+// Calcula velocidad media km/h
+function calcSpeed(distKm, durMin) {
+  if (!distKm || !durMin || durMin <= 0) return null;
+  return (distKm / (durMin / 60)).toFixed(1);
+}
+
+// ── RPE selector reutilizable ─────────────────────────────────────────────────
+function RpeSelector({ value, onChange, leftLabel = "Muy fácil", rightLabel = "Máximo" }) {
+  return (
+    <div style={{marginBottom:14}}>
+      <div style={{fontSize:".72rem",color:"var(--text-muted)",marginBottom:8}}>
+        Esfuerzo percibido (RPE)
+      </div>
+      <div style={{display:"flex",gap:5}}>
+        {[1,2,3,4,5,6,7,8,9,10].map(v => (
+          <button key={v} className={`rating-btn ${value===v?"sel":""}`}
+            style={{flex:1,padding:"8px 2px"}} onClick={() => onChange(v)}>{v}</button>
+        ))}
+      </div>
+      <div style={{display:"flex",justifyContent:"space-between",fontSize:".58rem",
+        color:"var(--text-dim)",fontFamily:"var(--font-mono)",marginTop:4}}>
+        <span>{leftLabel}</span><span>{rightLabel}</span>
+      </div>
+    </div>
+  );
+}
+
+// ── GymForm ───────────────────────────────────────────────────────────────────
+function GymForm({ onSave, onCancel }) {
+  const [exercises, setExercises] = useState([]);
+  const [gymDuration, setGymDuration] = useState("");
+  const [gymNotes, setGymNotes] = useState("");
+
+  const addExercise = () => {
+    setExercises(prev => [...prev, {
+      id: Date.now(),
+      name: "",
+      muscleGroup: "Pecho",
+      sets: [{ reps:"", weight:"", rir:"" }],
+    }]);
+  };
+
+  const updateExercise = (eid, field, val) =>
+    setExercises(prev => prev.map(e => e.id===eid ? {...e,[field]:val} : e));
+
+  const removeExercise = (eid) =>
+    setExercises(prev => prev.filter(e => e.id !== eid));
+
+  const addSet = (eid) =>
+    setExercises(prev => prev.map(e => {
+      if (e.id !== eid) return e;
+      const last = e.sets[e.sets.length-1] || {reps:"",weight:"",rir:""};
+      return {...e, sets:[...e.sets,{...last}]};
+    }));
+
+  const updateSet = (eid, idx, field, val) =>
+    setExercises(prev => prev.map(e => {
+      if (e.id !== eid) return e;
+      const sets = e.sets.map((s,i) => i===idx ? {...s,[field]:val} : s);
+      return {...e, sets};
+    }));
+
+  const removeSet = (eid, idx) =>
+    setExercises(prev => prev.map(e => {
+      if (e.id !== eid || e.sets.length <= 1) return e;
+      return {...e, sets: e.sets.filter((_,i) => i!==idx)};
+    }));
+
+  const handleSave = () => {
+    const validExercises = exercises.filter(e => e.name.trim());
+    if (validExercises.length === 0) return;
+    const totalSets = validExercises.reduce((s,e) => s+e.sets.length, 0);
+    onSave({
+      type:"gimnasio", sportName:"Gimnasio",
+      exercises: validExercises,
+      duration: gymDuration ? parseInt(gymDuration) : null,
+      notes: gymNotes.trim(),
+      summary: `${validExercises.length} ejercicio${validExercises.length!==1?"s":""} · ${totalSets} series`,
+    });
+  };
+
+  return (
+    <div>
+      <div style={{display:"flex",gap:12,marginBottom:16}}>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Duración (min)</label>
+          <input className="peso-form-input narrow" type="number" min="1" max="360" placeholder="75"
+            value={gymDuration} onChange={e => setGymDuration(e.target.value)}/>
+        </div>
+      </div>
+
+      <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:14}}>
+        {exercises.map((ex, exIdx) => (
+          <div key={ex.id} style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",overflow:"hidden"}}>
+            {/* Exercise header */}
+            <div style={{padding:"11px 14px",background:"var(--bg-warm)",borderBottom:"1px solid var(--border)",
+              display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+              <span style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-dim)",width:18,textAlign:"center",flexShrink:0}}>
+                {exIdx+1}
+              </span>
+              <input
+                style={{flex:1,minWidth:130,background:"var(--bg)",border:"1.5px solid var(--border)",
+                  borderRadius:"var(--r)",color:"var(--text)",fontFamily:"var(--font-body)",
+                  fontSize:".82rem",padding:"6px 10px",outline:"none"}}
+                placeholder="Nombre del ejercicio"
+                value={ex.name} onChange={e => updateExercise(ex.id,"name",e.target.value)}/>
+              <select className="styled-select" style={{width:"auto",padding:"6px 28px 6px 10px",flexShrink:0}}
+                value={ex.muscleGroup} onChange={e => updateExercise(ex.id,"muscleGroup",e.target.value)}>
+                {MUSCLE_GROUPS.map(g => <option key={g} value={g}>{g}</option>)}
+              </select>
+              <button onClick={() => removeExercise(ex.id)}
+                style={{background:"none",border:"none",color:"var(--text-dim)",cursor:"pointer",
+                  fontSize:"1rem",padding:"2px 6px",flexShrink:0,transition:"var(--tr)"}}
+                title="Eliminar ejercicio">×</button>
+            </div>
+
+            {/* Sets */}
+            <div style={{padding:"10px 14px"}}>
+              {/* Header */}
+              <div className="set-grid-header" style={{marginBottom:5,paddingBottom:5,borderBottom:"1px solid var(--border)"}}>
+                {["#","Reps","kg","RIR",""].map((h,i) => (
+                  <span key={i} style={{fontFamily:"var(--font-mono)",fontSize:".54rem",color:"var(--text-dim)",
+                    textAlign:"center",textTransform:"uppercase",letterSpacing:".08em"}}>{h}</span>
+                ))}
+              </div>
+
+              {ex.sets.map((set, sIdx) => (
+                <div key={sIdx} className="set-grid-row" style={{marginBottom:4}}>
+                  <span style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-dim)",textAlign:"center"}}>
+                    {sIdx+1}
+                  </span>
+                  <input className="set-input" type="number" min="1" max="100" placeholder="—"
+                    value={set.reps} onChange={e => updateSet(ex.id,sIdx,"reps",e.target.value)}/>
+                  <input className="set-input" type="number" min="0" max="500" step="0.5" placeholder="—"
+                    value={set.weight} onChange={e => updateSet(ex.id,sIdx,"weight",e.target.value)}/>
+                  <input className="set-input" type="number" min="0" max="10" placeholder="—"
+                    title="Repeticiones en Reserva (0 = fallo)"
+                    value={set.rir} onChange={e => updateSet(ex.id,sIdx,"rir",e.target.value)}/>
+                  <button onClick={() => removeSet(ex.id,sIdx)}
+                    style={{background:"none",border:"none",color:"var(--text-dim)",cursor:"pointer",
+                      fontSize:".8rem",textAlign:"center",opacity:ex.sets.length<=1?.25:1,
+                      transition:"var(--tr)"}} disabled={ex.sets.length<=1}>×</button>
+                </div>
+              ))}
+
+              <button onClick={() => addSet(ex.id)}
+                style={{marginTop:6,fontFamily:"var(--font-mono)",fontSize:".62rem",color:"var(--accent)",
+                  background:"var(--accent-dim)",border:"1px solid var(--accent-dim)",borderRadius:6,
+                  padding:"4px 12px",cursor:"pointer",transition:"var(--tr)"}}>
+                + Serie
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button className="save-btn" onClick={addExercise} style={{marginBottom:12}}>
+        + Añadir ejercicio
+      </button>
+
+      <div style={{marginBottom:12}}>
+        <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)",display:"block",marginBottom:5}}>
+          Notas de la sesión (opcional)
+        </label>
+        <textarea className="checkin-notes" rows={2}
+          placeholder="Sensaciones, observaciones, PR..."
+          value={gymNotes} onChange={e => setGymNotes(e.target.value)}/>
+      </div>
+
+      <div style={{display:"flex",gap:10}}>
+        <button className="modal-cancel" onClick={onCancel} style={{flex:"0 0 auto"}}>Cancelar</button>
+        <button className="cta" onClick={handleSave}
+          style={{flex:1}} disabled={exercises.filter(e=>e.name.trim()).length===0}>
+          Guardar sesión de gimnasio
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── RunningForm ────────────────────────────────────────────────────────────────
+function RunningForm({ onSave, onCancel }) {
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const [rpe, setRpe] = useState(null);
+  const [notes, setNotes] = useState("");
+
+  const pace = calcPace(parseFloat(distance), parseFloat(duration));
+
+  const handleSave = () => {
+    if (!distance && !duration) return;
+    const parts = [];
+    if (distance) parts.push(`${distance} km`);
+    if (duration) parts.push(`${duration} min`);
+    if (pace) parts.push(`${pace} min/km`);
+    onSave({
+      type:"correr", sportName:"Correr",
+      distance: distance ? parseFloat(distance) : null,
+      duration: duration ? parseFloat(duration) : null,
+      pace, rpe, notes: notes.trim(),
+      summary: parts.join(" · "),
+    });
+  };
+
+  return (
+    <div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Distancia (km)</label>
+          <input className="peso-form-input" type="number" min="0" step="0.01" placeholder="10.0"
+            value={distance} onChange={e => setDistance(e.target.value)}/>
+        </div>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Duración (min)</label>
+          <input className="peso-form-input" type="number" min="0" step="1" placeholder="52"
+            value={duration} onChange={e => setDuration(e.target.value)}/>
+        </div>
+      </div>
+
+      {pace && (
+        <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",
+          padding:"10px 14px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{fontSize:".72rem",color:"var(--text-muted)"}}>Ritmo calculado</span>
+          <span style={{fontFamily:"var(--font-mono)",fontSize:"1.1rem",color:"var(--accent)",fontWeight:500}}>{pace} min/km</span>
+        </div>
+      )}
+
+      <RpeSelector value={rpe} onChange={setRpe}/>
+
+      <div style={{marginBottom:14}}>
+        <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)",display:"block",marginBottom:5}}>Notas</label>
+        <textarea className="checkin-notes" rows={2} placeholder="Ruta, terreno, sensaciones..."
+          value={notes} onChange={e => setNotes(e.target.value)}/>
+      </div>
+
+      <div style={{display:"flex",gap:10}}>
+        <button className="modal-cancel" onClick={onCancel} style={{flex:"0 0 auto"}}>Cancelar</button>
+        <button className="cta" onClick={handleSave} style={{flex:1}} disabled={!distance && !duration}>
+          Guardar sesión
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── CyclingForm ────────────────────────────────────────────────────────────────
+function CyclingForm({ onSave, onCancel }) {
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const [elevation, setElevation] = useState("");
+  const [rpe, setRpe] = useState(null);
+  const [notes, setNotes] = useState("");
+
+  const speed = calcSpeed(parseFloat(distance), parseFloat(duration));
+
+  const handleSave = () => {
+    if (!distance && !duration) return;
+    const parts = [];
+    if (distance) parts.push(`${distance} km`);
+    if (speed) parts.push(`${speed} km/h`);
+    if (elevation) parts.push(`+${elevation}m`);
+    onSave({
+      type:"ciclismo", sportName:"Ciclismo",
+      distance: distance ? parseFloat(distance) : null,
+      duration: duration ? parseFloat(duration) : null,
+      speed, elevation: elevation ? parseFloat(elevation) : null,
+      rpe, notes: notes.trim(),
+      summary: parts.join(" · "),
+    });
+  };
+
+  return (
+    <div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Distancia (km)</label>
+          <input className="peso-form-input" type="number" min="0" step="0.1" placeholder="40"
+            value={distance} onChange={e => setDistance(e.target.value)}/>
+        </div>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Duración (min)</label>
+          <input className="peso-form-input" type="number" min="0" step="1" placeholder="90"
+            value={duration} onChange={e => setDuration(e.target.value)}/>
+        </div>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Desnivel + (m)</label>
+          <input className="peso-form-input" type="number" min="0" step="10" placeholder="500"
+            value={elevation} onChange={e => setElevation(e.target.value)}/>
+        </div>
+      </div>
+
+      {speed && (
+        <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",
+          padding:"10px 14px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{fontSize:".72rem",color:"var(--text-muted)"}}>Velocidad media</span>
+          <span style={{fontFamily:"var(--font-mono)",fontSize:"1.1rem",color:"var(--accent)",fontWeight:500}}>{speed} km/h</span>
+        </div>
+      )}
+
+      <RpeSelector value={rpe} onChange={setRpe}/>
+
+      <div style={{marginBottom:14}}>
+        <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)",display:"block",marginBottom:5}}>Notas</label>
+        <textarea className="checkin-notes" rows={2} placeholder="Ruta, condiciones, bicicleta..."
+          value={notes} onChange={e => setNotes(e.target.value)}/>
+      </div>
+
+      <div style={{display:"flex",gap:10}}>
+        <button className="modal-cancel" onClick={onCancel} style={{flex:"0 0 auto"}}>Cancelar</button>
+        <button className="cta" onClick={handleSave} style={{flex:1}} disabled={!distance && !duration}>
+          Guardar sesión
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── SwimForm ───────────────────────────────────────────────────────────────────
+function SwimForm({ onSave, onCancel }) {
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const [style, setStyle] = useState("Libre");
+  const [rpe, setRpe] = useState(null);
+  const [notes, setNotes] = useState("");
+
+  const handleSave = () => {
+    if (!distance && !duration) return;
+    const parts = [];
+    if (distance) parts.push(`${distance} m`);
+    if (duration) parts.push(`${duration} min`);
+    parts.push(style);
+    onSave({
+      type:"natacion", sportName:"Natación",
+      distance: distance ? parseFloat(distance) : null,
+      duration: duration ? parseFloat(duration) : null,
+      style, rpe, notes: notes.trim(),
+      summary: parts.join(" · "),
+    });
+  };
+
+  return (
+    <div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Distancia (m)</label>
+          <input className="peso-form-input" type="number" min="0" step="25" placeholder="1500"
+            value={distance} onChange={e => setDistance(e.target.value)}/>
+        </div>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Duración (min)</label>
+          <input className="peso-form-input" type="number" min="0" step="1" placeholder="40"
+            value={duration} onChange={e => setDuration(e.target.value)}/>
+        </div>
+      </div>
+
+      <div className="field" style={{marginBottom:14}}>
+        <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Estilo</label>
+        <select className="styled-select" value={style} onChange={e => setStyle(e.target.value)}>
+          {["Libre","Espalda","Braza","Mariposa","Combinado","Variado"].map(s => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+      </div>
+
+      <RpeSelector value={rpe} onChange={setRpe}/>
+
+      <div style={{marginBottom:14}}>
+        <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)",display:"block",marginBottom:5}}>Notas</label>
+        <textarea className="checkin-notes" rows={2} placeholder="Piscina, sensaciones..."
+          value={notes} onChange={e => setNotes(e.target.value)}/>
+      </div>
+
+      <div style={{display:"flex",gap:10}}>
+        <button className="modal-cancel" onClick={onCancel} style={{flex:"0 0 auto"}}>Cancelar</button>
+        <button className="cta" onClick={handleSave} style={{flex:1}} disabled={!distance && !duration}>
+          Guardar sesión
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── GenericForm ────────────────────────────────────────────────────────────────
+function GenericForm({ sport, onSave, onCancel }) {
+  const [duration, setDuration] = useState("");
+  const [intensity, setIntensity] = useState(null);
+  const [notes, setNotes] = useState("");
+
+  const handleSave = () => {
+    if (!duration && !intensity) return;
+    const parts = [];
+    if (duration) parts.push(`${duration} min`);
+    if (intensity) parts.push(`Intensidad ${intensity}/10`);
+    onSave({
+      type: sport.id, sportName: sport.name,
+      duration: duration ? parseFloat(duration) : null,
+      intensity, notes: notes.trim(),
+      summary: parts.join(" · "),
+    });
+  };
+
+  return (
+    <div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
+        <div className="peso-form-field">
+          <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)"}}>Duración (min)</label>
+          <input className="peso-form-input" type="number" min="0" step="5" placeholder="60"
+            value={duration} onChange={e => setDuration(e.target.value)}/>
+        </div>
+      </div>
+
+      <RpeSelector value={intensity} onChange={setIntensity} leftLabel="Muy baja" rightLabel="Muy alta"/>
+
+      <div style={{marginBottom:14}}>
+        <label style={{fontSize:".68rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)",display:"block",marginBottom:5}}>Notas</label>
+        <textarea className="checkin-notes" rows={2} placeholder="Detalles de la actividad..."
+          value={notes} onChange={e => setNotes(e.target.value)}/>
+      </div>
+
+      <div style={{display:"flex",gap:10}}>
+        <button className="modal-cancel" onClick={onCancel} style={{flex:"0 0 auto"}}>Cancelar</button>
+        <button className="cta" onClick={handleSave} style={{flex:1}} disabled={!duration && !intensity}>
+          Guardar sesión
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── EntrenosPage ───────────────────────────────────────────────────────────────
+function EntrenosPage() {
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0,10));
+  const [allData, setAllData] = useState(loadEntrenos);
+  const [selectedSport, setSelectedSport] = useState(null);
+
+  const todaySessions = allData[date] || [];
+
+  const handleSave = (session) => {
+    const updated = {
+      ...allData,
+      [date]: [...(allData[date]||[]), { ...session, id: Date.now() }],
+    };
+    setAllData(updated);
+    saveEntrenos(updated);
+    setSelectedSport(null);
+  };
+
+  const removeSession = (id) => {
+    const updated = { ...allData, [date]: (allData[date]||[]).filter(s => s.id !== id) };
+    setAllData(updated);
+    saveEntrenos(updated);
+  };
+
+  const dateLabel = new Date(date+"T12:00:00")
+    .toLocaleDateString("es-ES",{weekday:"long",day:"numeric",month:"long"});
+
+  return (
+    <div className="entrenos-page">
+      <div className="page-header">
+        <h1><em>Entrenos</em></h1>
+        <p>Diario de actividad física — gimnasio, cardio, deportes y más</p>
+      </div>
+
+      {/* Date selector */}
+      <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:28}}>
+        <input type="date" className="peso-form-input" style={{width:160}}
+          value={date} onChange={e => { setDate(e.target.value); setSelectedSport(null); }}/>
+        <span style={{fontFamily:"var(--font-mono)",fontSize:".72rem",color:"var(--text-muted)"}}>
+          {dateLabel.charAt(0).toUpperCase()+dateLabel.slice(1)}
+        </span>
+      </div>
+
+      {/* Sessions today */}
+      <div style={{marginBottom:28}}>
+        <div style={{fontFamily:"var(--font-mono)",fontSize:".57rem",letterSpacing:".15em",
+          color:"var(--text-muted)",textTransform:"uppercase",marginBottom:14,
+          display:"flex",alignItems:"center",gap:10}}>
+          Actividad del día
+          <span style={{flex:1,height:1,background:"var(--border)",display:"block"}}/>
+          <span style={{color:"var(--text-dim)"}}>{todaySessions.length} sesión{todaySessions.length!==1?"es":""}</span>
+        </div>
+
+        {todaySessions.length === 0 ? (
+          <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",
+            borderRadius:"var(--r-lg)",padding:"28px",textAlign:"center"}}>
+            <p style={{fontSize:".8rem",color:"var(--text-dim)",fontStyle:"italic"}}>
+              Sin actividad registrada. Selecciona un tipo de sesión abajo para empezar.
+            </p>
+          </div>
+        ) : (
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            {todaySessions.map(session => (
+              <div key={session.id} className="entrenos-session-card">
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",
+                  marginBottom: session.exercises?.length ? 12 : 0}}>
+                  <div>
+                    <div style={{fontSize:".88rem",fontWeight:500,color:"var(--text)",marginBottom:3}}>
+                      {session.sportName}
+                    </div>
+                    <div style={{fontFamily:"var(--font-mono)",fontSize:".65rem",color:"var(--accent)"}}>
+                      {session.summary}
+                    </div>
+                    {session.rpe && (
+                      <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-dim)",marginTop:3}}>
+                        RPE {session.rpe}/10
+                      </div>
+                    )}
+                    {session.intensity && (
+                      <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-dim)",marginTop:3}}>
+                        Intensidad {session.intensity}/10
+                      </div>
+                    )}
+                    {session.notes && (
+                      <div style={{fontSize:".7rem",color:"var(--text-muted)",marginTop:5,fontStyle:"italic"}}>
+                        {session.notes}
+                      </div>
+                    )}
+                  </div>
+                  <button onClick={() => removeSession(session.id)}
+                    style={{background:"none",border:"none",color:"var(--text-dim)",cursor:"pointer",
+                      fontSize:"1rem",padding:"2px 6px",borderRadius:4,transition:"var(--tr)",flexShrink:0}}>×</button>
+                </div>
+
+                {/* Gym exercises breakdown */}
+                {session.exercises?.length > 0 && (
+                  <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                    {session.exercises.map(ex => (
+                      <div key={ex.id} style={{background:"var(--bg-warm)",borderRadius:"var(--r)",
+                        padding:"9px 12px",border:"1px solid var(--border)"}}>
+                        <div style={{display:"flex",justifyContent:"space-between",
+                          alignItems:"center",marginBottom:5}}>
+                          <span style={{fontSize:".8rem",fontWeight:500}}>{ex.name||"Sin nombre"}</span>
+                          <span style={{fontFamily:"var(--font-mono)",fontSize:".57rem",color:"var(--accent)",
+                            background:"var(--accent-dim)",padding:"1px 7px",borderRadius:100,flexShrink:0}}>
+                            {ex.muscleGroup}
+                          </span>
+                        </div>
+                        <div style={{display:"flex",gap:5,flexWrap:"wrap"}}>
+                          {ex.sets.map((set,i) => (
+                            <span key={i} style={{fontFamily:"var(--font-mono)",fontSize:".62rem",
+                              color:"var(--text-muted)",background:"var(--surface)",
+                              padding:"2px 8px",borderRadius:6,border:"1px solid var(--border)"}}>
+                              {set.reps && set.weight
+                                ? `${set.reps}×${set.weight}kg${set.rir !== "" ? ` RIR${set.rir}` : ""}`
+                                : set.reps ? `${set.reps} reps` : `Serie ${i+1}`}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    {session.duration && (
+                      <div style={{fontFamily:"var(--font-mono)",fontSize:".6rem",color:"var(--text-dim)",marginTop:2}}>
+                        Duración total: {session.duration} min
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sport selector or form */}
+      {!selectedSport ? (
+        <div>
+          <div style={{fontFamily:"var(--font-mono)",fontSize:".57rem",letterSpacing:".15em",
+            color:"var(--text-muted)",textTransform:"uppercase",marginBottom:14,
+            display:"flex",alignItems:"center",gap:10}}>
+            Añadir sesión
+            <span style={{flex:1,height:1,background:"var(--border)",display:"block"}}/>
+          </div>
+          <div className="sport-type-grid">
+            {SPORT_TYPES.map(sport => (
+              <button key={sport.id} className="sport-type-btn" onClick={() => setSelectedSport(sport)}>
+                {sport.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+            <button onClick={() => setSelectedSport(null)}
+              style={{background:"none",border:"1.5px solid var(--border)",color:"var(--text-muted)",
+                cursor:"pointer",fontFamily:"var(--font-mono)",fontSize:".72rem",padding:"6px 12px",
+                borderRadius:"var(--r)",transition:"var(--tr)"}}>
+              ← Volver
+            </button>
+            <span style={{fontFamily:"var(--font-display)",fontSize:"1.1rem"}}>
+              <em>{selectedSport.name}</em>
+            </span>
+          </div>
+
+          {selectedSport.fields === "gym"     && <GymForm     onSave={handleSave} onCancel={() => setSelectedSport(null)}/>}
+          {selectedSport.fields === "running" && <RunningForm onSave={handleSave} onCancel={() => setSelectedSport(null)}/>}
+          {selectedSport.fields === "cycling" && <CyclingForm onSave={handleSave} onCancel={() => setSelectedSport(null)}/>}
+          {selectedSport.fields === "swim"    && <SwimForm    onSave={handleSave} onCancel={() => setSelectedSport(null)}/>}
+          {selectedSport.fields === "generic" && <GenericForm sport={selectedSport} onSave={handleSave} onCancel={() => setSelectedSport(null)}/>}
+        </div>
+      )}
+    </div>
+  );
+}
 // ─── SIDEBAR USER ─────────────────────────────────────────────────────────────
 function SidebarUser({ onNavigate }) {
   const prof = useMemo(() => { try { return JSON.parse(localStorage.getItem(PROFILE_KEY)||"null"); } catch { return null; } }, []);
