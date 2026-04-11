@@ -3693,7 +3693,7 @@ function NutrDonut({ kcal, protG, fatG, carbG, goalKcal }) {
 function NutritionPage() {
   const today = todayStr();
   const [allData, setAllData] = useState(loadNutrition);
-  const [openMeal, setOpenMeal] = useState("lunch");
+  const [openMeal, setOpenMeal] = useState(null);
   const [drafts, setDrafts] = useState({});
   const [quickFoods, setQuickFoods] = useState(loadQuickFoods);
   const [libOpen, setLibOpen] = useState(false);
