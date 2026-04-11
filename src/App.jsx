@@ -3258,8 +3258,8 @@ function CalculatorPage({ onNavigate }) {
           <div className="section">
             <div className="section-label">02 · Entrenamiento de fuerza</div>
             <div style={{display:"flex",flexDirection:"column",gap:24}}>
-              <Slider label="Días por semana" value={diasF} onChange={setDiasF} min={0} max={7} unit="días" marks={[0,1,2,3,4,5,6,7].map(d=>({val:d,label:String(d)}))}/>
-              <Slider label="Duración por sesión" value={duracion} onChange={setDuracion} min={20} max={180} step={5} unit="min" marks={[20,45,60,90,120,150,180].map(d=>({val:d,label:d+"'"}))}/>
+              <Slider label="Días por semana" value={diasF} onChange={(v) => { setDiasF(v); if (v === 0) setDuracion(0); }} min={0} max={7} unit="días" marks={[0,1,2,3,4,5,6,7].map(d=>({val:d,label:String(d)}))}/>
+              <Slider label="Duración por sesión" value={diasF === 0 ? 0 : duracion} onChange={setDuracion} min={diasF === 0 ? 0 : 20} max={180} step={5} unit="min" marks={[20,45,60,90,120,150,180].map(d=>({val:d,label:d+"'"}))} hint={diasF === 0 ? "Pon días de entrenamiento para activar este campo" : undefined}/>
               {diasF === 0 && (
                 <div className="info-box" style={{marginTop:4}}>
                   <strong>Sin entrenamiento de fuerza</strong> — el TDEE se calculará solo con actividad diaria y cardio.
