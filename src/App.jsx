@@ -2030,39 +2030,7 @@ function PesoPage() {
                 <label>Fecha</label>
                 <input type="date" className="peso-form-input narrow" style={{width:140}} value={draftDate}
                   onChange={e=>setDraftDate(e.target.value)}/>
-                  {/* Resumen semanal */}
-{(() => {
-  const now3 = new Date();
-  const stats = { days:0, sets:0, sports:new Set() };
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(now3); d.setDate(now3.getDate()-i);
-    const k = d.toISOString().slice(0,10);
-    const sessions = allData[k]||[];
-    if (sessions.length > 0) {
-      stats.days++;
-      sessions.forEach(s => {
-        stats.sports.add(s.sportName);
-        if (s.exercises) s.exercises.forEach(ex => stats.sets += ex.sets.length);
-      });
-    }
-  }
-  return (
-    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:28}}>
-      {[
-        {val:stats.days,      lbl:"Días entrenados",  sub:"esta semana",  color:"var(--accent)"},
-        {val:stats.sets,      lbl:"Series de gym",    sub:"esta semana",  color:"#3a6e9e"},
-        {val:stats.sports.size,lbl:"Deportes",        sub:"distintos",    color:"#5a8a4a"},
-      ].map((s,i) => (
-        <div key={i} style={{background:"var(--surface)",border:"1.5px solid var(--border)",
-          borderRadius:"var(--r)",padding:"14px 16px",textAlign:"center"}}>
-          <div style={{fontFamily:"var(--font-mono)",fontSize:"1.8rem",lineHeight:1,color:s.color,marginBottom:3}}>{s.val}</div>
-          <div style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-muted)",textTransform:"uppercase",letterSpacing:".06em"}}>{s.lbl}</div>
-          <div style={{fontFamily:"var(--font-mono)",fontSize:".54rem",color:"var(--text-dim)",marginTop:2}}>{s.sub}</div>
-        </div>
-      ))}
-    </div>
-  );
-})()}s
+                 
               </div>
               <div className="peso-form-field">
                 <label>Peso (kg)</label>
@@ -3672,8 +3640,8 @@ function CalculatorPage({ onNavigate }) {
               </div>
               <p className="note">Estimación ±10–15%. El IMC es una referencia estadística poblacional. No sustituye consulta con dietista/nutricionista colegiado.</p>
             </div>
-          )}
-        </div>
+            )}
+          </div>
       </div>
 
       {/* Historial */}
