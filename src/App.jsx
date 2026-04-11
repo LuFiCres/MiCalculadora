@@ -1884,26 +1884,55 @@ function WeightSparkline({ entries }) {
     const y = PAD + ((maxV - e.weight) / range) * (H - PAD * 2);
     return { x, y, ...e };
   });
-  const pathD = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const pathD = pts.map((p,i) => `${i===0?"M":"L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
   const areaD = pathD + ` L${pts[pts.length-1].x.toFixed(1)},${H} L${PAD},${H} Z`;
-  const trend = vals[vals.length - 1] - vals[0];
+  const trend = vals[vals.length-1] - vals[0];
   const trendColor = trend < 0 ? "#5a8a4a" : trend > 0 ? "#d94f2b" : "#8a6a50";
+
+  // Media móvil 7 días
+  const maVals = entries.map((e) => {
+    const eDate = new Date(e.date+"T12:00:00");
+    const cutoff = new Date(eDate); cutoff.setDate(eDate.getDate()-6);
+    const w7 = entries.filter(x => { const d=new Date(x.date+"T12:00:00"); return d>=cutoff&&d<=eDate; });
+    return w7.reduce((s,x)=>s+x.weight,0)/w7.length;
+  });
+  const maPts = maVals.map((v,i)=>({ x:pts[i].x, y:PAD+((maxV-v)/range)*(H-PAD*2) }));
+  const maPathD = maPts.map((p,i)=>`${i===0?"M":"L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
   return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{overflow:"visible"}}>
-      <path d={areaD} fill="var(--accent)" opacity=".07"/>
-      <path d={pathD} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      {pts.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r="3" fill="var(--accent)" stroke="var(--surface)" strokeWidth="1.5"/>
-      ))}
-      <text x={pts[0].x} y={pts[0].y - 7} textAnchor="middle"
-        style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:"var(--text-muted)"}}>
-        {vals[0].toFixed(1)}
-      </text>
-      <text x={pts[pts.length-1].x} y={pts[pts.length-1].y - 7} textAnchor="middle"
-        style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:trendColor,fontWeight:600}}>
-        {vals[vals.length-1].toFixed(1)}
-      </text>
-    </svg>
+    <>
+      <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{overflow:"visible"}}>
+        <path d={areaD} fill="var(--accent)" opacity=".06"/>
+        <path d={pathD} fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity=".4"/>
+        {entries.length >= 3 && (
+          <path d={maPathD} fill="none" stroke="#5a8a4a" strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round" strokeDasharray="none"/>
+        )}
+        {pts.map((p,i) => (
+          <circle key={i} cx={p.x} cy={p.y} r="2.5" fill="var(--accent)" stroke="var(--surface)" strokeWidth="1.5" opacity=".7"/>
+        ))}
+        <text x={pts[0].x} y={pts[0].y-7} textAnchor="middle"
+          style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:"var(--text-muted)"}}>
+          {vals[0].toFixed(1)}
+        </text>
+        <text x={pts[pts.length-1].x} y={pts[pts.length-1].y-7} textAnchor="middle"
+          style={{fontFamily:"var(--font-mono)",fontSize:"9px",fill:trendColor,fontWeight:600}}>
+          {vals[vals.length-1].toFixed(1)}
+        </text>
+      </svg>
+      {entries.length >= 3 && (
+        <div style={{display:"flex",gap:14,marginTop:6,justifyContent:"center"}}>
+          <div style={{display:"flex",alignItems:"center",gap:5,fontFamily:"var(--font-mono)",fontSize:".57rem",color:"var(--text-dim)"}}>
+            <span style={{width:16,height:2,background:"var(--accent)",opacity:.5,display:"inline-block",borderRadius:1}}/>
+            Peso real
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:5,fontFamily:"var(--font-mono)",fontSize:".57rem",color:"var(--text-dim)"}}>
+            <span style={{width:16,height:2,background:"#5a8a4a",display:"inline-block",borderRadius:1}}/>
+            Media 7 días
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -2001,6 +2030,39 @@ function PesoPage() {
                 <label>Fecha</label>
                 <input type="date" className="peso-form-input narrow" style={{width:140}} value={draftDate}
                   onChange={e=>setDraftDate(e.target.value)}/>
+                  {/* Resumen semanal */}
+{(() => {
+  const now3 = new Date();
+  const stats = { days:0, sets:0, sports:new Set() };
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now3); d.setDate(now3.getDate()-i);
+    const k = d.toISOString().slice(0,10);
+    const sessions = allData[k]||[];
+    if (sessions.length > 0) {
+      stats.days++;
+      sessions.forEach(s => {
+        stats.sports.add(s.sportName);
+        if (s.exercises) s.exercises.forEach(ex => stats.sets += ex.sets.length);
+      });
+    }
+  }
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:28}}>
+      {[
+        {val:stats.days,      lbl:"Días entrenados",  sub:"esta semana",  color:"var(--accent)"},
+        {val:stats.sets,      lbl:"Series de gym",    sub:"esta semana",  color:"#3a6e9e"},
+        {val:stats.sports.size,lbl:"Deportes",        sub:"distintos",    color:"#5a8a4a"},
+      ].map((s,i) => (
+        <div key={i} style={{background:"var(--surface)",border:"1.5px solid var(--border)",
+          borderRadius:"var(--r)",padding:"14px 16px",textAlign:"center"}}>
+          <div style={{fontFamily:"var(--font-mono)",fontSize:"1.8rem",lineHeight:1,color:s.color,marginBottom:3}}>{s.val}</div>
+          <div style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-muted)",textTransform:"uppercase",letterSpacing:".06em"}}>{s.lbl}</div>
+          <div style={{fontFamily:"var(--font-mono)",fontSize:".54rem",color:"var(--text-dim)",marginTop:2}}>{s.sub}</div>
+        </div>
+      ))}
+    </div>
+  );
+})()}s
               </div>
               <div className="peso-form-field">
                 <label>Peso (kg)</label>
@@ -2424,6 +2486,47 @@ function AnalysisPage({ onNavigate }) {
           <div className="weight-trend-card">
             <div className="weight-trend-title">Tendencia de peso — 14 días</div>
             <WeightTrend2W pesoEntries={pesoEntries}/>
+            {/* Volumen semanal por grupo muscular */}
+            {(() => {
+              try {
+               const entrenos = JSON.parse(localStorage.getItem(ENTRENOS_KEY)||"{}");
+               const now2 = new Date();
+               const volMap = {};
+              for (let i = 0; i < 7; i++) {
+               const d = new Date(now2);
+               d.setDate(now2.getDate() - i);
+              const k = d.toISOString().slice(0,10);
+              const sessions = entrenos[k] || [];
+              sessions.forEach(s => {
+           if (s.exercises) s.exercises.forEach(ex => {
+               const mg = ex.muscleGroup || "Otro";
+          volMap[mg] = (volMap[mg]||0) + ex.sets.length;
+        });
+      });
+    }
+    const entries2 = Object.entries(volMap).sort((a,b)=>b[1]-a[1]);
+    if (entries2.length === 0) return null;
+    const maxVol = Math.max(...entries2.map(e=>e[1]));
+    return (
+      <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r-lg)",padding:"16px 18px"}}>
+        <div style={{fontFamily:"var(--font-mono)",fontSize:".55rem",letterSpacing:".15em",color:"var(--text-muted)",textTransform:"uppercase",marginBottom:12}}>
+          Volumen semanal — series por músculo
+        </div>
+        {entries2.map(([mg, sets]) => (
+          <div key={mg} style={{marginBottom:8}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+              <span style={{fontSize:".72rem",color:"var(--text-muted)"}}>{mg}</span>
+              <span style={{fontFamily:"var(--font-mono)",fontSize:".7rem",color:"var(--accent)",fontWeight:500}}>{sets} series</span>
+            </div>
+            <div style={{height:4,background:"var(--surface-2)",borderRadius:3,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${(sets/maxVol)*100}%`,background:"var(--accent)",borderRadius:3,transition:"width .5s"}}/>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  } catch { return null; }
+})()}
           </div>
 
           {currentKcal && (
@@ -4098,6 +4201,27 @@ function NutritionPage() {
 // ─── ENTRENOS PAGE ───────────────────────────────────────────────────────────
 const ENTRENOS_KEY = "tdee_entrenos_v1";
 
+const ORM_KEY = "tdee_1rm_v1";
+function loadORM() { try { return JSON.parse(localStorage.getItem(ORM_KEY)||"{}"); } catch { return {}; } }
+function saveORM(data) { try { localStorage.setItem(ORM_KEY, JSON.stringify(data)); } catch {} }
+function epley1RM(weight, reps) {
+  const w = parseFloat(weight), r = parseFloat(reps);
+  if (!w || !r || r <= 0) return null;
+  if (r === 1) return w;
+  return Math.round(w * (1 + r/30) * 10) / 10;
+}
+function estimateSessionKcal(session, weightKg) {
+  const w = weightKg || 75;
+  const h = (session.duration || 0) / 60;
+  switch (session.type) {
+    case "gimnasio": return Math.round(5.5 * w * h);
+    case "correr":   return session.distance ? Math.round(session.distance * w * 1.036) : Math.round(8 * w * h);
+    case "ciclismo": return Math.round(7 * w * h);
+    case "natacion": return Math.round(7 * w * h);
+    default:         return Math.round(5 * w * h);
+  }
+}
+
 const SPORT_TYPES = [
   { id:"gimnasio",   name:"Gimnasio",   fields:"gym"     },
   { id:"correr",     name:"Correr",     fields:"running" },
@@ -4577,8 +4701,36 @@ function EntrenosPage() {
       [date]: [...(allData[date]||[]), { ...session, id: Date.now() }],
     };
     setAllData(updated);
+    // Auto-marcar hábito de entrenamiento en calendario
+try {
+  const cal = JSON.parse(localStorage.getItem(CAL_KEY)||"{}");
+  if (!cal[date]) cal[date] = {};
+  cal[date].training = true;
+  localStorage.setItem(CAL_KEY, JSON.stringify(cal));
+} catch {}
     saveEntrenos(updated);
     setSelectedSport(null);
+
+    // 1RM estimado Epley
+if (session.type === "gimnasio" && session.exercises) {
+  const orm = loadORM();
+  session.exercises.forEach(ex => {
+    if (!ex.name.trim()) return;
+    const key = ex.name.trim().toLowerCase();
+    if (!orm[key]) orm[key] = { name: ex.name.trim(), records: [] };
+    ex.sets.forEach(set => {
+      const est = epley1RM(set.weight, set.reps);
+      if (est && est > 0) {
+        orm[key].records.push({ date, weight: parseFloat(set.weight)||0, reps: parseFloat(set.reps)||0, est1rm: est });
+      }
+    });
+    orm[key].records.sort((a,b) => a.date.localeCompare(b.date));
+    orm[key].records = orm[key].records.slice(-60);
+    orm[key].best = Math.max(...orm[key].records.map(r => r.est1rm));
+    orm[key].bestDate = orm[key].records.find(r => r.est1rm === orm[key].best)?.date || "";
+  });
+  saveORM(orm);
+}
   };
 
   const removeSession = (id) => {
@@ -4605,7 +4757,38 @@ function EntrenosPage() {
           {dateLabel.charAt(0).toUpperCase()+dateLabel.slice(1)}
         </span>
       </div>
-
+      {/* TDEE dinámico hoy */}
+{(() => {
+  const todayStr2 = new Date().toISOString().slice(0,10);
+  if (date !== todayStr2) return null;
+  const sessions = allData[date] || [];
+  if (sessions.length === 0) return null;
+  const userWeight = (() => { try { const f=JSON.parse(localStorage.getItem(FORM_KEY)||"{}"); return f.peso||75; } catch { return 75; } })();
+  const baseTdee = (() => { try { const h=JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); return h[0]?.tdee||null; } catch { return null; } })();
+  const extraKcal = sessions.reduce((s, sess) => s + estimateSessionKcal(sess, userWeight), 0);
+  if (extraKcal === 0) return null;
+  return (
+    <div style={{background:"var(--surface)",border:"1.5px solid var(--accent)",borderRadius:"var(--r-lg)",
+      padding:"13px 18px",marginBottom:20,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
+      <div>
+        <div style={{fontSize:".72rem",fontWeight:500,color:"var(--text)",marginBottom:2}}>
+          Gasto estimado de tus sesiones de hoy
+        </div>
+        <div style={{fontFamily:"var(--font-mono)",fontSize:".62rem",color:"var(--text-muted)"}}>
+          {baseTdee ? `TDEE base ${baseTdee.toLocaleString()} + ${extraKcal} kcal entreno` : `+${extraKcal} kcal estimadas en el entrenamiento`}
+        </div>
+      </div>
+      <div style={{textAlign:"right"}}>
+        <div style={{fontFamily:"var(--font-mono)",fontSize:"1.4rem",color:"var(--accent)",lineHeight:1}}>
+          {baseTdee ? (baseTdee + extraKcal).toLocaleString() : `+${extraKcal}`}
+        </div>
+        <div style={{fontFamily:"var(--font-mono)",fontSize:".57rem",color:"var(--text-dim)"}}>
+          {baseTdee ? "kcal/día ajustado" : "kcal de actividad"}
+        </div>
+      </div>
+    </div>
+  );
+})()}
       {/* Sessions today */}
       <div style={{marginBottom:28}}>
         <div style={{fontFamily:"var(--font-mono)",fontSize:".57rem",letterSpacing:".15em",
@@ -4735,6 +4918,47 @@ function EntrenosPage() {
           {selectedSport.fields === "generic" && <GenericForm sport={selectedSport} onSave={handleSave} onCancel={() => setSelectedSport(null)}/>}
         </div>
       )}
+      {/* 1RM Records */}
+{(() => {
+  const orm = loadORM();
+  const keys = Object.keys(orm);
+  if (keys.length === 0) return null;
+  return (
+    <div style={{marginTop:36}}>
+      <div style={{fontFamily:"var(--font-mono)",fontSize:".57rem",letterSpacing:".15em",
+        color:"var(--text-muted)",textTransform:"uppercase",marginBottom:14,
+        display:"flex",alignItems:"center",gap:10}}>
+        Máximos estimados (1RM Epley)
+        <span style={{flex:1,height:1,background:"var(--border)",display:"block"}}/>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))",gap:10}}>
+        {keys.map(k => {
+          const rec = orm[k];
+          const todayRec = rec.records.filter(r => r.date === date).sort((a,b)=>b.est1rm-a.est1rm)[0];
+          const isNew = todayRec && todayRec.est1rm >= rec.best;
+          return (
+            <div key={k} style={{background:"var(--surface)",border:`1.5px solid ${isNew?"var(--accent)":"var(--border)"}`,
+              borderRadius:"var(--r-lg)",padding:"13px 14px",transition:"var(--tr)"}}>
+              <div style={{fontSize:".75rem",fontWeight:500,color:"var(--text)",marginBottom:4,
+                overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{rec.name}</div>
+              <div style={{fontFamily:"var(--font-mono)",fontSize:"1.4rem",color:"var(--accent)",lineHeight:1,marginBottom:2}}>
+                {rec.best} <span style={{fontSize:".65rem",color:"var(--text-muted)"}}>kg</span>
+              </div>
+              <div style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-dim)"}}>
+                {isNew ? "Nuevo máximo hoy" : `Mejor: ${formatDateShort(rec.bestDate)}`}
+              </div>
+              {todayRec && !isNew && (
+                <div style={{fontFamily:"var(--font-mono)",fontSize:".58rem",color:"var(--text-muted)",marginTop:2}}>
+                  Hoy: {todayRec.est1rm} kg
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+})()}
     </div>
   );
 }
