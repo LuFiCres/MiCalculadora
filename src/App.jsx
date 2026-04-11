@@ -1369,46 +1369,92 @@ function metLabel(met) {
   return               { label:"Muy intenso", color:"#d94f2b" };
 }
 
-function calcTDEE({ sexo,peso,altura,edad,grasa,diasFuerza,duracion,rir,series,descanso,cardio,pasos,trabajo }) {
-  // BMR: Mifflin-St Jeor o Katch-McArdle si hay % grasa
+function calcTDEE({ sexo, peso, altura, edad, grasa,
+                    diasFuerza, duracion, rir, series, descanso,
+                    cardio, pasos, trabajo }) {
+
+  // ── BMR ──────────────────────────────────────────────────────────
   let bmr;
   if (grasa && Number(grasa) > 0) {
-    bmr = 370 + 21.6 * (peso * (1 - Number(grasa) / 100));
+    const lbm = peso * (1 - Number(grasa) / 100);
+    bmr = 370 + 21.6 * lbm;
   } else {
-    bmr = sexo === "hombre" ? 10*peso+6.25*altura-5*edad+5 : 10*peso+6.25*altura-5*edad-161;
+    bmr = sexo === "hombre"
+      ? 10 * peso + 6.25 * altura - 5 * edad + 5
+      : 10 * peso + 6.25 * altura - 5 * edad - 161;
   }
 
-  // Factor de actividad base (tabla Mifflin estándar por días de entreno)
-  let fb;
-  if (diasFuerza === 0)       fb = 1.20;
-  else if (diasFuerza <= 2)   fb = 1.375;
-  else if (diasFuerza <= 5)   fb = 1.55;
-  else                        fb = 1.725;
+  // ── EAT: gasto por entrenamiento planificado ──────────────────────
+  const metFuerza = {
+    "0":   2.5,
+    "1-2": 5.5,
+    "3-4": 4.5,
+    "5+":  3.5,
+  }[rir] ?? 5.0;
 
-  // Ajustes por intensidad/volumen del entreno (escala conservadora)
-  // Referencia neutra: RIR 1-2, 3 series, 90-120s, 60min, poco cardio, 7000 pasos, sedentario
-  const rir_adj    = {"0":0.02,"1-2":0.0,"3-4":-0.01,"5+":-0.02}[rir] ?? 0;
-  const series_adj = {"1-2":-0.01,"3":0.0,"4-5":0.01,"6+":0.02}[series] ?? 0;
-  const desc_adj   = {"menos60":0.01,"60-90":0.005,"90-120":0.0,"2-3min":-0.005,"mas3min":-0.01}[descanso] ?? 0;
-  const dur_adj    = Math.max(-0.02, Math.min(0.03, (duracion - 60) / 120 * 0.025));
-  const cardio_adj = {"ninguno":-0.01,"poco":0.0,"moderado":0.03,"bastante":0.06,"mucho":0.10}[cardio] ?? 0;
-  const pasos_adj  = Math.max(-0.03, Math.min(0.04, (pasos - 7000) / 7000 * 0.03));
-  const trabajo_adj= {"sedentario":0.0,"ligero":0.03,"moderado":0.07,"activo":0.12,"muy_activo":0.17}[trabajo] ?? 0;
+  const densidadFactor = {
+    "menos60": 1.15,
+    "60-90":   1.08,
+    "90-120":  1.00,
+    "2-3min":  0.92,
+    "mas3min": 0.85,
+  }[descanso] ?? 1.00;
 
-  let adj = rir_adj + series_adj + desc_adj + dur_adj + cardio_adj + pasos_adj + trabajo_adj;
-  adj = Math.max(-0.12, Math.min(0.20, adj));  // cap para evitar extremos
+  const volumenFactor = {
+    "1-2": 0.85,
+    "3":   1.00,
+    "4-5": 1.12,
+    "6+":  1.22,
+  }[series] ?? 1.00;
 
-  const factor = fb + adj;
-  const tdee   = bmr * factor;
-  const tef    = bmr * 0.1;
-  const act    = tdee - bmr - tef;
+  const kcalPorSesionFuerza = diasFuerza > 0
+    ? metFuerza * densidadFactor * volumenFactor * peso * (duracion / 60)
+    : 0;
 
-  // Desglose EAT/NEAT proporcional para mantener el panel visual
-  const eat_frac = Math.min(0.60, Math.max(0.38, 0.44 + (diasFuerza - 3) * 0.025));
-  const eat  = Math.max(0, act * eat_frac);
-  const neat = Math.max(0, act * (1 - eat_frac));
+  const eatFuerzaDia = (kcalPorSesionFuerza * diasFuerza) / 7;
 
-  return {bmr:Math.round(bmr),eat:Math.round(eat),neat:Math.round(neat),tef:Math.round(tef),tdee:Math.round(tdee)};
+  const horasCardioSemana = {
+    ninguno:  0,
+    poco:     0.375,
+    moderado: 1.5,
+    bastante: 3.0,
+    mucho:    5.0,
+  }[cardio] ?? 0;
+
+  const metCardio = {
+    ninguno:  0,
+    poco:     6.0,
+    moderado: 7.0,
+    bastante: 8.0,
+    mucho:    9.0,
+  }[cardio] ?? 0;
+
+  const eatCardioDia = (metCardio * horasCardioSemana * peso) / 7;
+
+  const eat = Math.round(eatFuerzaDia + eatCardioDia);
+
+  // ── NEAT: actividad no planificada ────────────────────────────────
+  const kcalPasos = pasos * 0.045 * Math.sqrt(peso / 70);
+
+  const neatTrabajo = {
+    sedentario: 200,
+    ligero:     400,
+    moderado:   700,
+    activo:     1100,
+    muy_activo: 1600,
+  }[trabajo] ?? 200;
+
+  const neat = Math.round(
+    Math.max(kcalPasos, neatTrabajo * 0.6)
+    + Math.min(kcalPasos, neatTrabajo) * 0.25
+  );
+
+  // ── TEF ──────────────────────────────────────────────────────────
+  const tef = Math.round((bmr + eat + neat) * 0.10 / 0.90);
+
+  const tdee = Math.round(bmr + eat + neat + tef);
+
+  return { bmr: Math.round(bmr), eat, neat, tef, tdee };
 }
 
 function validateCalc(base, kcalObj, proteinG, fatG, carbG, peso) {
