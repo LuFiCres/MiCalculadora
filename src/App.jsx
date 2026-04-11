@@ -3290,44 +3290,52 @@ function CalculatorPage({ onNavigate }) {
           <div className="section">
             <div className="section-label">02 · Entrenamiento de fuerza</div>
             <div style={{display:"flex",flexDirection:"column",gap:24}}>
-              <Slider label="Días por semana" value={diasF} onChange={setDiasF} min={1} max={7} unit="días" marks={[1,2,3,4,5,6,7].map(d=>({val:d,label:String(d)}))}/>
+              <Slider label="Días por semana" value={diasF} onChange={setDiasF} min={0} max={7} unit="días" marks={[0,1,2,3,4,5,6,7].map(d=>({val:d,label:String(d)}))}/>
               <Slider label="Duración por sesión" value={duracion} onChange={setDuracion} min={20} max={180} step={5} unit="min" marks={[20,45,60,90,120,150,180].map(d=>({val:d,label:d+"'"}))}/>
-              <div style={{display:"flex",flexDirection:"column",gap:13}}>
-                <div className="field">
-                  <label>Esfuerzo — proximidad al fallo <Tip text={TIPS.rir}/></label>
-                  <select className="styled-select" value={rir} onChange={e=>setRir(e.target.value)}>
-                    <option value="0">RIR 0 — Fallo muscular total</option>
-                    <option value="1-2">RIR 1-2 — Quedan 1-2 reps, trabajo duro</option>
-                    <option value="3-4">RIR 3-4 — Trabajo moderado</option>
-                    <option value="5+">RIR 5+ — Esfuerzo ligero</option>
-                  </select>
+              {diasF === 0 && (
+                <div className="info-box" style={{marginTop:4}}>
+                  <strong>Sin entrenamiento de fuerza</strong> — el TDEE se calculará solo con actividad diaria y cardio.
                 </div>
-                <div className="field">
-                  <label>Volumen — series por ejercicio</label>
-                  <select className="styled-select" value={series} onChange={e=>setSeries(e.target.value)}>
-                    <option value="1-2">1-2 series — Volumen muy bajo</option>
-                    <option value="3">3 series — Volumen estándar</option>
-                    <option value="4-5">4-5 series — Volumen alto</option>
-                    <option value="6+">6+ series — Volumen muy alto</option>
-                  </select>
-                </div>
-                <div className="field">
-                  <label>Densidad — descanso entre series</label>
-                  <select className="styled-select" value={descanso} onChange={e=>setDescanso(e.target.value)}>
-                    <option value="menos60">&lt;60 s — Circuitos, HIIT</option>
-                    <option value="60-90">60-90 s — Hipertrofia corto</option>
-                    <option value="90-120">90-120 s — Hipertrofia/fuerza</option>
-                    <option value="2-3min">2-3 min — Fuerza, cargas altas</option>
-                    <option value="mas3min">3+ min — Powerlifting</option>
-                  </select>
-                </div>
-                <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"11px 13px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <div>
-                    <p style={{fontSize:".67rem",color:"var(--text-muted)",marginBottom:2}}>Intensidad calculada:</p>
-                    <p style={{fontSize:".7rem",color:"var(--text-dim)",fontStyle:"italic"}}>MET: <strong style={{color:metLabel(currentMET).color,fontStyle:"normal"}}>{currentMET.toFixed(1)}</strong></p>
+              )}
+              {diasF > 0 && (
+                <div style={{display:"flex",flexDirection:"column",gap:13}}>
+                  <div className="field">
+                    <label>Esfuerzo — proximidad al fallo <Tip text={TIPS.rir}/></label>
+                    <select className="styled-select" value={rir} onChange={e=>setRir(e.target.value)}>
+                      <option value="0">RIR 0 — Fallo muscular total</option>
+                      <option value="1-2">RIR 1-2 — Quedan 1-2 reps, trabajo duro</option>
+                      <option value="3-4">RIR 3-4 — Trabajo moderado</option>
+                      <option value="5+">RIR 5+ — Esfuerzo ligero</option>
+                    </select>
                   </div>
-                  <span style={{fontFamily:"var(--font-mono)",fontSize:".73rem",fontWeight:500,padding:"4px 13px",borderRadius:100,color:metLabel(currentMET).color,background:metLabel(currentMET).color+"18",border:`1px solid ${metLabel(currentMET).color}44`}}>{metLabel(currentMET).label}</span>
+                  <div className="field">
+                    <label>Volumen — series por ejercicio</label>
+                    <select className="styled-select" value={series} onChange={e=>setSeries(e.target.value)}>
+                      <option value="1-2">1-2 series — Volumen muy bajo</option>
+                      <option value="3">3 series — Volumen estándar</option>
+                      <option value="4-5">4-5 series — Volumen alto</option>
+                      <option value="6+">6+ series — Volumen muy alto</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label>Densidad — descanso entre series</label>
+                    <select className="styled-select" value={descanso} onChange={e=>setDescanso(e.target.value)}>
+                      <option value="menos60">&lt;60 s — Circuitos, HIIT</option>
+                      <option value="60-90">60-90 s — Hipertrofia corto</option>
+                      <option value="90-120">90-120 s — Hipertrofia/fuerza</option>
+                      <option value="2-3min">2-3 min — Fuerza, cargas altas</option>
+                      <option value="mas3min">3+ min — Powerlifting</option>
+                    </select>
+                  </div>
+                  <div style={{background:"var(--surface)",border:"1.5px solid var(--border)",borderRadius:"var(--r)",padding:"11px 13px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <div>
+                      <p style={{fontSize:".67rem",color:"var(--text-muted)",marginBottom:2}}>Intensidad calculada:</p>
+                      <p style={{fontSize:".7rem",color:"var(--text-dim)",fontStyle:"italic"}}>MET: <strong style={{color:metLabel(currentMET).color,fontStyle:"normal"}}>{currentMET.toFixed(1)}</strong></p>
+                    </div>
+                    <span style={{fontFamily:"var(--font-mono)",fontSize:".73rem",fontWeight:500,padding:"4px 13px",borderRadius:100,color:metLabel(currentMET).color,background:metLabel(currentMET).color+"18",border:`1px solid ${metLabel(currentMET).color}44`}}>{metLabel(currentMET).label}</span>
+                  </div>
                 </div>
+              )}
               </div>
             </div>
           </div>
