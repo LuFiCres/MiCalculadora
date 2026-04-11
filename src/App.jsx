@@ -3303,12 +3303,11 @@ function CalculatorPage({ onNavigate }) {
                     <span style={{fontFamily:"var(--font-mono)",fontSize:".73rem",fontWeight:500,padding:"4px 13px",borderRadius:100,color:metLabel(currentMET).color,background:metLabel(currentMET).color+"18",border:`1px solid ${metLabel(currentMET).color}44`}}>{metLabel(currentMET).label}</span>
                   </div>
                 </div>
-              )}
-              </div>
-            </div>
+            )}
           </div>
+        </div>
 
-          {/* 03 */}
+        {/* 03 */}
           <div className="section">
             <div className="section-label">03 · Cardio adicional</div>
             <div className="field">
